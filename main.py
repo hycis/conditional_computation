@@ -12,7 +12,7 @@ from pylearn2.training_algorithms.sgd import SGD, MomentumAdjustor
 from pylearn2.termination_criteria import MonitorBased
 from pylearn2.train_extensions.best_params import MonitorBasedSaveBest
 from pylearn2.train import Train
-
+from pylearn2.datasets.svhn import SVHN
 
 
 class StochasticLayer():
@@ -22,9 +22,9 @@ class StochasticLayer():
 def main():
     #pdb.set_trace()
     # train set X has dim (60,000, 784), y has dim (60,000, 10)
-    train_set = MNIST(which_set='train', one_hot=True)
+    train_set = SVHN(which_set='train')
     # test set X has dim (10,000, 784), y has dim (10,000, 10)
-    test_set = MNIST(which_set='test', one_hot=True)
+    test_set = SVHN(which_set='test')
     
     # =====<Create the MLP Model>=====
 
@@ -45,20 +45,21 @@ def main():
                              WeightDecay(coeffs=[0.00005, 0.00005, 0.00005])]),
                     termination_criteria = MonitorBased(channel_name='valid_y_misclass',
                                                         prop_decrease=0.50, N=10))
-    sgd.setup(model=mlp, dataset=train_set)
+    #sgd.setup(model=mlp, dataset=train_set)
     
     # =====<Extensions>=====
-    ext = [MomentumAdjustor(start=1, saturate=10, final_momentum=0.99),
-           MonitorBasedSaveBest(channel_name='valid_y_misclass',
-                                save_path='./best_mlp_model.pkl')]
+    ext = [MomentumAdjustor(start=1, saturate=10, final_momentum=0.99)]
     
     # =====<Create Training Object>=====
     save_path = './mlp_model.pkl'
     train_obj = Train(dataset=train_set, model=mlp, algorithms=sgd, 
-                      extensions=ext, save_path=save_path, save_freq=1)
-    train_obj.setup_extensions()
+                      extensions=ext, save_path=save_path, save_freq=10)
+    #train_obj.setup_extensions()
+    
+    train_obj.main_loop()
     
     # =====<Run the training>=====
+    '''
     while True:
         rval = train_obj.algorithm.train(train_set)
         assert rval is None
@@ -76,7 +77,7 @@ def main():
     
     if train_obj.save_freq > 0:
         train_obj.save()
-    
+    '''
     
 if __name__ == '__main__':
     os.environ['PYLEARN2_DATA_PATH'] = '/Users/zhenzhou/Desktop/pylearn2/data'
