@@ -4,7 +4,7 @@
 import pdb
 import os
 from pylearn2.datasets.mnist import MNIST
-from pylearn2.models.mlp import MLP, Softmax, RectifiedLinear
+from pylearn2.models.mlp import MLP, Softmax, RectifiedLinear, NoisyRELU
 from pylearn2.space import VectorSpace
 from pylearn2.costs.cost import SumOfCosts, MethodCost
 from pylearn2.costs.mlp import WeightDecay
@@ -12,47 +12,47 @@ from pylearn2.training_algorithms.sgd import SGD, MomentumAdjustor
 from pylearn2.termination_criteria import MonitorBased
 from pylearn2.train_extensions.best_params import MonitorBasedSaveBest
 from pylearn2.train import Train
-from pylearn2.datasets.svhn import SVHN
+from pylearn2.datasets.svhn import SVHN_On_Memory
 
 
 class StochasticLayer():
     def __init__(self):
         pass
 
-def main():
+def model1():
     #pdb.set_trace()
     # train set X has dim (60,000, 784), y has dim (60,000, 10)
-    train_set = SVHN(which_set='train')
+    train_set = SVHN_On_Memory(which_set='train')
     # test set X has dim (10,000, 784), y has dim (10,000, 10)
-    test_set = SVHN(which_set='test')
+    valid_set = SVHN_On_Memory(which_set='valid')
+    test_set = SVHN_On_Memory(which_set='test')
     
     # =====<Create the MLP Model>=====
 
-    h1_layer = RectifiedLinear(layer_name='h1', dim=100, irange=0.5)
+    h1_layer = RectifiedLinear(layer_name='h1', dim=500, sparse_init=15, max_col_norm=1)
     #print h1_layer.get_params()
-    h2_layer = RectifiedLinear(layer_name='h2', dim=100, sparse_init=15, max_col_norm=1)
-    y_layer = Softmax(layer_name='y', n_classes=train_set.y.shape[1], irange=0.5)
+    h2_layer = RectifiedLinear(layer_name='h2', dim=500, sparse_init=15, max_col_norm=1)
+    y_layer = Softmax(layer_name='y', n_classes=train_set.y.shape[1], irange=0.)
     
-    mlp = MLP(batch_size = 100,
-                input_space = VectorSpace(num_channels=1,dim=train_set.X.shape[1]),
+    mlp = MLP(batch_size = 64,
+                input_space = VectorSpace(dim=train_set.X.shape[1]),
                 layers = [h1_layer, h2_layer, y_layer])
     
     # =====<Create the SGD algorithm>=====
-    sgd = SGD(batch_size = 100, 
+    sgd = SGD(batch_size = 64, init_momentum = 0.1, 
                     learning_rate = 0.01, 
-                    monitoring_dataset = {'valid' : train_set, 'test' : test_set},
-                    cost = SumOfCosts(costs=[MethodCost('cost_from_X'), 
-                             WeightDecay(coeffs=[0.00005, 0.00005, 0.00005])]),
-                    termination_criteria = MonitorBased(channel_name='valid_y_misclass',
-                                                        prop_decrease=0.50, N=10))
+                    monitoring_dataset = {'valid' : valid_set, 'test' : test_set},
+                    cost = MethodCost('cost_from_X'),
+                    termination_criterion = MonitorBased(channel_name='valid_y_misclass',
+                                                        prop_decrease=0.001, N=50))
     #sgd.setup(model=mlp, dataset=train_set)
     
     # =====<Extensions>=====
-    ext = [MomentumAdjustor(start=1, saturate=10, final_momentum=0.99)]
+    ext = [MomentumAdjustor(start=1, saturate=10, final_momentum=0.9)]
     
     # =====<Create Training Object>=====
-    save_path = './mlp_model.pkl'
-    train_obj = Train(dataset=train_set, model=mlp, algorithms=sgd, 
+    save_path = './mlp_model3.pkl'
+    train_obj = Train(dataset=train_set, model=mlp, algorithm=sgd, 
                       extensions=ext, save_path=save_path, save_freq=10)
     #train_obj.setup_extensions()
     
@@ -78,7 +78,85 @@ def main():
     if train_obj.save_freq > 0:
         train_obj.save()
     '''
+
+def model2():
+    #pdb.set_trace()
+    # train set X has dim (60,000, 784), y has dim (60,000, 10)
+    train_set = MNIST(which_set='train', one_hot=True)
+    # test set X has dim (10,000, 784), y has dim (10,000, 10)
+    test_set = MNIST(which_set='test', one_hot=True)
     
+    # =====<Create the MLP Model>=====
+
+    h1_layer = RectifiedLinear(layer_name='h1', dim=1000, irange=0.5)
+    #print h1_layer.get_params()
+    h2_layer = RectifiedLinear(layer_name='h2', dim=1000, sparse_init=15, max_col_norm=1)
+    y_layer = Softmax(layer_name='y', n_classes=train_set.y.shape[1], irange=0.5)
+    
+    mlp = MLP(batch_size = 100,
+                input_space = VectorSpace(dim=train_set.X.shape[1]),
+                layers = [h1_layer, h2_layer, y_layer])
+    
+    # =====<Create the SGD algorithm>=====
+    sgd = SGD(batch_size = 100, init_momentum = 0.1, 
+                    learning_rate = 0.01, 
+                    monitoring_dataset = {'valid' : train_set, 'test' : test_set},
+                    cost = SumOfCosts(costs=[MethodCost('cost_from_X'), 
+                             WeightDecay(coeffs=[0.00005, 0.00005, 0.00005])]),
+                    termination_criterion = MonitorBased(channel_name='valid_y_misclass',
+                                                        prop_decrease=0.0001, N=5))
+    #sgd.setup(model=mlp, dataset=train_set)
+    
+    # =====<Extensions>=====
+    ext = [MomentumAdjustor(start=1, saturate=10, final_momentum=0.99)]
+    
+    # =====<Create Training Object>=====
+    save_path = './mlp_model2.pkl'
+    train_obj = Train(dataset=train_set, model=mlp, algorithm=sgd, 
+                      extensions=ext, save_path=save_path, save_freq=0)
+    #train_obj.setup_extensions()
+    
+    train_obj.main_loop()
+    
+def model3():
+    #pdb.set_trace()
+    # train set X has dim (60,000, 784), y has dim (60,000, 10)
+    train_set = SVHN_On_Memory(which_set='train')
+    # test set X has dim (10,000, 784), y has dim (10,000, 10)
+    test_set = SVHN_On_Memory(which_set='test')
+    
+    # =====<Create the MLP Model>=====
+
+    h1_layer = NoisyRELU(layer_name='h1', dim=500, threshold=5, sparse_init=15, max_col_norm=1)
+    #print h1_layer.get_params()
+    h2_layer = NoisyRELU(layer_name='h2', dim=500, threshold=15, sparse_init=15, max_col_norm=1)
+    y_layer = Softmax(layer_name='y', n_classes=train_set.y.shape[1], irange=0.5)
+    
+    mlp = MLP(batch_size = 64,
+                input_space = VectorSpace(dim=train_set.X.shape[1]),
+                layers = [h1_layer, h2_layer, y_layer])
+    
+    # =====<Create the SGD algorithm>=====
+    sgd = SGD(batch_size = 64, init_momentum = 0.1, 
+                    learning_rate = 0.01, 
+                    monitoring_dataset = {'valid' : train_set, 'test' : test_set},
+                    cost = MethodCost('cost_from_X'),
+                    termination_criterion = MonitorBased(channel_name='valid_y_misclass',
+                                                        prop_decrease=0.001, N=50))
+    #sgd.setup(model=mlp, dataset=train_set)
+    
+    # =====<Extensions>=====
+    ext = [MomentumAdjustor(start=1, saturate=10, final_momentum=0.9)]
+    
+    # =====<Create Training Object>=====
+    save_path = './mlp_model.pkl'
+    train_obj = Train(dataset=train_set, model=mlp, algorithm=sgd, 
+                      extensions=ext, save_path=save_path, save_freq=10)
+    #train_obj.setup_extensions()
+    
+    train_obj.main_loop()
+
 if __name__ == '__main__':
-    os.environ['PYLEARN2_DATA_PATH'] = '/Users/zhenzhou/Desktop/pylearn2/data'
-    main()
+    #os.environ['PYLEARN2_DATA_PATH'] = '/Users/zhenzhou/Desktop/pylearn2/data'
+    #model2()
+    model1()
