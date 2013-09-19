@@ -4,7 +4,7 @@
 import pdb
 import os
 from pylearn2.datasets.mnist import MNIST
-from pylearn2.models.mlp import MLP, Softmax, RectifiedLinear, NoisyRELU
+from pylearn2.models.mlp import MLP, Softmax, RectifiedLinear
 from pylearn2.space import VectorSpace
 from pylearn2.costs.cost import SumOfCosts, MethodCost
 from pylearn2.costs.mlp import WeightDecay
@@ -14,6 +14,8 @@ from pylearn2.train_extensions.best_params import MonitorBasedSaveBest
 from pylearn2.train import Train
 from pylearn2.datasets.svhn import SVHN_On_Memory
 
+from layers import NoisyRELU
+
 
 class StochasticLayer():
     def __init__(self):
@@ -22,24 +24,28 @@ class StochasticLayer():
 def model1():
     #pdb.set_trace()
     # train set X has dim (60,000, 784), y has dim (60,000, 10)
-    train_set = SVHN_On_Memory(which_set='train')
+    train_set = MNIST(which_set='train', one_hot=True)
     # test set X has dim (10,000, 784), y has dim (10,000, 10)
-    valid_set = SVHN_On_Memory(which_set='valid')
-    test_set = SVHN_On_Memory(which_set='test')
+    valid_set = MNIST(which_set='test', one_hot=True)
+    test_set = MNIST(which_set='test', one_hot=True)
+    
+    #import pdb
+    #pdb.set_trace()
+    #print train_set.X.shape[1]
     
     # =====<Create the MLP Model>=====
 
-    h1_layer = RectifiedLinear(layer_name='h1', dim=500, sparse_init=15, max_col_norm=1)
+    h1 = NoisyRELU(layer_name='h1', sparse_init=50, dim=100, max_col_norm=100)
     #print h1_layer.get_params()
-    h2_layer = RectifiedLinear(layer_name='h2', dim=500, sparse_init=15, max_col_norm=1)
-    y_layer = Softmax(layer_name='y', n_classes=train_set.y.shape[1], irange=0.)
+    #h2 = RectifiedLinear(layer_name='h2', dim=500, sparse_init=15, max_col_norm=1)
+    y_layer = Softmax(layer_name='y', n_classes=10, irange=0., max_col_norm=1)
     
-    mlp = MLP(batch_size = 64,
+    mlp = MLP(batch_size = 100,
                 input_space = VectorSpace(dim=train_set.X.shape[1]),
-                layers = [h1_layer, h2_layer, y_layer])
+                layers = [h1, y_layer])
     
     # =====<Create the SGD algorithm>=====
-    sgd = SGD(batch_size = 64, init_momentum = 0.1, 
+    sgd = SGD(init_momentum = 0.1, 
                     learning_rate = 0.01, 
                     monitoring_dataset = {'valid' : valid_set, 'test' : test_set},
                     cost = MethodCost('cost_from_X'),
@@ -56,6 +62,8 @@ def model1():
                       extensions=ext, save_path=save_path, save_freq=10)
     #train_obj.setup_extensions()
     
+    import pdb
+    pdb.set_trace()
     train_obj.main_loop()
     
     # =====<Run the training>=====
