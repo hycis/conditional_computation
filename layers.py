@@ -85,6 +85,8 @@ class NoisyRELU(Linear):
                 rval = b_value_for_one_neuron - (active_rate - self.desired_active_rate) * self.bias_factor
             else:
                 rval = b_value_for_one_neuron + (self.desired_active_rate - active_rate) * self.bias_factor
+            import pdb
+            pdb.set_trace()
             return rval
         
         assert b in updates
