@@ -85,17 +85,17 @@ class NoisyRELU(Linear):
                 rval = b_value_for_one_neuron - (active_rate - self.desired_active_rate) * self.bias_factor
             else:
                 rval = b_value_for_one_neuron + (self.desired_active_rate - active_rate) * self.bias_factor
-            import pdb
-            pdb.set_trace()
+            #import pdb
+            #pdb.set_trace()
             return rval
         
         assert b in updates
         
         updates_b = updates[b]
-        updates_b = theano.map(update_bias_elemwise, updates_b, self.active_rate)
-        import pdb
-        pdb.set_trace()
-        updates[b] = updates_b
+        updates[b] = theano.map(update_bias_elemwise, updates_b, self.active_rate)[0]
+        #import pdb
+        #pdb.set_trace()
+        #updates[b] = updates_b
             
         
         
