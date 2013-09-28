@@ -92,8 +92,10 @@ class NoisyRELU(Linear):
         assert b in updates
         
         updates_b = updates[b]
-        updates[b] = theano.map(update_bias_elemwise, updates_b, self.active_rate)
-        
+        updates_b = theano.map(update_bias_elemwise, updates_b, self.active_rate)
+        import pdb
+        pdb.set_trace()
+        updates[b] = updates_b
             
         
         
