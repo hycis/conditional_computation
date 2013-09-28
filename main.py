@@ -53,13 +53,13 @@ def model1():
     ext = [MomentumAdjustor(start=1, saturate=10, final_momentum=0.9)]
     
     # =====<Create Training Object>=====
-    save_path = './mlp_model3.pkl'
+    save_path = './mlp_model1.pkl'
     train_obj = Train(dataset=train_set, model=mlp, algorithm=sgd, 
                       extensions=ext, save_path=save_path, save_freq=10)
     #train_obj.setup_extensions()
     
-    #import pdb
-    #pdb.set_trace()
+    import pdb
+    pdb.set_trace()
     train_obj.main_loop()
     
     # =====<Run the training>=====

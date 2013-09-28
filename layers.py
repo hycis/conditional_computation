@@ -4,7 +4,7 @@ import theano.tensor as T
 from theano.compat.python2x import OrderedDict
 from theano.tensor.shared_randomstreams import RandomStreams
 from pylearn2.utils import sharedX
-from theano import config, scan
+import theano
 
 class My_MLP(MLP):
     def __init__(self, **kwargs):
@@ -47,7 +47,7 @@ class NoisyRELU(Linear):
         
         p = T.maximum(0., p)
         num_example = p.shape[1]
-        self.active_rate, updates = scan(fn=lambda example : T.gt(example,0).sum() * 1. / num_example,
+        self.active_rate, updates = theano.scan(fn=lambda example : T.gt(example,0).sum() * 1. / num_example,
                                      sequences = [p])
         #import pdb
         #pdb.set_trace()
@@ -80,13 +80,32 @@ class NoisyRELU(Linear):
                 desired_norms = T.clip(col_norms, 0, self.max_col_norm)
                 updates[W] = updated_W * desired_norms / (1e-7 + col_norms)
         
-        if T.gt(self.desired_active_rate, self.active_rate):
-            assert b in updates
-            updates[b] += (self.desired_active_rate - self.active_rate) * self.bias_factor
+        def update_bias_elemwise(b_value_for_one_neuron, active_rate):
+            if T.gt(active_rate, self.desired_active_rate):
+                rval = b_value_for_one_neuron - (active_rate - self.desired_active_rate) * self.bias_factor
+            else:
+                rval = b_value_for_one_neuron + (self.desired_active_rate - active_rate) * self.bias_factor
+            return rval
         
-        elif T.lt(self.desired_active_rate, self.active_rates):
-            assert b in updates
-            updates[b] -= (self.desired_active_rate - self.active_rate) * self.bias_factor
+        assert b in updates
+        
+        updates_b = updates[b]
+        updates[b] = theano.map(update_bias_elemwise, updates_b, self.active_rate)
+        
+            
+        
+        
+#         assert b in updates
+#         
+#         if T.gt(self.desired_active_rate, self.active_rate):
+#             assert b in updates
+#             values, updates = scan(lambda : {example, (self.desired_active_rate - example) * self.bias_factor \
+#                                              if T.gt(self.desired_active_rate, example) else })
+#             updates[b] += (self.desired_active_rate - self.active_rate) * self.bias_factor
+#         
+#         elif T.lt(self.desired_active_rate, self.active_rates):
+#             assert b in updates
+#             updates[b] -= (self.desired_active_rate - self.active_rate) * self.bias_factor
             
             
     def cost(self, *args, **kwargs):
@@ -141,18 +160,18 @@ class NoisyRELU(Linear):
          
         active_rate = []
         for i in xrange(self.dim):
-            active_rate.append(T.sum(T.neq(state[:][i], 0), dtype=config.floatX) / (state.shape[0]))
+            active_rate.append(T.sum(T.neq(state[:][i], 0), dtype=theano.config.floatX) / (state.shape[0]))
  
         max_active_rate = self.active_rate.max()
         min_active_rate = self.active_rate.min()
         mean_active_rate = self.active_rate.mean()
-        num_row = self.active_rate.shape[0]
-        num_col = self.active_rate.shape[1]
+        num_row = self.active_rate.shape[0] * 1.
+        #num_col = self.active_rate.shape[1] * 1.
         rval['===max_active_rate===='] = max_active_rate
         rval['===min_active_rate===='] = min_active_rate
         rval['===mean_active_rate===='] = mean_active_rate
         rval['===num_row_active_rate===='] = num_row
-        rval['===num_col_active_rate===='] = num_col
+        #rval['===num_col_active_rate===='] = num_col
         
         rval['active_rate_cal_1'] = self.active_rate[1]
         rval['active_rate_1'] = active_rate[1]
