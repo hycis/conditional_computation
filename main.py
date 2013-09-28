@@ -16,11 +16,6 @@ from pylearn2.datasets.svhn import SVHN_On_Memory
 
 from layers import NoisyRELU
 
-
-class StochasticLayer():
-    def __init__(self):
-        pass
-
 def model1():
     #pdb.set_trace()
     # train set X has dim (60,000, 784), y has dim (60,000, 10)
@@ -35,14 +30,15 @@ def model1():
     
     # =====<Create the MLP Model>=====
 
-    h1 = NoisyRELU(layer_name='h1', sparse_init=50, dim=100, max_col_norm=100)
+    h2_layer = NoisyRELU(layer_name='h1', sparse_init=50, dim=100, max_col_norm=100)
+    #h2_layer = RectifiedLinear(layer_name='h2', dim=100, sparse_init=15, max_col_norm=1)
     #print h1_layer.get_params()
     #h2 = RectifiedLinear(layer_name='h2', dim=500, sparse_init=15, max_col_norm=1)
     y_layer = Softmax(layer_name='y', n_classes=10, irange=0., max_col_norm=1)
     
     mlp = MLP(batch_size = 100,
                 input_space = VectorSpace(dim=train_set.X.shape[1]),
-                layers = [h1, y_layer])
+                layers = [h2_layer, y_layer])
     
     # =====<Create the SGD algorithm>=====
     sgd = SGD(init_momentum = 0.1, 
@@ -62,8 +58,8 @@ def model1():
                       extensions=ext, save_path=save_path, save_freq=10)
     #train_obj.setup_extensions()
     
-    import pdb
-    pdb.set_trace()
+    #import pdb
+    #pdb.set_trace()
     train_obj.main_loop()
     
     # =====<Run the training>=====
@@ -135,14 +131,15 @@ def model3():
     
     # =====<Create the MLP Model>=====
 
-    h1_layer = NoisyRELU(layer_name='h1', dim=500, threshold=5, sparse_init=15, max_col_norm=1)
+    h1_layer = NoisyRELU(layer_name='h1', dim=100, threshold=5, sparse_init=15, max_col_norm=1)
     #print h1_layer.get_params()
-    h2_layer = NoisyRELU(layer_name='h2', dim=500, threshold=15, sparse_init=15, max_col_norm=1)
+    #h2_layer = NoisyRELU(layer_name='h2', dim=100, threshold=15, sparse_init=15, max_col_norm=1)
+    
     y_layer = Softmax(layer_name='y', n_classes=train_set.y.shape[1], irange=0.5)
     
     mlp = MLP(batch_size = 64,
                 input_space = VectorSpace(dim=train_set.X.shape[1]),
-                layers = [h1_layer, h2_layer, y_layer])
+                layers = [h1_layer, y_layer])
     
     # =====<Create the SGD algorithm>=====
     sgd = SGD(batch_size = 64, init_momentum = 0.1, 
