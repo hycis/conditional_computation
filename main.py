@@ -58,8 +58,8 @@ def model1():
                       extensions=ext, save_path=save_path, save_freq=10)
     #train_obj.setup_extensions()
     
-    import pdb
-    pdb.set_trace()
+    #import pdb
+    #pdb.set_trace()
     train_obj.main_loop()
     
     # =====<Run the training>=====
