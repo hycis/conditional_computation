@@ -94,8 +94,8 @@ class NoisyRELU(Linear):
         assert b in updates
         
 #         updates_b = updates[b]
-        renormalize = (T.gt(self.desired_active_rate, self.active_rate) - 0.5) * 2
-        factor = renormalize * (self.desired_active_rate - self.active_rate) * self.bias_factor
+        renormalize = (T.gt(self.desired_active_rate, self.active_rate) * 1. - 0.5) * 2
+        factor = renormalize * T.abs_(self.desired_active_rate - self.active_rate) * self.bias_factor
         #import pdb
         #pdb.set_trace()
         updates[b] += factor
@@ -181,8 +181,8 @@ class NoisyRELU(Linear):
         #num_col = self.active_rate.shape[1] * 1.
         
         
-        renormalize = (T.gt(self.desired_active_rate, self.active_rate) - 0.5) * 2
-        factor = renormalize * (self.desired_active_rate - self.active_rate) * self.bias_factor
+        renormalize = (T.gt(self.desired_active_rate, self.active_rate) * 1. - 0.5) * 2
+        factor = renormalize * T.abs_(self.desired_active_rate - self.active_rate) * self.bias_factor
         
         rval['==factor mean=='] = T.mean(factor)
         rval['==factor shape=='] = factor.shape[0] * 1.
