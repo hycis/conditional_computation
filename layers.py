@@ -17,7 +17,7 @@ class My_MLP(MLP):
 
 class NoisyRELU(Linear):
 
-    def __init__(self, noise_factor=1, desired_active_rate=0.1, bias_factor=0.0001, **kwargs):
+    def __init__(self, noise_factor=1, desired_active_rate=0.1, bias_factor=0.01, **kwargs):
         super(NoisyRELU, self).__init__(**kwargs)
         self.noise_factor = noise_factor
         self.bias_factor = bias_factor
@@ -189,7 +189,9 @@ class NoisyRELU(Linear):
         rval['active_rate_1'] = active_rate[1]
         rval['active_rate_15'] = active_rate[15]
         rval['active_rate_30'] = active_rate[15]
- 
+        rval['active_rate_mean'] = active_rate.mean()
+        rval['active_rate_max'] = active_rate.max()
+        rval['active_rate_min'] = active_rate.min()
  
         rval['state_shape_0'] = state.shape[0] * 1.
         rval['state_shape_1'] = state.shape[1] * 1.
