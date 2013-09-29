@@ -185,12 +185,13 @@ class NoisyRELU(Linear):
         rval['===num_row_active_rate===='] = num_row
         #rval['===num_col_active_rate===='] = num_col
         
+        
         rval['active_rate_cal_1'] = self.active_rate[1]
         rval['active_rate_1'] = active_rate[1]
         rval['active_rate_15'] = active_rate[15]
         rval['active_rate_30'] = active_rate[30]
-        rval['active_rate_max'] = T.max(active_rate, dtype=theano.config.floatX)
-        rval['active_rate_min'] = T.min(active_rate, dtype=theano.config.floatX)
+        rval['active_rate_max'] = T.max(np.asarray(active_rate))
+        rval['active_rate_min'] = T.min(np.asarray(active_rate))
         rval['active_rate_mean'] = T.mean(active_rate)
  
         rval['state_shape_0'] = state.shape[0] * 1.
