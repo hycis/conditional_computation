@@ -179,6 +179,14 @@ class NoisyRELU(Linear):
         mean_active_rate = self.active_rate.mean()
         num_row = self.active_rate.shape[0] * 1.
         #num_col = self.active_rate.shape[1] * 1.
+        
+        
+        renormalize = (T.gt(self.desired_active_rate, self.active_rate) - 0.5) * 2
+        factor = renormalize * (self.desired_active_rate - self.active_rate) * self.bias_factor
+        
+        rval['==factor mean=='] = T.mean(factor)
+        
+        
         rval['===max_active_rate===='] = max_active_rate
         rval['===min_active_rate===='] = min_active_rate
         rval['===mean_active_rate===='] = mean_active_rate
