@@ -185,6 +185,9 @@ class NoisyRELU(Linear):
         factor = renormalize * (self.desired_active_rate - self.active_rate) * self.bias_factor
         
         rval['==factor mean=='] = T.mean(factor)
+        rval['==factor shape=='] = factor.shape[0]
+        rval['==factor max=='] = T.max(factor)
+        rval['==factor min=='] = T.min(factor)
         
         
         rval['===max_active_rate===='] = max_active_rate
