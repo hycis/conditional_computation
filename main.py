@@ -30,7 +30,7 @@ def model1():
     
     # =====<Create the MLP Model>=====
 
-    h2_layer = NoisyRELU(layer_name='h1', sparse_init=50, dim=500, max_col_norm=10)
+    h2_layer = NoisyRELU(layer_name='h1', sparse_init=50, dim=100, max_col_norm=10)
     #h2_layer = RectifiedLinear(layer_name='h2', dim=100, sparse_init=15, max_col_norm=1)
     #print h1_layer.get_params()
     #h2 = RectifiedLinear(layer_name='h2', dim=500, sparse_init=15, max_col_norm=1)
