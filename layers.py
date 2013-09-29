@@ -38,7 +38,7 @@ class NoisyRELU(Linear):
         un = rng.uniform(size=(self.mlp.batch_size, self.dim), low=0., high=1.)
         #print '=====frop===='
         #print '=======statebelow=========', 
-        #self.s = state_below.shape
+        self.s = state_below.shape
         
         
         
@@ -94,7 +94,7 @@ class NoisyRELU(Linear):
         assert b in updates
         
 #         updates_b = updates[b]
-        renormalize = (T.gt(self.desired_active_rate, self.active_rate) * 1. - 0.5) * 2
+        renormalize = (T.gt(self.desired_active_rate, self.active_rate) - 0.5) * 2
         factor = renormalize * T.abs_(self.desired_active_rate - self.active_rate) * self.bias_factor
         #import pdb
         #pdb.set_trace()
@@ -181,7 +181,7 @@ class NoisyRELU(Linear):
         #num_col = self.active_rate.shape[1] * 1.
         
         
-        renormalize = (T.gt(self.desired_active_rate, self.active_rate) * 1. - 0.5) * 2
+        renormalize = (T.gt(self.desired_active_rate, self.active_rate) - 0.5) * 2
         factor = renormalize * T.abs_(self.desired_active_rate - self.active_rate) * self.bias_factor
         
         rval['==factor mean=='] = T.mean(factor)
