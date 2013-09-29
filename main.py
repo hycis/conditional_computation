@@ -36,7 +36,7 @@ def model1():
     #h2 = RectifiedLinear(layer_name='h2', dim=500, sparse_init=15, max_col_norm=1)
     y_layer = Softmax(layer_name='y', n_classes=10, irange=0., max_col_norm=1)
     
-    mlp = MLP(batch_size = 100,
+    mlp = MLP(batch_size = 120,
                 input_space = VectorSpace(dim=train_set.X.shape[1]),
                 layers = [h2_layer, y_layer])
     
