@@ -191,7 +191,7 @@ class NoisyRELU(Linear):
         rval['active_rate_30'] = active_rate[30]
         rval['active_rate_40'] = active_rate[40]
         rval['active_rate_45'] = active_rate[45]
-        rval['active_rate_mean'] = active_rate.sum() / self.dim
+        rval['active_rate_mean'] = T.sum(active_rate) / self.dim
  
         rval['state_shape_0'] = state.shape[0] * 1.
         rval['state_shape_1'] = state.shape[1] * 1.
