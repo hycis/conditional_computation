@@ -29,15 +29,15 @@ def model1():
     #print train_set.X.shape[1]
     
     # =====<Create the MLP Model>=====
-    h2_layer_dim = 1000
-    h2_layer = NoisyRELU(layer_name='h1', sparse_init=50, dim=h2_layer_dim, max_col_norm=10)
+
+    h2_layer = NoisyRELU(layer_name='h1', sparse_init=50, dim=1000, max_col_norm=10)
     #h2_layer = RectifiedLinear(layer_name='h2', dim=100, sparse_init=15, max_col_norm=1)
     #print h1_layer.get_params()
     #h2 = RectifiedLinear(layer_name='h2', dim=500, sparse_init=15, max_col_norm=1)
     y_layer = Softmax(layer_name='y', n_classes=10, irange=0., max_col_norm=1)
     
     mlp = MLP(batch_size = 100,
-                input_space = VectorSpace(dim=h2_layer_dim),
+                input_space = VectorSpace(dim=train_set.X.shape[0]),
                 layers = [h2_layer, y_layer])
     
     # =====<Create the SGD algorithm>=====
