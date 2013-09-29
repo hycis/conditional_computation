@@ -34,8 +34,8 @@ class NoisyRELU(Linear):
         #print '=====self.dim====', self.dim
         #import pdb
         #pdb.set_trace()
-        #un = rng.uniform(size=(self.mlp.batch_size, self.dim), low=0., high=1.)
-        un = rng.uniform(low=0., high=1., ndim=2)
+        un = rng.uniform(size=(self.mlp.batch_size, self.dim), low=0., high=1.)
+        #un = rng.uniform(size=(self.ndim),low=0., high=1., ndim=2)
 
         #print '=====frop===='
         #print '=======statebelow=========', 
