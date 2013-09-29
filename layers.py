@@ -17,7 +17,7 @@ class My_MLP(MLP):
 
 class NoisyRELU(Linear):
 
-    def __init__(self, noise_factor=1, desired_active_rate=0.1, bias_factor=0.1, **kwargs):
+    def __init__(self, noise_factor=1, desired_active_rate=0.1, bias_factor=0.0001, **kwargs):
         super(NoisyRELU, self).__init__(**kwargs)
         self.noise_factor = noise_factor
         self.bias_factor = bias_factor
