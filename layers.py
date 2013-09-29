@@ -96,6 +96,8 @@ class NoisyRELU(Linear):
 #         updates_b = updates[b]
         renormalize = (T.gt(self.desired_active_rate, self.active_rate) - 0.5) * 2
         factor = renormalize * (self.active_rate - self.desired_active_rate) * self.bias_factor
+        import pdb
+        pdb.set_trace()
         updates[b] += factor
         
         #updates[b] = theano.scan(update_bias_elemwise, sequences=[updates_b, self.active_rate])[0]
