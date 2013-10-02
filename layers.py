@@ -145,16 +145,16 @@ class NoisyRELU(Linear):
 #         max_noise = self.noise.max()
 #         min_noise = self.noise.min()
 #         mean_noise = self.noise.mean()
-        max_active_rate = self.active_rate.max()
-        min_active_rate = self.active_rate.min()
-        mean_active_rate = self.active_rate.mean()
+#         max_active_rate = self.active_rate.max()
+#         min_active_rate = self.active_rate.min()
+#         mean_active_rate = self.active_rate.mean()
          
         print 'get_monitoring ===== '
          
         return OrderedDict([
-                            ('=====max_active_rate', max_active_rate),
-                            ('=====mean_active_rate', mean_active_rate),
-                            ('=====min_active_rate', min_active_rate),
+#                             ('=====max_active_rate', max_active_rate),
+#                             ('=====mean_active_rate', mean_active_rate),
+#                             ('=====min_active_rate', min_active_rate),
 #                              ('=====max_noise=====', max_noise),
 #                              ('=====mean_noise=====', mean_noise),
 #                              ('=====min_noise=====', min_noise),
@@ -182,9 +182,9 @@ class NoisyRELU(Linear):
 #         for i in xrange(self.dim):
 #             active_rate.append(T.sum(T.neq(state[:][i], 0), dtype=theano.config.floatX) / (state.shape[0]))
 #  
-#         max_active_rate = self.active_rate.max()
-#         min_active_rate = self.active_rate.min()
-#         mean_active_rate = self.active_rate.mean()
+        max_active_rate = self.active_rate.max()
+        min_active_rate = self.active_rate.min()
+        mean_active_rate = self.active_rate.mean()
 #         num_row = self.active_rate.shape[0] * 1.
         #num_col = self.active_rate.shape[1] * 1.
         
@@ -198,9 +198,9 @@ class NoisyRELU(Linear):
 #         rval['==factor min=='] = T.min(factor)
 #         
 #         
-#         rval['===max_active_rate===='] = max_active_rate
-#         rval['===min_active_rate===='] = min_active_rate
-#         rval['===mean_active_rate===='] = mean_active_rate
+        rval['===max_active_rate===='] = max_active_rate
+        rval['===min_active_rate===='] = min_active_rate
+        rval['===mean_active_rate===='] = mean_active_rate
 #         rval['===num_row_active_rate===='] = num_row
 #         #rval['===num_col_active_rate===='] = num_col
 #         
