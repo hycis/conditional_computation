@@ -34,6 +34,9 @@ class NoisyRELU(Linear):
         #print '=====self.dim====', self.dim
         #import pdb
         #pdb.set_trace()
+        size=theano.tensor.as_tensor_variable((state_below.shape[1], self.dim))
+        rdm_num = rng.uniform(size=size, low=0., high=1.)
+        
         un = rng.uniform(size=(state_below.shape[0], self.dim), low=0., high=1.)
         #un = rng.uniform(size=(self.ndim),low=0., high=1., ndim=2)
 
