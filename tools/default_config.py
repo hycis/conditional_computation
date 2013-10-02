@@ -61,19 +61,19 @@ model_config = DD({
 
             # Channel and dataset monitoring
             # mca : mean classification average of a minibatch
-            'channel_array'                 : ['mca0'],
-            # valid or test
+            #'channel_array'                 : ['mca0'],
+            # valid or test or both
             'monitoring_dataset'           : ['test', 'valid'],
 
             'random_seed'                   : 256571,
-            'batch_size'                    : ((40, 80), int),
+            'batch_size'                    : ((100, 200), int),
             'learning_rate'                 : ((1e-5, 0.01), float),
             'init_momentum'                 : ((0.5, 0.99), float),
 
             # Cost
             'train_iteration_mode'          : 'random_uniform',
             # fun1 or hint1 works with output1 layer set as fun1 or hint1
-            'cost_array'                    : ['fun1'],
+            #'cost_array'                    : ['fun1'],
 
             # Momentum and exponential decay
             'ext_array'                     : DD({
@@ -121,25 +121,37 @@ model_config = DD({
                 # tanh, sigmoid, rectifiedlinear, softmax
 
                 # First hidden layer
+#                 'hidden1' : DD({
+#                     'layer_class'           : 'tanh',
+#                     #'dim'                   : ((100, 2000), int),
+#                     'dim'                   : ((200, 1000), int),
+#                     'max_col_norm'          : ((0.1, 8.), float)
+#                     #'weight_decay'          : ((0.1, 7.), float),
+#                     #'sparse_init'           : 15
+#                 }),
+
+
+                #First hidden layer
                 'hidden1' : DD({
-                    'layer_class'           : 'tanh',
-                    #'dim'                   : ((100, 2000), int),
-                    'dim'                   : ((200, 1000), int),
-                    'max_col_norm'          : ((0.1, 8.), float),
-                    'weight_decay'          : ((0.1, 7.), float),
-                    #'sparse_init'           : 15
-                }),
+                    'layer_class'           : 'noisyRELU',
+                    'dim'                   : ((500, 1000), int),
+                    'max_col_norm'          : ((0.1, 10.), float),
+                    'noise_factor'          : ((1., 10.), float),
+                    'adjust_bias_factor'   : ((1., 10.), float),
+                    'desired_active_rate'   : ((0.1, 0.4), float)
+                    }),
 
                 #Second hidden layer
                 'hidden2' : DD({
                     'layer_class'           : 'tanh',
                     #'dim'                   : ((100, 2000), int),
                     'dim'                   : ((200, 1000), int),
-                    'max_col_norm'          : ((0.1, 5.), float),
-                    'weight_decay'          : ((1., 9.), float),
+                    'max_col_norm'          : ((0.1, 5.), float)
+                    #'weight_decay'          : ((1., 9.), float),
 
                     #'sparse_init'           : 15
                 }),
+
 
                 # Last (output) layer
                 # The fun model only takes 1 output.

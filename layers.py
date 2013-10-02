@@ -6,70 +6,34 @@ from theano.tensor.shared_randomstreams import RandomStreams
 from pylearn2.utils import sharedX
 import theano
 
-class My_MLP(MLP):
-    def __init__(self, **kwargs):
-        super(My_MLP, self).__init__(**kwargs)
-    
-    def censor_updates_inputs(self, updates, theano_args):
-        for layer in self.layers:
-            layer.censor_updates_inputs(self, updates, theano_args)
-
-
 class NoisyRELU(Linear):
 
-    def __init__(self, noise_factor=1, desired_active_rate=0.1, bias_factor=1, **kwargs):
+    def __init__(self, noise_factor=1, desired_active_rate=0.1, adjust_bias_factor=1, **kwargs):
         super(NoisyRELU, self).__init__(**kwargs)
         self.noise_factor = noise_factor
-        self.bias_factor = bias_factor
-        #self.activation_threshold = T.matrix(dtype=config.floatX)
+        self.adjust_bias_factor = adjust_bias_factor
         self.desired_active_rate = desired_active_rate
-        #self.active_rate = T.vector()
 
 
     def fprop(self, state_below):
         print "======fprop====="
         
-        #noise = sharedX(np.zeros(self.dim))
         rng = RandomStreams(seed=234)
-        #print '=====self.dim====', self.dim
-        #import pdb
-        #pdb.set_trace()
+
         size=theano.tensor.as_tensor_variable((state_below.shape[0], self.dim))
         un = rng.uniform(size=size, low=0., high=1.)
-        
-        #un = rng.uniform(size=(self.ndim),low=0., high=1., ndim=2)
-
-        #print '=====frop===='
-        #print '=======statebelow=========', 
-        #self.s = state_below.shape[0]
-        
-        
-        
         self.noise = T.log(un/(1-un))
         p = self._linear_part(state_below) + self.noise * self.noise_factor
-        
         p = T.maximum(0., p)
-        
-        #p.shape is (batch_size * self.dim)
-        num_example = p.shape[0] 
-        #shuffled_p.shape is (self.dim * batch_size)
-        #shuffled_p = p.dimshuffle((1,0))
-        
-        self.active_rate = T.gt(p, 0).sum(axis=0, dtype=theano.config.floatX) / num_example
-        
-        
-        #self.active_rate, updates = theano.scan(fn=lambda example : T.gt(example,0).sum() * 1. / num_example,
-         #                            sequences = [shuffled_p])
-        #import pdb
-        #pdb.set_trace()
+        batch_size = p.shape[0] 
+        self.active_rate = T.gt(p, 0).sum(axis=0, dtype=theano.config.floatX) / batch_size
+
         return p
         
     
     def censor_updates(self, updates):
         print "====censor_updates====="
-        
-        #import pdb
-        #pdb.set_trace()
+
         W, b = self.get_params()
 
         if self.mask_weights is not None:
@@ -91,46 +55,12 @@ class NoisyRELU(Linear):
                 desired_norms = T.clip(col_norms, 0, self.max_col_norm)
                 updates[W] = updated_W * desired_norms / (1e-7 + col_norms)
         
-        
-        
-#         def update_bias_elemwise(b_value_for_one_neuron, active_rate):
-#             if T.gt(active_rate, self.desired_active_rate):
-#                 rval = b_value_for_one_neuron - (active_rate - self.desired_active_rate) * self.bias_factor
-#             else:
-#                 rval = b_value_for_one_neuron + (self.desired_active_rate - active_rate) * self.bias_factor
-#             #import pdb
-#             #pdb.set_trace()
-#             return rval
-        
         assert b in updates
         
-#         updates_b = updates[b]
         renormalize = (T.gt(self.desired_active_rate, self.active_rate) - 0.5) * 2
-        factor = renormalize * T.abs_(self.desired_active_rate - self.active_rate) * self.bias_factor
-        #import pdb
-        #pdb.set_trace()
+        factor = renormalize * T.abs_(self.desired_active_rate - self.active_rate) * self.adjust_bias_factor
         updates[b] += factor
-        
-        #updates[b] = theano.scan(update_bias_elemwise, sequences=[updates_b, self.active_rate])[0]
-        #import pdb
-        #pdb.set_trace()
-        #updates[b] = updates_b
-            
-        
-        
-#         assert b in updates
-#         
-#         if T.gt(self.desired_active_rate, self.active_rate):
-#             assert b in updates
-#             values, updates = scan(lambda : {example, (self.desired_active_rate - example) * self.bias_factor \
-#                                              if T.gt(self.desired_active_rate, example) else })
-#             updates[b] += (self.desired_active_rate - self.active_rate) * self.bias_factor
-#         
-#         elif T.lt(self.desired_active_rate, self.active_rates):
-#             assert b in updates
-#             updates[b] -= (self.desired_active_rate - self.active_rate) * self.bias_factor
-            
-            
+                   
     def cost(self, *args, **kwargs):
         raise NotImplementedError()
      
@@ -144,13 +74,6 @@ class NoisyRELU(Linear):
  
         row_norms = T.sqrt(sq_W.sum(axis=1))
         col_norms = T.sqrt(sq_W.sum(axis=0))
-         
-#         max_noise = self.noise.max()
-#         min_noise = self.noise.min()
-#         mean_noise = self.noise.mean()
-#         max_active_rate = self.active_rate.max()
-#         min_active_rate = self.active_rate.min()
-#         mean_active_rate = self.active_rate.mean()
          
         print 'get_monitoring ===== '
          

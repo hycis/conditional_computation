@@ -38,6 +38,9 @@ from pylearn2.train_extensions.best_params import MonitorBasedSaveBest
 from pylearn2.datasets.dense_design_matrix import DenseDesignMatrix
 from pylearn2.datasets import preprocessing as pp
 
+from layers import NoisyRELU
+
+
 from pylearn2_objects import *
 #from load_model import compute_nll
 
@@ -263,6 +266,24 @@ class HPS:
                 init_bias_target_marginals=layer.init_bias, W_lr_scale=layer.W_lr_scale,
                 b_lr_scale=layer.b_lr_scale, max_col_norm=layer.max_col_norm,
                 max_row_norm=layer.max_row_norm)
+        
+    def get_layer_noisyRELU(self, layer):
+        
+        return NoisyRELU(
+                        dim=layer.dim,
+                        layer_name=layer.layer_name,
+                        irange=layer.irange,
+                        sparse_init=layer.sparse_init,
+                        W_lr_scale=layer.W_lr_scale,
+                        b_lr_scale=layer.b_lr_scale,
+                        mask_weights = None,
+                        max_row_norm=layer.max_row_norm,
+                        max_col_norm=layer.max_col_norm,
+                        use_bias=True,
+                        noise_factor=layer.noise_factor,
+                        desired_active_rate=layer.desired_active_rate,
+                        adjust_bias_factor=layer.adjust_bias_factor
+                        )
 
     def setup_monitor(self):
         if self.topo_view:
@@ -311,14 +332,13 @@ class HPS:
         termination_criterion = self.get_terminations()
         monitoring_dataset = {}
         for dataset_id in self.state.monitoring_dataset:
-	    if dataset_id == 'test' and self.test_ddm is not None:
-		monitoring_dataset['test'] = self.test_ddm
-	    elif dataset_id == 'valid' and self.valid_ddm is not None:
-		monitoring_dataset['valid'] = self.valid_ddm
-	    else:
-		monitoring_dataset = None
-		
-        
+            if dataset_id == 'test' and self.test_ddm is not None:
+                monitoring_dataset['test'] = self.test_ddm
+            elif dataset_id == 'valid' and self.valid_ddm is not None:
+                monitoring_dataset['valid'] = self.valid_ddm
+            else:
+                monitoring_dataset = None
+            
         return SGD( learning_rate=self.state.learning_rate, cost=cost,
                     batch_size=self.state.batch_size,
                     batches_per_iter=num_train_batch,
