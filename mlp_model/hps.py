@@ -331,6 +331,8 @@ class HPS:
         print "num training batches:", num_train_batch
 
         termination_criterion = self.get_terminations()
+        import pdb
+        pdb.set_trace()
         monitoring_dataset = {}
         for dataset_id in self.state.monitoring_dataset:
             if dataset_id == 'test' and self.test_ddm is not None:
