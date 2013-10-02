@@ -142,9 +142,9 @@ class NoisyRELU(Linear):
         row_norms = T.sqrt(sq_W.sum(axis=1))
         col_norms = T.sqrt(sq_W.sum(axis=0))
          
-        max_noise = self.noise.max()
-        min_noise = self.noise.min()
-        mean_noise = self.noise.mean()
+#         max_noise = self.noise.max()
+#         min_noise = self.noise.min()
+#         mean_noise = self.noise.mean()
         max_active_rate = self.active_rate.max()
         min_active_rate = self.active_rate.min()
         mean_active_rate = self.active_rate.mean()
@@ -155,9 +155,9 @@ class NoisyRELU(Linear):
                             ('=====max_active_rate', max_active_rate),
                             ('=====mean_active_rate', mean_active_rate),
                             ('=====min_active_rate', min_active_rate),
-                             ('=====max_noise=====', max_noise),
-                             ('=====mean_noise=====', mean_noise),
-                             ('=====min_noise=====', min_noise),
+#                              ('=====max_noise=====', max_noise),
+#                              ('=====mean_noise=====', mean_noise),
+#                              ('=====min_noise=====', min_noise),
 #                             ('w_shape_0', W.shape[0] * 1.),
 #                             ('w_shape_1', W.shape[1] * 1.),
                             ('row_norms_min'  , row_norms.min()),
