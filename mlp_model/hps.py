@@ -324,7 +324,7 @@ class HPS:
 
     def get_train_sgd(self):
         # cost
-        cost = self.get_costs()
+        #cost = self.get_costs()
 
         num_train_batch = (self.ntrain/self.batch_size)
         print "num training batches:", num_train_batch
@@ -339,7 +339,7 @@ class HPS:
             else:
                 monitoring_dataset = None
             
-        return SGD( learning_rate=self.state.learning_rate, cost=cost,
+        return SGD( learning_rate=self.state.learning_rate,
                     batch_size=self.state.batch_size,
                     batches_per_iter=num_train_batch,
                     monitoring_dataset=monitoring_dataset,
