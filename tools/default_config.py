@@ -134,7 +134,7 @@ model_config = DD({
                 #First hidden layer
                 'hidden1' : DD({
                     'layer_class'           : 'noisyRELU',
-                    'sparse_init'           : 15,
+                    #'sparse_init'           : 15,
                     'dim'                   : ((500, 1000), int),
                     'max_col_norm'          : ((0.1, 10.), float),
                     'noise_factor'          : ((1., 10.), float),
@@ -150,7 +150,7 @@ model_config = DD({
                     'max_col_norm'          : ((0.1, 5.), float),
                     #'weight_decay'          : ((1., 9.), float),
 
-                    #'sparse_init'           : 15
+                    'sparse_init'           : 15
                 }),
 
 
