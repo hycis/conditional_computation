@@ -55,7 +55,7 @@ class NoisyRELU(Linear):
         #shuffled_p.shape is (self.dim * batch_size)
         shuffled_p = p.dimshuffle((1,0))
         
-        self.active_rate = T.gt(shuffled_p, 0).sum(axis=1) / num_example
+        self.active_rate = T.gt(shuffled_p, 0).sum(axis=1, dtype=theano.config.floatX) / num_example
         
         
         #self.active_rate, updates = theano.scan(fn=lambda example : T.gt(example,0).sum() * 1. / num_example,
