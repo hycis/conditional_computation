@@ -34,7 +34,7 @@ class NoisyRELU(Linear):
         #print '=====self.dim====', self.dim
         #import pdb
         #pdb.set_trace()
-        un = rng.uniform(size=(self.mlp.batch_size, self.dim), low=0., high=1.)
+        un = rng.uniform(size=(state_below.shape[0], self.dim), low=0., high=1.)
         #un = rng.uniform(size=(self.ndim),low=0., high=1., ndim=2)
 
         #print '=====frop===='
@@ -47,9 +47,14 @@ class NoisyRELU(Linear):
         p = self._linear_part(state_below) + self.noise * self.noise_factor
         
         p = T.maximum(0., p)
-        num_example = p.shape[1]
+        
+        #p.shape is (batch_size * self.dim)
+        num_example = p.shape[0] 
+        #shuffled_p.shape is (self.dim * batch_size)
+        shuffled_p = p.dimshuffle((1,0))
+        
         self.active_rate, updates = theano.scan(fn=lambda example : T.gt(example,0).sum() * 1. / num_example,
-                                     sequences = [p])
+                                     sequences = [shuffled_p])
         #import pdb
         #pdb.set_trace()
         return p
@@ -135,12 +140,12 @@ class NoisyRELU(Linear):
         row_norms = T.sqrt(sq_W.sum(axis=1))
         col_norms = T.sqrt(sq_W.sum(axis=0))
          
-        max_noise = self.noise.max()
-        min_noise = self.noise.min()
-        mean_noise = self.noise.mean()
-        max_active_rate = self.active_rate.max()
-        min_active_rate = self.active_rate.min()
-        mean_active_rate = self.active_rate.mean()
+#         max_noise = self.noise.max()
+#         min_noise = self.noise.min()
+#         mean_noise = self.noise.mean()
+#         max_active_rate = self.active_rate.max()
+#         min_active_rate = self.active_rate.min()
+#         mean_active_rate = self.active_rate.mean()
          
         print 'get_monitoring ===== '
          
@@ -148,11 +153,11 @@ class NoisyRELU(Linear):
                             #('=====max_active_rate', max_active_rate),
                             #('=====mean_active_rate', mean_active_rate),
                             #('=====min_active_rate', min_active_rate),
-                            ('=====max_noise=====', max_noise),
-                            ('=====mean_noise=====', mean_noise),
-                            ('=====min_noise=====', min_noise),
-                            ('w_shape_0', W.shape[0] * 1.),
-                            ('w_shape_1', W.shape[1] * 1.),
+#                             ('=====max_noise=====', max_noise),
+#                             ('=====mean_noise=====', mean_noise),
+#                             ('=====min_noise=====', min_noise),
+#                             ('w_shape_0', W.shape[0] * 1.),
+#                             ('w_shape_1', W.shape[1] * 1.),
                             ('row_norms_min'  , row_norms.min()),
                             ('row_norms_mean' , row_norms.mean()),
                             ('row_norms_max'  , row_norms.max()),
@@ -171,44 +176,44 @@ class NoisyRELU(Linear):
         mn = state.min(axis=0)
         rg = mx - mn
          
-        active_rate = []
-        for i in xrange(self.dim):
-            active_rate.append(T.sum(T.neq(state[:][i], 0), dtype=theano.config.floatX) / (state.shape[0]))
- 
-        max_active_rate = self.active_rate.max()
-        min_active_rate = self.active_rate.min()
-        mean_active_rate = self.active_rate.mean()
-        num_row = self.active_rate.shape[0] * 1.
+#         active_rate = []
+#         for i in xrange(self.dim):
+#             active_rate.append(T.sum(T.neq(state[:][i], 0), dtype=theano.config.floatX) / (state.shape[0]))
+#  
+#         max_active_rate = self.active_rate.max()
+#         min_active_rate = self.active_rate.min()
+#         mean_active_rate = self.active_rate.mean()
+#         num_row = self.active_rate.shape[0] * 1.
         #num_col = self.active_rate.shape[1] * 1.
         
         
-        renormalize = (T.gt(self.desired_active_rate, self.active_rate) - 0.5) * 2
-        factor = renormalize * T.abs_(self.desired_active_rate - self.active_rate) * self.bias_factor
-        
-        rval['==factor mean=='] = T.mean(factor)
-        rval['==factor shape=='] = factor.shape[0] * 1.
-        rval['==factor max=='] = T.max(factor)
-        rval['==factor min=='] = T.min(factor)
-        
-        
-        rval['===max_active_rate===='] = max_active_rate
-        rval['===min_active_rate===='] = min_active_rate
-        rval['===mean_active_rate===='] = mean_active_rate
-        rval['===num_row_active_rate===='] = num_row
-        #rval['===num_col_active_rate===='] = num_col
-        
-        
-        rval['active_rate_cal_1'] = self.active_rate[1]
-        rval['active_rate_1'] = active_rate[1]
-        rval['active_rate_15'] = active_rate[15]
-        rval['active_rate_30'] = active_rate[30]
-        rval['active_rate_45'] = active_rate[45]
-        rval['active_rate_50'] = active_rate[50]
-        rval['active_rate_mean'] = T.sum(active_rate) / self.dim
- 
-        rval['state_shape_0'] = state.shape[0] * 1.
-        rval['state_shape_1'] = state.shape[1] * 1.
-         
+#         renormalize = (T.gt(self.desired_active_rate, self.active_rate) - 0.5) * 2
+#         factor = renormalize * T.abs_(self.desired_active_rate - self.active_rate) * self.bias_factor
+#         
+#         rval['==factor mean=='] = T.mean(factor)
+#         rval['==factor shape=='] = factor.shape[0] * 1.
+#         rval['==factor max=='] = T.max(factor)
+#         rval['==factor min=='] = T.min(factor)
+#         
+#         
+#         rval['===max_active_rate===='] = max_active_rate
+#         rval['===min_active_rate===='] = min_active_rate
+#         rval['===mean_active_rate===='] = mean_active_rate
+#         rval['===num_row_active_rate===='] = num_row
+#         #rval['===num_col_active_rate===='] = num_col
+#         
+#         
+#         rval['active_rate_cal_1'] = self.active_rate[1]
+#         rval['active_rate_1'] = active_rate[1]
+#         rval['active_rate_15'] = active_rate[15]
+#         rval['active_rate_30'] = active_rate[30]
+#         rval['active_rate_45'] = active_rate[45]
+#         rval['active_rate_50'] = active_rate[50]
+#         rval['active_rate_mean'] = T.sum(active_rate) / self.dim
+#  
+#         rval['state_shape_0'] = state.shape[0] * 1.
+#         rval['state_shape_1'] = state.shape[1] * 1.
+#          
         #self.noise -= 10
          
         #rval['state_shape[1]'] = float(state.shape[1])

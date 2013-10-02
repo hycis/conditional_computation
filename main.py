@@ -30,13 +30,13 @@ def model1():
     
     # =====<Create the MLP Model>=====
 
-    h2_layer = NoisyRELU(layer_name='h1', sparse_init=50, dim=200, max_col_norm=10)
+    h2_layer = NoisyRELU(layer_name='h1', sparse_init=15, dim=100, max_col_norm=10)
     #h2_layer = RectifiedLinear(layer_name='h2', dim=100, sparse_init=15, max_col_norm=1)
     #print h1_layer.get_params()
     #h2 = RectifiedLinear(layer_name='h2', dim=500, sparse_init=15, max_col_norm=1)
     y_layer = Softmax(layer_name='y', n_classes=10, irange=0., max_col_norm=1)
     
-    mlp = MLP(batch_size = 100,
+    mlp = MLP(batch_size = 64,
                 input_space = VectorSpace(dim=train_set.X.shape[1]),
                 layers = [h2_layer, y_layer])
     
@@ -131,7 +131,7 @@ def model3():
     
     # =====<Create the MLP Model>=====
 
-    h1_layer = NoisyRELU(layer_name='h1', dim=1000, threshold=5, sparse_init=15, max_col_norm=1)
+    h1_layer = NoisyRELU(layer_name='h1', dim=2000, threshold=5, sparse_init=15, max_col_norm=1)
     #print h1_layer.get_params()
     #h2_layer = NoisyRELU(layer_name='h2', dim=100, threshold=15, sparse_init=15, max_col_norm=1)
     
