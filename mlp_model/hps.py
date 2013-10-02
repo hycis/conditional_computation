@@ -26,7 +26,7 @@ from pylearn2.models.model import Model
 from pylearn2.training_algorithms.sgd import SGD, MomentumAdjustor
 from pylearn2.termination_criteria import MonitorBased, And, EpochCounter
 from pylearn2.train import Train
-from pylearn2.costs.cost import SumOfCosts, Cost
+from pylearn2.costs.cost import SumOfCosts, Cost, MethodCost
 from pylearn2.costs.mlp import WeightDecay, L1WeightDecay
 from pylearn2.models.mlp import MLP, ConvRectifiedLinear, \
     RectifiedLinear, Softmax, Sigmoid, Linear, Tanh, max_pool_c01b, \
@@ -325,6 +325,7 @@ class HPS:
     def get_train_sgd(self):
         # cost
         #cost = self.get_costs()
+        cost = MethodCost('cost_from_X')
 
         num_train_batch = (self.ntrain/self.batch_size)
         print "num training batches:", num_train_batch
@@ -341,6 +342,7 @@ class HPS:
             
         return SGD( learning_rate=self.state.learning_rate,
                     batch_size=self.state.batch_size,
+                    cost=cost,
                     batches_per_iter=num_train_batch,
                     monitoring_dataset=monitoring_dataset,
                     termination_criterion=termination_criterion,
