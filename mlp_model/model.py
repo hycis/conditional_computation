@@ -10,7 +10,7 @@ import copy
 from math import sqrt
 from jobman import flatten
 
-from mlp_training_framework.hps3 import *
+from mlp_model.hps import *
 from tools.default_config import model_config, layer_config
 
 from pylearn2.datasets.mnist import MNIST
