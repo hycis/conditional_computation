@@ -40,7 +40,7 @@ model_config = DD({
             'cached'                        : True,
             
             # dataset can be mnist or svhn
-            'dataset'                       : 'mnist',
+            'dataset'                       : 'svhn',
             
             # task can be fun or diff.
             #'task'                          : 'fun',
@@ -95,7 +95,7 @@ model_config = DD({
                 # Max number of training epochs
                 'epoch_count' : DD({
                     'term_class'            : 'epochcounter',
-                    'max_epochs'            : 150,
+                    'max_epochs'            : 80,
                 }),
                 # Early stopping on validation set
                 # If after max_epochs, we don't see significant improvement
@@ -103,7 +103,7 @@ model_config = DD({
                 'early_stopping' : DD({
                     'term_class'            : 'monitorbased',
                     'proportional_decrease' : 1e-4,
-                    'max_epochs'            : 40,
+                    'max_epochs'            : 20,
                     'channel_name'          : 'valid_softmax2_misclass'
                 })
             }),
@@ -135,7 +135,7 @@ model_config = DD({
                 'hidden1' : DD({
                     'layer_class'           : 'noisyRELU',
                     'sparse_init'           : 15,
-                    'dim'                   : ((500, 1000), int),
+                    'dim'                   : ((2000, 3000), int),
                     'max_col_norm'          : ((0.1, 10.), float),
                     'noise_factor'          : ((1., 10.), float),
                     'adjust_bias_factor'   : ((1., 10.), float),

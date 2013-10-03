@@ -376,6 +376,8 @@ class HPS:
         default_dropout_scale = self.state.layers[-1]['dropout_scale']
         mlp_cost = MLPCost(cost_type=self.state.cost_type,
                             missing_target_value=missing_target_value)
+        #import pdb
+        #pdb.set_trace()
         # default monitor based save best channel:
         test_cost = mlp_cost.get_test_cost(self.model,
                                            self.minibatch,
