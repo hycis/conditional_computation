@@ -326,8 +326,8 @@ class HPS:
 
     def get_train_sgd(self):
         # cost
-        #cost = self.get_costs()
-        cost = MethodCost('cost_from_X')
+        cost = self.get_costs()
+        #cost = MethodCost('cost_from_X')
 
         num_train_batch = (self.ntrain/self.batch_size)
         print "num training batches:", num_train_batch
@@ -469,13 +469,13 @@ class HPS:
             saturate=ext_obj.saturate_epoch
         )
 
-    def setup_channels(self):
-        if self.state.channel_array is None:
-            return
-
-        for channel_id in self.state.channel_array:
-            fn = getattr(self, 'setup_channel_'+channel_id)
-            fn(self.state.monitoring_dataset)
+#     def setup_channels(self):
+#         if self.state.channel_array is None:
+#             return
+# 
+#         for channel_id in self.state.channel_array:
+#             fn = getattr(self, 'setup_channel_'+channel_id)
+#             fn(self.state.monitoring_dataset)
 
     def add_channel(self, channel_name, tensor_var,
                     dataset_names=['valid','test']):

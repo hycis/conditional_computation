@@ -287,25 +287,25 @@ class MightyQuestHPS(HPS):
                 max_row_norm=layer['max_row_norm'],max_col_norm=layer['max_col_norm'],
                 layer_name=layer['layer_name'],softmax_columns=layer['softmax_columns'])
  
-    def setup_channel_mca(self, monitoring_dataset):
-        Y = self.model.fprop(self.minibatch)
-        MCA = T.mean(T.eq(self.target,T.round(Y)), dtype=config.floatX)
-        self.add_channel('mca',MCA,monitoring_dataset)
- 
-    def setup_channel_mca0(self, monitoring_dataset):
-        Y = self.model.fprop(self.minibatch)
-        MCA = T.mean(T.eq(self.target,T.round(Y)), dtype=config.floatX)
-        self.add_channel('mca0',MCA,monitoring_dataset)
- 
-    def setup_channel_mse1(self, monitoring_dataset):
-        Y = self.model.fprop(self.minibatch)[:,1]
-        MSE = T.mean(T.sqr(self.target[:,1] - Y), dtype=config.floatX)
-        self.add_channel('mse1',MSE,monitoring_dataset)
- 
-    def setup_channel_mse2(self, monitoring_dataset):
-        Y = self.model.fprop(self.minibatch)[:,2]
-        MSE = T.mean(T.sqr(self.target[:,2] - Y), dtype=config.floatX)
-        self.add_channel('mse2',MSE,monitoring_dataset)
+#     def setup_channel_mca(self, monitoring_dataset):
+#         Y = self.model.fprop(self.minibatch)
+#         MCA = T.mean(T.eq(self.target,T.round(Y)), dtype=config.floatX)
+#         self.add_channel('mca',MCA,monitoring_dataset)
+#  
+#     def setup_channel_mca0(self, monitoring_dataset):
+#         Y = self.model.fprop(self.minibatch)
+#         MCA = T.mean(T.eq(self.target,T.round(Y)), dtype=config.floatX)
+#         self.add_channel('mca0',MCA,monitoring_dataset)
+#  
+#     def setup_channel_mse1(self, monitoring_dataset):
+#         Y = self.model.fprop(self.minibatch)[:,1]
+#         MSE = T.mean(T.sqr(self.target[:,1] - Y), dtype=config.floatX)
+#         self.add_channel('mse1',MSE,monitoring_dataset)
+#  
+#     def setup_channel_mse2(self, monitoring_dataset):
+#         Y = self.model.fprop(self.minibatch)[:,2]
+#         MSE = T.mean(T.sqr(self.target[:,2] - Y), dtype=config.floatX)
+#         self.add_channel('mse2',MSE,monitoring_dataset)
 
 
 def update_irange_in_layer(layer, prev_layer_dim):
