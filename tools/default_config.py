@@ -40,7 +40,7 @@ model_config = DD({
             'cached'                        : True,
             
             # dataset can be mnist or svhn
-            'dataset'                       : 'svhn',
+            'dataset'                       : 'mnist',
             
             # task can be fun or diff.
             #'task'                          : 'fun',
@@ -61,7 +61,7 @@ model_config = DD({
 
             # Channel and dataset monitoring
             # mca : mean classification average of a minibatch
-            'channel_array'                 : None,
+            'channel_array'                 : ['mlp'],
             # valid or test or both
             'monitoring_dataset'           : ['test', 'valid'],
 
@@ -73,7 +73,7 @@ model_config = DD({
             # Cost
             'train_iteration_mode'          : 'random_uniform',
             # fun1 or hint1 works with output1 layer set as fun1 or hint1
-            'cost_array'                    : ['fun1'],
+            'cost_array'                    : None,
 
             # Momentum and exponential decay
             'ext_array'                     : DD({
