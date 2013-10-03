@@ -40,7 +40,7 @@ model_config = DD({
             'cached'                        : True,
             
             # dataset can be mnist or svhn
-            'dataset'                       : 'svhn',
+            'dataset'                       : 'mnist',
             
             # task can be fun or diff.
             #'task'                          : 'fun',

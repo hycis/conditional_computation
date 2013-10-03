@@ -111,6 +111,12 @@ class NoisyRELU(Linear):
         max_active_rate = self.active_rate.max()
         min_active_rate = self.active_rate.min()
         mean_active_rate = self.active_rate.mean()
+        
+        max_noise = self.noise.max()
+        min_noise = self.noise.min()
+        mean_noise = self.noise.mean()
+        
+        
 #         num_row = self.active_rate.shape[0] * 1.
         #num_col = self.active_rate.shape[1] * 1.
         
@@ -127,6 +133,9 @@ class NoisyRELU(Linear):
         rval['===max_active_rate===='] = max_active_rate
         rval['===min_active_rate===='] = min_active_rate
         rval['===mean_active_rate===='] = mean_active_rate
+        rval['===max_noise==='] = max_noise
+        rval['===min_noise==='] = min_noise
+        rval['===mean_noise==='] = mean_noise
 #         rval['===num_row_active_rate===='] = num_row
 #         #rval['===num_col_active_rate===='] = num_col
 #         
