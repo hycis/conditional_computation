@@ -414,8 +414,8 @@ class HPS:
         for term_obj in self.state.term_array.values():
             fn = getattr(self, 'get_term_' + term_obj.term_class)
             terminations.append(fn(term_obj))
-            import pdb
-            pdb.set_trace()
+            #import pdb
+            #pdb.set_trace()
         if len(terminations) > 1:
             return And(terminations)
         return terminations[0]
