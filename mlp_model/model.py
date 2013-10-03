@@ -426,7 +426,7 @@ def experiment(state, channel):
     state = update_default_layer_hyperparams(state)
     #import pdb
     #pdb.set_trace()
-    hps = HPS(state=state)
+    hps = MightyQuestHPS(state=state)
     #import pdb
     #pdb.set_trace()
     hps.run()
