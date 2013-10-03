@@ -326,7 +326,8 @@ class HPS:
 
     def get_train_sgd(self):
         # cost
-        cost = self.get_costs()
+        #cost = self.get_costs()
+        cost = MLPCost()
         #cost = self.model.cost
         #cost = MethodCost('cost_from_X')
 

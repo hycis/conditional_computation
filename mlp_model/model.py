@@ -217,7 +217,7 @@ class MightyQuestHPS(HPS):
         test_cost = mlp_cost.get_test_cost(self.model,
                                             self.minibatch,
                                             self.target)
-        print test_cost
+        #print test_cost
         self.add_channel('cost',test_cost)
  
         if self.dropout:
