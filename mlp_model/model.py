@@ -325,8 +325,8 @@ def get_dim_input(state):
         dataset = MNIST(which_set='train')
         dim = dataset.X.shape[1]
     elif state.dataset == 'svhn':
-        #import pdb
-        #pdb.set_trace()
+        import pdb
+        pdb.set_trace()
         dataset = SVHN(which_set='splitted_train')
         dim = dataset.X.shape[1]
     else:

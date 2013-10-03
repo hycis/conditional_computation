@@ -41,7 +41,7 @@ from pylearn2.datasets import preprocessing as pp
 from layers import NoisyRELU
 
 
-from pylearn2_objects import *
+#from pylearn2_objects import *
 #from load_model import compute_nll
 
 from jobman import DD, expand
