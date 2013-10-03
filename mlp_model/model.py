@@ -256,6 +256,9 @@ class MightyQuestHPS(HPS):
         test_cost = mlp_cost.get_test_cost(self.model,
                                             self.minibatch,
                                             self.target)
+        
+        import pdb
+        pdb.set_trace()
         self.add_channel('cost',test_cost)
  
         if self.dropout:
