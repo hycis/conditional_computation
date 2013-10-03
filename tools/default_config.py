@@ -73,7 +73,7 @@ model_config = DD({
             # Cost
             'train_iteration_mode'          : 'random_uniform',
             # fun1 or hint1 works with output1 layer set as fun1 or hint1
-            'cost_array'                    : None,
+            'cost_array'                    : ['fun1'],
 
             # Momentum and exponential decay
             'ext_array'                     : DD({
