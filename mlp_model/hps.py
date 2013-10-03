@@ -326,8 +326,8 @@ class HPS:
 
     def get_train_sgd(self):
         # cost
-        cost = self.get_costs()
-        #cost = MethodCost('cost_from_X')
+        #cost = self.get_costs()
+        cost = MethodCost('cost_from_X')
 
         num_train_batch = (self.ntrain/self.batch_size)
         print "num training batches:", num_train_batch
@@ -365,6 +365,8 @@ class HPS:
         return cost
 
     def get_cost(self, cost_type):
+        import pdb
+        pdb.set_trace()
         fn = getattr(self, 'get_cost_'+cost_type)
         return fn()
 
