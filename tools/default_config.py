@@ -40,7 +40,7 @@ model_config = DD({
             'cached'                        : True,
             
             # dataset can be mnist or svhn
-            'dataset'                       : 'mnist',
+            'dataset'                       : 'svhn',
             
             # task can be fun or diff.
             #'task'                          : 'fun',
@@ -95,7 +95,7 @@ model_config = DD({
                 # Max number of training epochs
                 'epoch_count' : DD({
                     'term_class'            : 'epochcounter',
-                    'max_epochs'            : 80,
+                    'max_epochs'            : 50,
                 }),
                 # Early stopping on validation set
                 # If after max_epochs, we don't see significant improvement
@@ -139,7 +139,7 @@ model_config = DD({
                     'max_col_norm'          : ((0.1, 10.), float),
                     'noise_factor'          : ((1., 10.), float),
                     'adjust_bias_factor'   : ((1., 10.), float),
-                    'desired_active_rate'   : ((0.1, 0.4), float)
+                    'desired_active_rate'   : ((0.05, 0.4), float)
                     }),
 
                 #Second hidden layer
