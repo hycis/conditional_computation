@@ -365,8 +365,8 @@ class HPS:
         return cost
 
     def get_cost(self, cost_type):
-        import pdb
-        pdb.set_trace()
+        #import pdb
+        #pdb.set_trace()
         fn = getattr(self, 'get_cost_'+cost_type)
         return fn()
 
