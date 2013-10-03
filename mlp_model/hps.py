@@ -331,8 +331,7 @@ class HPS:
         print "num training batches:", num_train_batch
 
         termination_criterion = self.get_terminations()
-        import pdb
-        pdb.set_trace()
+
         monitoring_dataset = {}
         for dataset_id in self.state.monitoring_dataset:
             if dataset_id == 'test' and self.test_ddm is not None:
@@ -413,6 +412,8 @@ class HPS:
         for term_obj in self.state.term_array.values():
             fn = getattr(self, 'get_term_' + term_obj.term_class)
             terminations.append(fn(term_obj))
+            import pdb
+            pdb.set_trace()
         if len(terminations) > 1:
             return And(terminations)
         return terminations[0]
