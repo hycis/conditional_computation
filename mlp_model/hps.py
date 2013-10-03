@@ -41,7 +41,7 @@ from pylearn2.datasets import preprocessing as pp
 from layers import NoisyRELU
 
 
-#from pylearn2_objects import *
+from pylearn2_objects import *
 #from load_model import compute_nll
 
 from jobman import DD, expand
@@ -370,45 +370,45 @@ class HPS:
         fn = getattr(self, 'get_cost_'+cost_type)
         return fn()
 
-#     def get_cost_mlp(self):
-#         raise NotImplementedError('get_cost_mlp not supported!')
-#         # TODO: add missing_target_value as a config option.
-#         missing_target_value = None
-#         # TODO: check if default_dropout_prob is the same as dropout_probability
-#         # and should it be taken from the last layer.
-#         default_dropout_prob = self.state.layers[-1]['dropout_probability']
-#         default_dropout_scale = self.state.layers[-1]['dropout_scale']
-#         mlp_cost = MLPCost(cost_type=self.state.cost_type,
-#                             missing_target_value=missing_target_value)
-#         #import pdb
-#         #pdb.set_trace()
-#         # default monitor based save best channel:
-#         test_cost = mlp_cost.get_test_cost(self.model,
-#                                            self.minibatch,
-#                                            self.target)
-#         self.add_channel('cost',test_cost)
-# 
-#         if self.dropout:
-#             mlp_cost.setup_dropout(
-#                 default_input_include_prob=(1.-default_dropout_prob),
-#                 default_input_scale=default_dropout_scale,
-#                 input_scales=self.input_scales,
-#                 input_include_probs=self.input_include_probs)
-# 
-#         costs = [mlp_cost]
-#         if self.weight_decay:
-#             coeffs = []
-#             for layer in self.mlp.layers:
-#                 coeffs.append(self.weight_decays[layer.layer_name])
-#             wd_cost = WeightDecay(coeffs)
-#             costs.append(wd_cost)
-#         if self.l1_weight_decay:
-#             coeffs = []
-#             for layer in self.mlp.layers:
-#                 coeffs.append(self.l1_weight_decays[layer.layer_name])
-#             lwd_cost = L1WeightDecay(coeffs)
-#             costs.append(lwd_cost)
-#         return costs
+    def get_cost_mlp(self):
+        raise NotImplementedError('get_cost_mlp not supported!')
+        # TODO: add missing_target_value as a config option.
+        missing_target_value = None
+        # TODO: check if default_dropout_prob is the same as dropout_probability
+        # and should it be taken from the last layer.
+        default_dropout_prob = self.state.layers[-1]['dropout_probability']
+        default_dropout_scale = self.state.layers[-1]['dropout_scale']
+        mlp_cost = MLPCost(cost_type=self.state.cost_type,
+                            missing_target_value=missing_target_value)
+        #import pdb
+        #pdb.set_trace()
+        # default monitor based save best channel:
+        test_cost = mlp_cost.get_test_cost(self.model,
+                                           self.minibatch,
+                                           self.target)
+        self.add_channel('cost',test_cost)
+ 
+        if self.dropout:
+            mlp_cost.setup_dropout(
+                default_input_include_prob=(1.-default_dropout_prob),
+                default_input_scale=default_dropout_scale,
+                input_scales=self.input_scales,
+                input_include_probs=self.input_include_probs)
+ 
+        costs = [mlp_cost]
+        if self.weight_decay:
+            coeffs = []
+            for layer in self.mlp.layers:
+                coeffs.append(self.weight_decays[layer.layer_name])
+            wd_cost = WeightDecay(coeffs)
+            costs.append(wd_cost)
+        if self.l1_weight_decay:
+            coeffs = []
+            for layer in self.mlp.layers:
+                coeffs.append(self.l1_weight_decays[layer.layer_name])
+            lwd_cost = L1WeightDecay(coeffs)
+            costs.append(lwd_cost)
+        return costs
 
     def get_terminations(self):
         if 'term_array' not in self.state:

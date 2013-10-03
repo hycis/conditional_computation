@@ -17,7 +17,7 @@ from pylearn2.datasets.mnist import MNIST
 from pylearn2.datasets.svhn import SVHN
 import os
 
-
+from pylearn2_objects import *
 
  
 class HintLayer1(Linear):
@@ -28,158 +28,63 @@ class HintLayer1(Linear):
  
     def cost(self, *args, **kwargs):
         raise NotImplementedError()
-#  
-# class HintCost1(MLPCost):
-#     supervised = True
-#     def __init__(self, name='cost'):
-#         self.name = name
-#         self.use_dropout = False
-#  
-#     def get_gradients(self, model, data, ** kwargs):
-#         """
-#         model: a pylearn2 Model instance
-#         X: a batch in model.get_input_space()
-#         Y: a batch in model.get_output_space()
-#  
-#         returns: gradients, updates
-#             gradients:
-#                 a dictionary mapping from the model's parameters
-#                          to their gradients
-#                 The default implementation is to compute the gradients
-#                 using T.grad applied to the value returned by __call__.
-#                 However, subclasses may return other values for the gradient.
-#                 For example, an intractable cost may return a sampling-based
-#                 approximation to its gradient.
-#             updates:
-#                 a dictionary mapping shared variables to updates that must
-#                 be applied to them each time these gradients are computed.
-#                 This is to facilitate computation of sampling-based approximate
-#                 gradients.
-#                 The parameters should never appear in the updates dictionary.
-#                 This would imply that computing their gradient changes
-#                 their value, thus making the gradient value outdated.
-#         """
-#  
-#         try:
-#             cost = self.expr(model=model, data=data, **kwargs)
-#         except TypeError,e:
-#             # If anybody knows how to add type(seslf) to the exception message
-#             # but still preserve the stack trace, please do so
-#             # The current code does neither
-#             e.message += " while calling "+str(type(self))+".__call__"
-#             print str(type(self))
-#             print e.message
-#             raise e
-#  
-#         if cost is None:
-#             raise NotImplementedError(str(type(self))+" represents an intractable "
-#                     " cost and does not provide a gradient approximation scheme.")
-#  
-#         params = list(model.get_params())
-#  
-#         grads = T.grad(cost, params, disconnected_inputs = 'raise')
-#  
-#         gradients = OrderedDict(izip(params, grads))
-#  
-#         updates = OrderedDict()
-#  
-#         return gradients, updates
-#  
-#     def expr(self, model, data, ** kwargs):
-#         space, sources = self.get_data_specs(model)
-#         space.validate(data)
-#         (X, Y) = data
-#         if self.use_dropout:
-#             Y_hat = model.dropout_fprop(X, default_input_include_prob=self.default_input_include_prob,
-#                     input_include_probs=self.input_include_probs, default_input_scale=self.default_input_scale,
-#                     input_scales=self.input_scales
-#                     )
-#         else:
-#             Y_hat = model.fprop(X)
-#  
-#         cross_entropy = (-Y[:,0] * T.log(Y_hat[:,0]) - (1 - Y[:,0]) \
-#             * T.log(1 - Y_hat[:,0])).mean()
-#         mse = T.sqr(Y[:,1:] - Y_hat[:,1:]).mean()
-#         return mse + cross_entropy
-#  
-#     def get_data_specs(self, model):
-#         space = CompositeSpace([model.get_input_space(), model.get_output_space()])
-#         sources = (model.get_input_source(), model.get_target_source())
-#         return (space, sources)
-#  
-#     def get_test_cost(self, model, X, Y):
-#         Y_hat = model.fprop(X)
-#  
-#         cross_entropy = (-Y[:,0] * T.log(Y_hat[:,0]) - (1 - Y[:,0]) \
-#             * T.log(1 - Y_hat[:,0])).mean()
-#         return cross_entropy
-#  
- 
-class FunLayer1(Linear):
-    def fprop(self, state_below):
-        p = self._linear_part(state_below)
-        p = T.nnet.sigmoid(p)
-        return p
- 
-    def cost(self, *args, **kwargs):
-        raise NotImplementedError()
-#  
-# class FunCost1(MLPCost):
-#     supervised = True
-#     def __init__(self, name='cost'):
-#         self.name = name
-#         self.use_dropout = False
-#  
-#     def get_gradients(self, model, data, ** kwargs):
-#         """
-#         model: a pylearn2 Model instance
-#         X: a batch in model.get_input_space()
-#         Y: a batch in model.get_output_space()
-#  
-#         returns: gradients, updates
-#             gradients:
-#                 a dictionary mapping from the model's parameters
-#                          to their gradients
-#                 The default implementation is to compute the gradients
-#                 using T.grad applied to the value returned by __call__.
-#                 However, subclasses may return other values for the gradient.
-#                 For example, an intractable cost may return a sampling-based
-#                 approximation to its gradient.
-#             updates:
-#                 a dictionary mapping shared variables to updates that must
-#                 be applied to them each time these gradients are computed.
-#                 This is to facilitate computation of sampling-based approximate
-#                 gradients.
-#                 The parameters should never appear in the updates dictionary.
-#                 This would imply that computing their gradient changes
-#                 their value, thus making the gradient value outdated.
-#         """
-#  
-#         try:
-#             cost = self.expr(model=model, data=data, **kwargs)
-#         except TypeError,e:
-#             # If anybody knows how to add type(seslf) to the exception message
-#             # but still preserve the stack trace, please do so
-#             # The current code does neither
-#             e.message += " while calling "+str(type(self))+".__call__"
-#             print str(type(self))
-#             print e.message
-#             raise e
-#  
-#         if cost is None:
-#             raise NotImplementedError(str(type(self))+" represents an intractable "
-#                     " cost and does not provide a gradient approximation scheme.")
-#  
-#         params = list(model.get_params())
-#  
-#         grads = T.grad(cost, params, disconnected_inputs = 'raise')
-#  
-#         gradients = OrderedDict(izip(params, grads))
-#  
-#         updates = OrderedDict()
-#  
-#         return gradients, updates
-#  
+  
+class HintCost1(MLPCost):
+    supervised = True
+    def __init__(self, name='cost'):
+        self.name = name
+        self.use_dropout = False
+  
+    def get_gradients(self, model, data, ** kwargs):
+        """
+        model: a pylearn2 Model instance
+        X: a batch in model.get_input_space()
+        Y: a batch in model.get_output_space()
+  
+        returns: gradients, updates
+            gradients:
+                a dictionary mapping from the model's parameters
+                         to their gradients
+                The default implementation is to compute the gradients
+                using T.grad applied to the value returned by __call__.
+                However, subclasses may return other values for the gradient.
+                For example, an intractable cost may return a sampling-based
+                approximation to its gradient.
+            updates:
+                a dictionary mapping shared variables to updates that must
+                be applied to them each time these gradients are computed.
+                This is to facilitate computation of sampling-based approximate
+                gradients.
+                The parameters should never appear in the updates dictionary.
+                This would imply that computing their gradient changes
+                their value, thus making the gradient value outdated.
+        """
+  
+        try:
+            cost = self.expr(model=model, data=data, **kwargs)
+        except TypeError,e:
+            # If anybody knows how to add type(seslf) to the exception message
+            # but still preserve the stack trace, please do so
+            # The current code does neither
+            e.message += " while calling "+str(type(self))+".__call__"
+            print str(type(self))
+            print e.message
+            raise e
+  
+        if cost is None:
+            raise NotImplementedError(str(type(self))+" represents an intractable "
+                    " cost and does not provide a gradient approximation scheme.")
+  
+        params = list(model.get_params())
+  
+        grads = T.grad(cost, params, disconnected_inputs = 'raise')
+  
+        gradients = OrderedDict(izip(params, grads))
+  
+        updates = OrderedDict()
+  
+        return gradients, updates
+  
     def expr(self, model, data, ** kwargs):
         space, sources = self.get_data_specs(model)
         space.validate(data)
@@ -191,22 +96,117 @@ class FunLayer1(Linear):
                     )
         else:
             Y_hat = model.fprop(X)
- 
-        cross_entropy = (-Y * T.log(Y_hat) - (1 - Y) \
-            * T.log(1 - Y_hat)).mean()
-        return cross_entropy
- 
+  
+        cross_entropy = (-Y[:,0] * T.log(Y_hat[:,0]) - (1 - Y[:,0]) \
+            * T.log(1 - Y_hat[:,0])).mean()
+        mse = T.sqr(Y[:,1:] - Y_hat[:,1:]).mean()
+        return mse + cross_entropy
+  
     def get_data_specs(self, model):
         space = CompositeSpace([model.get_input_space(), model.get_output_space()])
         sources = (model.get_input_source(), model.get_target_source())
         return (space, sources)
- 
+  
     def get_test_cost(self, model, X, Y):
         Y_hat = model.fprop(X)
+  
+        cross_entropy = (-Y[:,0] * T.log(Y_hat[:,0]) - (1 - Y[:,0]) \
+            * T.log(1 - Y_hat[:,0])).mean()
+        return cross_entropy
+  
  
+class FunLayer1(Linear):
+    def fprop(self, state_below):
+        p = self._linear_part(state_below)
+        p = T.nnet.sigmoid(p)
+        return p
+ 
+    def cost(self, *args, **kwargs):
+        raise NotImplementedError()
+  
+class FunCost1(MLPCost):
+    supervised = True
+    def __init__(self, name='cost'):
+        self.name = name
+        self.use_dropout = False
+  
+    def get_gradients(self, model, data, ** kwargs):
+        """
+        model: a pylearn2 Model instance
+        X: a batch in model.get_input_space()
+        Y: a batch in model.get_output_space()
+  
+        returns: gradients, updates
+            gradients:
+                a dictionary mapping from the model's parameters
+                         to their gradients
+                The default implementation is to compute the gradients
+                using T.grad applied to the value returned by __call__.
+                However, subclasses may return other values for the gradient.
+                For example, an intractable cost may return a sampling-based
+                approximation to its gradient.
+            updates:
+                a dictionary mapping shared variables to updates that must
+                be applied to them each time these gradients are computed.
+                This is to facilitate computation of sampling-based approximate
+                gradients.
+                The parameters should never appear in the updates dictionary.
+                This would imply that computing their gradient changes
+                their value, thus making the gradient value outdated.
+        """
+  
+        try:
+            cost = self.expr(model=model, data=data, **kwargs)
+        except TypeError,e:
+            # If anybody knows how to add type(seslf) to the exception message
+            # but still preserve the stack trace, please do so
+            # The current code does neither
+            e.message += " while calling "+str(type(self))+".__call__"
+            print str(type(self))
+            print e.message
+            raise e
+  
+        if cost is None:
+            raise NotImplementedError(str(type(self))+" represents an intractable "
+                    " cost and does not provide a gradient approximation scheme.")
+  
+        params = list(model.get_params())
+  
+        grads = T.grad(cost, params, disconnected_inputs = 'raise')
+  
+        gradients = OrderedDict(izip(params, grads))
+  
+        updates = OrderedDict()
+  
+        return gradients, updates
+  
+    def expr(self, model, data, ** kwargs):
+        space, sources = self.get_data_specs(model)
+        space.validate(data)
+        (X, Y) = data
+        if self.use_dropout:
+            Y_hat = model.dropout_fprop(X, default_input_include_prob=self.default_input_include_prob,
+                    input_include_probs=self.input_include_probs, default_input_scale=self.default_input_scale,
+                    input_scales=self.input_scales
+                    )
+        else:
+            Y_hat = model.fprop(X)
+  
         cross_entropy = (-Y * T.log(Y_hat) - (1 - Y) \
             * T.log(1 - Y_hat)).mean()
- 
+        return cross_entropy
+  
+    def get_data_specs(self, model):
+        space = CompositeSpace([model.get_input_space(), model.get_output_space()])
+        sources = (model.get_input_source(), model.get_target_source())
+        return (space, sources)
+  
+    def get_test_cost(self, model, X, Y):
+        Y_hat = model.fprop(X)
+  
+        cross_entropy = (-Y * T.log(Y_hat) - (1 - Y) \
+            * T.log(1 - Y_hat)).mean()
+  
         return cross_entropy
 
 class MightyQuestHPS(HPS):
@@ -426,7 +426,7 @@ def experiment(state, channel):
     state = update_default_layer_hyperparams(state)
     #import pdb
     #pdb.set_trace()
-    hps = HPS(state=state)
+    hps = MightyQuestHPS(state=state)
     #import pdb
     #pdb.set_trace()
     hps.run()
