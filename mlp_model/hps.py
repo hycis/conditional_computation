@@ -101,7 +101,7 @@ class HPS:
         extensions = self.get_extensions()
 
         # channels
-        self.setup_channels()
+        #self.setup_channels()
 
         # learner
         learner = Train(dataset=self.train_ddm,
