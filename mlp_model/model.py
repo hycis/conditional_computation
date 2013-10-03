@@ -210,7 +210,7 @@ class FunCost1(MLPCost):
         return cross_entropy
 
 class MightyQuestHPS(HPS):
-    pass
+
     def get_cost_hint1(self):
         mlp_cost = HintCost1()
         # default monitor based save best channel:
@@ -426,7 +426,7 @@ def experiment(state, channel):
     state = update_default_layer_hyperparams(state)
     #import pdb
     #pdb.set_trace()
-    hps = MightyQuestHPS(state=state)
+    hps = HPS(state=state)
     #import pdb
     #pdb.set_trace()
     hps.run()
