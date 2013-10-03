@@ -145,7 +145,9 @@ class HPS:
             self.test_ddm = MNIST(which_set='test', one_hot=True)
             self.valid_ddm = MNIST(which_set='test', one_hot=True)
 
-        if self.state.dataset == 'svhn':
+        elif self.state.dataset == 'svhn':
+            import pdb
+            pdb.set_trace()
             self.train_ddm = SVHN(which_set='splitted_train')
             self.test_ddm = SVHN(which_set='test')
             self.valid_ddm = SVHN(which_set='valid')
