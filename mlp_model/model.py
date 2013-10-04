@@ -242,13 +242,13 @@ class MightyQuestHPS(HPS):
             costs.append(lwd_cost)
         return costs
  
-    def get_layer_hint1(self, layer):
-        return HintLayer1(dim=layer['dim'], irange=layer['irange'],istdev=layer['istdev'],
-                sparse_init=layer['sparse_init'],sparse_stdev=layer['sparse_stdev'],
-                include_prob=layer['include_prob'],init_bias=layer['init_bias'],
-                W_lr_scale=layer['W_lr_scale'],b_lr_scale=layer['b_lr_scale'],
-                max_row_norm=layer['max_row_norm'],max_col_norm=layer['max_col_norm'],
-                layer_name=layer['layer_name'],softmax_columns=layer['softmax_columns'])
+#     def get_layer_hint1(self, layer):
+#         return HintLayer1(dim=layer['dim'], irange=layer['irange'],istdev=layer['istdev'],
+#                 sparse_init=layer['sparse_init'],sparse_stdev=layer['sparse_stdev'],
+#                 include_prob=layer['include_prob'],init_bias=layer['init_bias'],
+#                 W_lr_scale=layer['W_lr_scale'],b_lr_scale=layer['b_lr_scale'],
+#                 max_row_norm=layer['max_row_norm'],max_col_norm=layer['max_col_norm'],
+#                 layer_name=layer['layer_name'],softmax_columns=layer['softmax_columns'])
  
     def get_cost_fun1(self):
         mlp_cost = FunCost1()
@@ -257,8 +257,8 @@ class MightyQuestHPS(HPS):
                                             self.minibatch,
                                             self.target)
         
-        import pdb
-        pdb.set_trace()
+        #import pdb
+        #pdb.set_trace()
         self.add_channel('cost',test_cost)
  
         if self.dropout:
@@ -283,13 +283,13 @@ class MightyQuestHPS(HPS):
             costs.append(lwd_cost)
         return costs
  
-    def get_layer_fun1(self, layer):
-        return FunLayer1(dim=layer['dim'], irange=layer['irange'],istdev=layer['istdev'],
-                sparse_init=layer['sparse_init'],sparse_stdev=layer['sparse_stdev'],
-                include_prob=layer['include_prob'],init_bias=layer['init_bias'],
-                W_lr_scale=layer['W_lr_scale'],b_lr_scale=layer['b_lr_scale'],
-                max_row_norm=layer['max_row_norm'],max_col_norm=layer['max_col_norm'],
-                layer_name=layer['layer_name'],softmax_columns=layer['softmax_columns'])
+#     def get_layer_fun1(self, layer):
+#         return FunLayer1(dim=layer['dim'], irange=layer['irange'],istdev=layer['istdev'],
+#                 sparse_init=layer['sparse_init'],sparse_stdev=layer['sparse_stdev'],
+#                 include_prob=layer['include_prob'],init_bias=layer['init_bias'],
+#                 W_lr_scale=layer['W_lr_scale'],b_lr_scale=layer['b_lr_scale'],
+#                 max_row_norm=layer['max_row_norm'],max_col_norm=layer['max_col_norm'],
+#                 layer_name=layer['layer_name'],softmax_columns=layer['softmax_columns'])
  
 #     def setup_channel_mca(self, monitoring_dataset):
 #         Y = self.model.fprop(self.minibatch)
@@ -328,11 +328,13 @@ def get_dim_input(state):
     if state.dataset == 'mnist':
         dataset = MNIST(which_set='train')
         dim = dataset.X.shape[1]
+        #del dataset
     elif state.dataset == 'svhn':
-        import pdb
-        pdb.set_trace()
+        #import pdb
+        #pdb.set_trace()
         dataset = SVHN(which_set='splitted_train')
         dim = dataset.X.shape[1]
+        #del dataset
     else:
         raise ValueError('only mnist and svhn are supported for now in get_dim_input')
     #base_path = get_data_path(state)

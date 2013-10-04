@@ -326,10 +326,10 @@ class HPS:
 
     def get_train_sgd(self):
         # cost
-        #cost = self.get_costs()
+        cost = self.get_costs()
         #cost = MLPCost()
         #cost = self.model.cost
-        cost = MethodCost('cost_from_X')
+        #cost = MethodCost('cost_from_X')
 
         num_train_batch = (self.ntrain/self.batch_size)
         print "num training batches:", num_train_batch
@@ -345,6 +345,11 @@ class HPS:
             else:
                 monitoring_dataset = None
             
+        if self.state.dataset == 'svhn':
+            train_iter_mode = 'batchwise_shuffled_equential'
+        elif self.state.dataset == 'mnist':
+            train_iter_mode = self.state.train_iteration_mode
+            
         return SGD( learning_rate=self.state.learning_rate,
                     batch_size=self.state.batch_size,
                     cost=cost,
@@ -352,7 +357,7 @@ class HPS:
                     monitoring_dataset=monitoring_dataset,
                     termination_criterion=termination_criterion,
                     init_momentum=self.state.init_momentum,
-                    train_iteration_mode='batchwise_shuffled_equential')
+                    train_iteration_mode=train_iter_mode)
 
     def get_costs(self):
         costs = []
