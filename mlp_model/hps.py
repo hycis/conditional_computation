@@ -146,16 +146,13 @@ class HPS:
             self.train_ddm = DenseDesignMatrix(X=train_X, y=train_y)
             self.valid_ddm = DenseDesignMatrix(X=valid_X, y=valid_y)
             
-            
-            #self.train_ddm, self.valid_ddm = dataset.split_dataset_holdout(train_size=10000)
-
         elif self.state.dataset == 'svhn':
             self.train_ddm = SVHN(which_set='splitted_train')
             self.test_ddm = SVHN(which_set='test')
             self.valid_ddm = SVHN(which_set='valid')
 
-        import pdb
-        pdb.set_trace()
+        #import pdb
+        #pdb.set_trace()
         self.nvis = self.train_ddm.X.shape[1]
         self.nout = self.train_ddm.y.shape[1]
         
@@ -321,10 +318,7 @@ class HPS:
         return fn()
 
     def get_train_sgd(self):
-        # cost
-        #cost = self.get_costs()
-        #cost = MLPCost()
-        #cost = self.model.cost
+
         cost = MethodCost('cost_from_X')
         #cost = self.get_costs()
         num_train_batch = (self.ntrain/self.batch_size)
