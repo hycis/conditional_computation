@@ -140,7 +140,7 @@ class HPS:
         if self.state.dataset == 'mnist':
             dataset = MNIST(which_set='train', shuffle=True, one_hot=True)
             self.test_ddm = MNIST(which_set='test', one_hot=True)
-            self.train_ddm, self.valid_ddm = dataset.split_dataset_holdout(train_size=50000)
+            self.train_ddm, self.valid_ddm = dataset.split_dataset_holdout(train_size=10000)
 
         elif self.state.dataset == 'svhn':
             self.train_ddm = SVHN(which_set='splitted_train')
