@@ -30,11 +30,11 @@ class NoisyRELU(Linear):
         batch_size = p.shape[0]
         self.active_rate = T.gt(p, self.threshold).sum(axis=0, dtype=theano.config.floatX) / batch_size
         renormalize = (T.gt(self.active_rate, self.desired_active_rate) - 0.5) * 2
-        self.threshold = self.active_rate.reshape(shape=(self.dim,))
+        #self.threshold = self.active_rate.reshape(shape=(self.dim,))
         #T.abs_(self.desired_active_rate - self.active_rate) * self.adjust_threshold_factor
         #self.threshold = renormalize * T.abs_(self.desired_active_rate - self.active_rate) * self.adjust_threshold_factor
 #         
-        return T.gt(p, self.threshold) * p
+        return T.gt(p, self.active_rate)
         
         #batch_size = p.shape[0] 
         #self.active_rate = T.gt(p, 0).sum(axis=0, dtype=theano.config.floatX) / batch_size
