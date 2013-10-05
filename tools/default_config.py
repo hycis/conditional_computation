@@ -64,11 +64,12 @@ model_config = DD({
             #'channel_array'                 : ['mca'],
             'channel_array'                 : None,
             
+            
 
             # valid or test or both
             'monitoring_dataset'           : ['test', 'valid'],
 
-            'random_seed'                   : 256571,
+            'random_seed'                   : 251,
             'batch_size'                    : ((100, 200), int),
             'learning_rate'                 : ((1e-5, 0.01), float),
             'init_momentum'                 : ((0.5, 0.99), float),
