@@ -325,16 +325,12 @@ class HPS:
         return fn()
 
     def get_train_sgd(self):
-<<<<<<< HEAD
         # cost
         cost = self.get_costs()
         #cost = MLPCost()
         #cost = self.model.cost
         #cost = MethodCost('cost_from_X')
-
-=======
         cost = self.get_costs()
->>>>>>> d417268f5fc57ad0d7c3f64998278beacd984b5d
         num_train_batch = (self.ntrain/self.batch_size)
         print "num training batches:", num_train_batch
 
