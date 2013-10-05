@@ -38,7 +38,7 @@ class NoisyRELU(Linear):
         #import traceback
         #trace = traceback.format_exc()
         
-        rval = T.gt(p, self.threshold).astype(theano.config.floatX)
+        rval = T.gt(p, self.threshold).astype(theano.config.floatX) * p
         return rval
         
         #batch_size = p.shape[0] 
