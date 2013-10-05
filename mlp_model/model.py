@@ -259,7 +259,7 @@ class MightyQuestHPS(HPS):
         
         #import pdb
         #pdb.set_trace()
-        self.add_channel('cost',test_cost)
+        #self.add_channel('cost',test_cost)
  
         if self.dropout:
             mlp_cost.setup_dropout(
