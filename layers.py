@@ -14,8 +14,8 @@ class NoisyRELU(Linear):
         self.noise_factor = noise_factor
         self.adjust_threshold_factor = adjust_threshold_factor
         self.desired_active_rate = desired_active_rate
-        #self.threshold = T.zeros(shape=(self.dim,), dtype=theano.config.floatX)
-        self.threshold = theano.shared(np.zeros(shape=(self.dim,)))
+        self.threshold = T.zeros(shape=(self.dim,), dtype=theano.config.floatX)
+        #self.threshold = theano.shared(np.zeros(shape=(self.dim,)))
         #self.active_rate = theano.tensor.zeros(shape=(self.dim,), dtype=theano.config.floatX)
 
     def fprop(self, state_below):
@@ -31,11 +31,11 @@ class NoisyRELU(Linear):
         batch_size = p.shape[0]
         self.active_rate = T.gt(p, self.threshold).sum(axis=0, dtype=theano.config.floatX) / batch_size
         renormalize = (T.gt(self.active_rate, self.desired_active_rate) - 0.5) * 2
-        #self.threshold = self.active_rate.reshape(shape=(self.dim,))
+        self.threshold += 1
         #T.abs_(self.desired_active_rate - self.active_rate) * self.adjust_threshold_factor
         #self.threshold += renormalize * T.abs_(self.desired_active_rate - self.active_rate) * self.adjust_threshold_factor
-        import pdb
-        pdb.set_trace()
+        #import pdb
+        #pdb.set_trace()
         rval = T.gt(p, self.threshold).astype(theano.config.floatX)
         return rval
         
