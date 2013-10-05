@@ -19,7 +19,7 @@ class NoisyRELU(Linear):
         #self.threshold = T.zeros(shape=(self.dim,), dtype=theano.config.floatX)
         #self.threshold = theano.sparse.basic.as_sparse_or_tensor_variable(np.zeros(shape=(self.dim,)))
         #self.active_rate = theano.tensor.zeros(shape=(self.dim,), dtype=theano.config.floatX)
-
+        
     def fprop(self, state_below):
         print "======fprop====="
         
@@ -31,12 +31,8 @@ class NoisyRELU(Linear):
         p = self._linear_part(state_below) + self.noise * self.noise_factor
         
         batch_size = p.shape[0]
-        self.threshold = (T.gt(p, self.threshold).sum(axis=0, dtype=theano.config.floatX) / batch_size).astype(theano.config.floatX)
-        #renormalize = (T.gt(self.active_rate, self.desired_active_rate) - 0.5) * 2
-        #self.threshold = self.active_rate
-        #T.abs_(self.desired_active_rate - self.active_rate) * self.adjust_threshold_factor
-        #self.threshold += renormalize * T.abs_(self.desired_active_rate - self.active_rate) * self.adjust_threshold_factor
-        #import pdb
+        self.active_rate = (T.gt(p, self.threshold).sum(axis=0, dtype=theano.config.floatX) / batch_size).astype(theano.config.floatX)
+                #import pdb
         #pdb.set_trace()
         
         #import traceback
@@ -75,33 +71,35 @@ class NoisyRELU(Linear):
 
 
 #     
-#     def censor_updates(self, updates):
-#         print "====censor_updates====="
-# 
-#         W, b = self.get_params()
-# 
-#         if self.mask_weights is not None:
-#             if W in updates:
-#                 updates[W] = updates[W] * self.mask
-# 
-#         if self.max_row_norm is not None:
-#             if W in updates:
-#                 updated_W = updates[W]
-#                 row_norms = T.sqrt(T.sum(T.sqr(updated_W), axis=1))
-#                 desired_norms = T.clip(row_norms, 0, self.max_row_norm)
-#                 updates[W] = updated_W * (desired_norms / (1e-7 + row_norms)).dimshuffle(0, 'x')
-# 
-#         if self.max_col_norm is not None:
-#             assert self.max_row_norm is None
-#             if W in updates:
-#                 updated_W = updates[W]
-#                 col_norms = T.sqrt(T.sum(T.sqr(updated_W), axis=0))
-#                 desired_norms = T.clip(col_norms, 0, self.max_col_norm)
-#                 updates[W] = updated_W * desired_norms / (1e-7 + col_norms)
-#         
-#         #assert b in updates
-# 
-#         #updates[b] += factor
+    def censor_updates(self, updates):
+        print "====censor_updates====="
+ 
+        W, b = self.get_params()
+ 
+        if self.mask_weights is not None:
+            if W in updates:
+                updates[W] = updates[W] * self.mask
+ 
+        if self.max_row_norm is not None:
+            if W in updates:
+                updated_W = updates[W]
+                row_norms = T.sqrt(T.sum(T.sqr(updated_W), axis=1))
+                desired_norms = T.clip(row_norms, 0, self.max_row_norm)
+                updates[W] = updated_W * (desired_norms / (1e-7 + row_norms)).dimshuffle(0, 'x')
+ 
+        if self.max_col_norm is not None:
+            assert self.max_row_norm is None
+            if W in updates:
+                updated_W = updates[W]
+                col_norms = T.sqrt(T.sum(T.sqr(updated_W), axis=0))
+                desired_norms = T.clip(col_norms, 0, self.max_col_norm)
+                updates[W] = updated_W * desired_norms / (1e-7 + col_norms)
+         
+        renormalize = (T.gt(self.active_rate, self.desired_active_rate) - 0.5) * 2
+        #self.threshold = self.active_rate
+        #T.abs_(self.desired_active_rate - self.active_rate) * self.adjust_threshold_factor
+        self.threshold += renormalize * T.abs_(self.desired_active_rate - self.active_rate) * self.adjust_threshold_factor
+
                    
     def cost(self, *args, **kwargs):
         raise NotImplementedError()
