@@ -15,7 +15,7 @@ class NoisyRELU(Linear):
         self.adjust_threshold_factor = adjust_threshold_factor
         self.desired_active_rate = desired_active_rate
         self.threshold = theano.tensor.zeros(shape=(self.dim,), dtype=theano.config.floatX)
-
+        self.active_rate = theano.tensor.zeros(shape=(self.dim,), dtype=theano.config.floatX)
 
     def fprop(self, state_below):
         print "======fprop====="
