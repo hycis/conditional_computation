@@ -63,6 +63,7 @@ model_config = DD({
             # mca : mean classification average of a minibatch
             #'channel_array'                 : ['mca'],
             'channel_array'                 : None,
+            
 
             # valid or test or both
             'monitoring_dataset'           : ['test', 'valid'],
