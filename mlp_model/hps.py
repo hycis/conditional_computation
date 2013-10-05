@@ -328,7 +328,7 @@ class HPS:
         #cost = MLPCost()
         #cost = self.model.cost
         cost = MethodCost('cost_from_X')
-        cost = self.get_costs()
+        #cost = self.get_costs()
         num_train_batch = (self.ntrain/self.batch_size)
         print "num training batches:", num_train_batch
 
