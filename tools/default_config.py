@@ -70,7 +70,7 @@ model_config = DD({
             'monitoring_dataset'           : ['test', 'valid'],
 
             'random_seed'                   : 251,
-            'batch_size'                    : ((100, 200), int),
+            'batch_size'                    : 64,
             'learning_rate'                 : ((1e-5, 0.01), float),
             'init_momentum'                 : ((0.5, 0.99), float),
 
@@ -139,7 +139,7 @@ model_config = DD({
                 'hidden1' : DD({
                     'layer_class'           : 'noisyRELU',
                     'sparse_init'           : 15,
-                    'dim'                   : ((50, 100), int),
+                    'dim'                   : 100,
                     'max_col_norm'          : ((0.1, 10.), float),
                     'noise_factor'          : ((1., 10.), float),
                     'adjust_threshold_factor'   : ((1., 10.), float),
