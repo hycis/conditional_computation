@@ -284,7 +284,7 @@ class HPS:
                         use_bias=True,
                         noise_factor=layer.noise_factor,
                         desired_active_rate=layer.desired_active_rate,
-                        adjust_bias_factor=layer.adjust_bias_factor
+                        adjust_threshold_factor=layer.adjust_threshold_factor
                         )
 
     def setup_monitor(self):
