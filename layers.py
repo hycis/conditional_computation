@@ -2,10 +2,10 @@ from pylearn2.models.mlp import Linear, MLP
 import numpy as np
 import theano.tensor as T
 from theano.compat.python2x import OrderedDict
-from theano.tensor.shared_randomstreams import RandomStreams
+#from theano.tensor.shared_randomstreams import RandomStreams
 from pylearn2.utils import sharedX
 import theano
-#from theano.sandbox.rng_mrg import MRG_RandomStreams as RandomStreams
+from theano.sandbox.rng_mrg import MRG_RandomStreams as RandomStreams
 from pylearn2.space import CompositeSpace
 
 
@@ -33,7 +33,7 @@ class NoisyRELU(Linear):
         batch_size = p.shape[0]
         self.active_rate = (T.gt(p, self.threshold).sum(axis=0, dtype=theano.config.floatX) / batch_size).astype(theano.config.floatX)
         renormalize = (T.gt(self.active_rate, self.desired_active_rate) - 0.5) * 2
-        self.threshold = self.active_rate
+        #self.threshold = self.active_rate
         #T.abs_(self.desired_active_rate - self.active_rate) * self.adjust_threshold_factor
         #self.threshold += renormalize * T.abs_(self.desired_active_rate - self.active_rate) * self.adjust_threshold_factor
         #import pdb
@@ -56,22 +56,22 @@ class NoisyRELU(Linear):
 
         #return p
         
-    def get_data_specs(self, model):
-        space = CompositeSpace([model.get_input_space(), model.get_output_space()])
-        sources = (model.get_input_source(), model.get_target_source())
-        return (space, sources)        
-
-
-    def get_monitoring_data_specs(self):
-        """
-        Return the (space, source) data_specs for self.get_monitoring_channels.
-
-        In this case, we want the inputs and targets.
-        """
-        space = CompositeSpace((self.get_input_space(),
-                                self.get_output_space()))
-        source = (self.get_input_source(), self.get_target_source())
-        return (space, source)
+#     def get_data_specs(self, model):
+#         space = CompositeSpace([model.get_input_space(), model.get_output_space()])
+#         sources = (model.get_input_source(), model.get_target_source())
+#         return (space, sources)        
+# 
+# 
+#     def get_monitoring_data_specs(self):
+#         """
+#         Return the (space, source) data_specs for self.get_monitoring_channels.
+# 
+#         In this case, we want the inputs and targets.
+#         """
+#         space = CompositeSpace((self.get_input_space(),
+#                                 self.get_output_space()))
+#         source = (self.get_input_source(), self.get_target_source())
+#         return (space, source)
 
 
 #     
