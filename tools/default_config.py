@@ -108,7 +108,8 @@ model_config = DD({
                     'term_class'            : 'monitorbased',
                     'proportional_decrease' : 1e-4,
                     'max_epochs'            : 20,
-                    'channel_name'          : 'valid_softmax2_misclass'
+                    'channel_name'          : 'valid_softmax2_misclass',
+                    'save_best_channel'     : 'valid_softmax2_nll',
                 })
             }),
 

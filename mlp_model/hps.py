@@ -54,16 +54,14 @@ class HPS:
                  state,
                  base_channel_names = ['train_objective'],
                  save_prefix = "model_",
-                 mbsb_channel_name = 'valid_hps_cost',
                  cache_dataset = True):
         self.cache_dataset = cache_dataset
         self.dataset_cache = {}
         self.state = state
-
+        self.mbsb_channel_name = self.state.term_array.early_stopping.save_best_channel
         self.base_channel_names = base_channel_names
         self.save_prefix = save_prefix
         # TODO store this in data for each experiment or dataset
-        self.mbsb_channel_name = mbsb_channel_name
 
     def run(self):
         (model, learner, algorithm) \
@@ -326,10 +324,10 @@ class HPS:
 
     def get_train_sgd(self):
         # cost
-        cost = self.get_costs()
+        #cost = self.get_costs()
         #cost = MLPCost()
         #cost = self.model.cost
-        #cost = MethodCost('cost_from_X')
+        cost = MethodCost('cost_from_X')
         cost = self.get_costs()
         num_train_batch = (self.ntrain/self.batch_size)
         print "num training batches:", num_train_batch
@@ -452,7 +450,7 @@ class HPS:
             extensions.append(fn(ext_obj))
 
         # monitor based save best
-        print 'self.mbsb_channel_name', self.mbsb_channel_name
+        print 'save best channel', self.mbsb_channel_name
         if self.mbsb_channel_name is not None:
             self.save_path = self.save_prefix + str(self.state.config_id) + "_optimum.pkl"
             extensions.append(MonitorBasedSaveBest(
