@@ -36,6 +36,10 @@ class NoisyRELU(Linear):
         #self.threshold += renormalize * T.abs_(self.desired_active_rate - self.active_rate) * self.adjust_threshold_factor
         import pdb
         pdb.set_trace()
+        
+        import traceback
+        trace = traceback.format_exc()
+        
         rval = T.gt(p, self.active_rate).astype(theano.config.floatX)
         return rval
         
