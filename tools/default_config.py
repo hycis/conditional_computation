@@ -307,11 +307,19 @@ model_config = DD({
                 'hidden1' : DD({
                     'layer_class'           : 'noisyRELU',
                     'sparse_init'           : 15,
+<<<<<<< HEAD
                     'dim'                   : 1000,
                     'max_col_norm'          : None,
                     'noise_factor'          : 1.0,
                     'adjust_bias_factor'    : 1.0,
                     'desired_active_rate'   : 0.1
+=======
+                    'dim'                   : ((50, 100), int),
+                    'max_col_norm'          : ((0.1, 10.), float),
+                    'noise_factor'          : ((1., 10.), float),
+                    'adjust_threshold_factor'   : ((1., 10.), float),
+                    'desired_active_rate'   : ((0.1, 0.4), float)
+>>>>>>> d417268f5fc57ad0d7c3f64998278beacd984b5d
                     }),
 
                 #Second hidden layer
