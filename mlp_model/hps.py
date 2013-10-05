@@ -138,9 +138,16 @@ class HPS:
 	'''
 
         if self.state.dataset == 'mnist':
-            dataset = MNIST(which_set='train', shuffle=True, one_hot=True)
             self.test_ddm = MNIST(which_set='test', one_hot=True)
-            self.train_ddm, self.valid_ddm = dataset.split_dataset_holdout(train_size=10000)
+
+            dataset = MNIST(which_set='train', shuffle=True, one_hot=True)
+            train_X, valid_X = np.split(dataset.X, [50000])
+            train_y, valid_y = np.split(dataset.y, [50000])
+            self.train_ddm = DenseDesignMatrix(X=train_X, y=train_y)
+            self.valid_ddm = DenseDesignMatrix(X=valid_X, y=valid_y)
+            
+            
+            #self.train_ddm, self.valid_ddm = dataset.split_dataset_holdout(train_size=10000)
 
         elif self.state.dataset == 'svhn':
             self.train_ddm = SVHN(which_set='splitted_train')
