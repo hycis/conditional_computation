@@ -211,44 +211,44 @@ class FunCost1(MLPCost):
 
 class MightyQuestHPS(HPS):
 
-    def get_cost_hint1(self):
-        mlp_cost = HintCost1()
-        # default monitor based save best channel:
-        test_cost = mlp_cost.get_test_cost(self.model,
-                                            self.minibatch,
-                                            self.target)
-        #print test_cost
-        self.add_channel('cost',test_cost)
+#     def get_cost_hint1(self):
+#         mlp_cost = HintCost1()
+#         # default monitor based save best channel:
+#         test_cost = mlp_cost.get_test_cost(self.model,
+#                                             self.minibatch,
+#                                             self.target)
+#         #print test_cost
+#         self.add_channel('cost',test_cost)
+#  
+#         if self.dropout:
+#             mlp_cost.setup_dropout(
+#                 default_input_include_prob=1,
+#                 default_input_scale=1,
+#                 input_scales=self.input_scales,
+#                 input_include_probs=self.input_include_probs)
+#  
+#         costs = [mlp_cost]
+#         if self.weight_decay:
+#             coeffs = []
+#             for layer in self.mlp.layers:
+#                 coeffs.append(self.weight_decays[layer.layer_name])
+#             wd_cost = WeightDecay(coeffs)
+#             costs.append(wd_cost)
+#         if self.l1_weight_decay:
+#             coeffs = []
+#             for layer in self.mlp.layers:
+#                 coeffs.append(self.l1_weight_decays[layer.layer_name])
+#             lwd_cost = L1WeightDecay(coeffs)
+#             costs.append(lwd_cost)
+#         return costs
  
-        if self.dropout:
-            mlp_cost.setup_dropout(
-                default_input_include_prob=1,
-                default_input_scale=1,
-                input_scales=self.input_scales,
-                input_include_probs=self.input_include_probs)
- 
-        costs = [mlp_cost]
-        if self.weight_decay:
-            coeffs = []
-            for layer in self.mlp.layers:
-                coeffs.append(self.weight_decays[layer.layer_name])
-            wd_cost = WeightDecay(coeffs)
-            costs.append(wd_cost)
-        if self.l1_weight_decay:
-            coeffs = []
-            for layer in self.mlp.layers:
-                coeffs.append(self.l1_weight_decays[layer.layer_name])
-            lwd_cost = L1WeightDecay(coeffs)
-            costs.append(lwd_cost)
-        return costs
- 
-    def get_layer_hint1(self, layer):
-        return HintLayer1(dim=layer['dim'], irange=layer['irange'],istdev=layer['istdev'],
-                sparse_init=layer['sparse_init'],sparse_stdev=layer['sparse_stdev'],
-                include_prob=layer['include_prob'],init_bias=layer['init_bias'],
-                W_lr_scale=layer['W_lr_scale'],b_lr_scale=layer['b_lr_scale'],
-                max_row_norm=layer['max_row_norm'],max_col_norm=layer['max_col_norm'],
-                layer_name=layer['layer_name'],softmax_columns=layer['softmax_columns'])
+#     def get_layer_hint1(self, layer):
+#         return HintLayer1(dim=layer['dim'], irange=layer['irange'],istdev=layer['istdev'],
+#                 sparse_init=layer['sparse_init'],sparse_stdev=layer['sparse_stdev'],
+#                 include_prob=layer['include_prob'],init_bias=layer['init_bias'],
+#                 W_lr_scale=layer['W_lr_scale'],b_lr_scale=layer['b_lr_scale'],
+#                 max_row_norm=layer['max_row_norm'],max_col_norm=layer['max_col_norm'],
+#                 layer_name=layer['layer_name'],softmax_columns=layer['softmax_columns'])
  
     def get_cost_fun1(self):
         mlp_cost = FunCost1()
@@ -257,8 +257,8 @@ class MightyQuestHPS(HPS):
                                             self.minibatch,
                                             self.target)
         
-        import pdb
-        pdb.set_trace()
+        #import pdb
+        #pdb.set_trace()
         self.add_channel('cost',test_cost)
  
         if self.dropout:
@@ -439,40 +439,3 @@ def experiment(state, channel):
     print 'We will save the experiment state'
     dump_pkl(state, 'state.pkl')
     return channel.COMPLETE
-
-# 
-# if __name__ == '__main__':
-#     model_config = model_config['mlp']
-#     # Test hyperparameters
-#     ## Dataset info ##
-#     model_config.task = 'fun'
-#     model_config.pack = 'pack15'
-#     model_config.dataset = 'default+ratios'
-#     model_config.batch_size = 32
-# 
-#     model_config.learning_rate = 0.01
-#     model_config.init_momentum = 0.5
-#     model_config.ext_array.exp_decay.decay_factor = 0.85
-#     model_config.ext_array.exp_decay.min_lr_scale = 1e-2
-#     model_config.ext_array.moment_adj.saturate_epoch = 20
-#     model_config.term_array.epoch_count.max_epochs = 1000
-#     model_config.term_array.early_stopping.proportional_decrease = 1e-5
-# 
-#     ## Layers ##
-#     # First Hidden layer
-#     model_config.layers.hidden1.layer_class = 'sigmoid'
-#     model_config.layers.hidden1.dim = 100
-#     # Second Hidden layer
-#     model_config.layers.hidden2.layer_class = 'sigmoid'
-#     model_config.layers.hidden2.dim = 100
-#     # Third Hidden layer
-#     # IMPORTANT:
-#     # Since there are only 2 hidden layers in default_config.py, we have to
-#     # create the third hidden layer.
-#     model_config.layers['hidden3'] = DD()
-#     model_config.layers.hidden3['layer_class'] = 'sigmoid'
-#     model_config.layers.hidden3['dim'] = 100
-# 
-#     update_default_layer_hyperparams(model_config)
-#     hps = MightyQuestHPS(state=model_config)
-#     hps.run()

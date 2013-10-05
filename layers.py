@@ -2,17 +2,19 @@ from pylearn2.models.mlp import Linear, MLP
 import numpy as np
 import theano.tensor as T
 from theano.compat.python2x import OrderedDict
-from theano.tensor.shared_randomstreams import RandomStreams
+#from theano.tensor.shared_randomstreams import RandomStreams
 from pylearn2.utils import sharedX
 import theano
+from theano.sandbox.rng_mrg import MRG_RandomStreams as RandomStreams
 
 class NoisyRELU(Linear):
 
-    def __init__(self, noise_factor=1, desired_active_rate=0.1, adjust_bias_factor=1, **kwargs):
+    def __init__(self, noise_factor=1, desired_active_rate=0.1, adjust_threshold_factor=1, **kwargs):
         super(NoisyRELU, self).__init__(**kwargs)
         self.noise_factor = noise_factor
-        self.adjust_bias_factor = adjust_bias_factor
+        self.adjust_threshold_factor = adjust_threshold_factor
         self.desired_active_rate = desired_active_rate
+        self.threshold = theano.tensor.zeros(shape=(self.dim,), dtype=theano.config.floatX)
 
 
     def fprop(self, state_below):
@@ -24,42 +26,47 @@ class NoisyRELU(Linear):
         un = rng.uniform(size=size, low=0., high=1.)
         self.noise = T.log(un/(1-un))
         p = self._linear_part(state_below) + self.noise * self.noise_factor
-        p = T.maximum(0., p)
-        batch_size = p.shape[0] 
-        self.active_rate = T.gt(p, 0).sum(axis=0, dtype=theano.config.floatX) / batch_size
+        
+        #batch_size = p.shape[0] 
+        #self.active_rate = T.gt(p, 0).sum(axis=0, dtype=theano.config.floatX) / batch_size
+        #renormalize = (T.gt(self.desired_active_rate, self.active_rate) - 0.5) * 2
+        
+        #factor = renormalize * T.abs_(self.desired_active_rate - self.active_rate) * self.adjust_threshold_factor
+        
+        #self.threshold += factor
+        p = T.maximum(0, p)
+
 
         return p
         
-    
-    def censor_updates(self, updates):
-        print "====censor_updates====="
-
-        W, b = self.get_params()
-
-        if self.mask_weights is not None:
-            if W in updates:
-                updates[W] = updates[W] * self.mask
-
-        if self.max_row_norm is not None:
-            if W in updates:
-                updated_W = updates[W]
-                row_norms = T.sqrt(T.sum(T.sqr(updated_W), axis=1))
-                desired_norms = T.clip(row_norms, 0, self.max_row_norm)
-                updates[W] = updated_W * (desired_norms / (1e-7 + row_norms)).dimshuffle(0, 'x')
-
-        if self.max_col_norm is not None:
-            assert self.max_row_norm is None
-            if W in updates:
-                updated_W = updates[W]
-                col_norms = T.sqrt(T.sum(T.sqr(updated_W), axis=0))
-                desired_norms = T.clip(col_norms, 0, self.max_col_norm)
-                updates[W] = updated_W * desired_norms / (1e-7 + col_norms)
-        
-        assert b in updates
-        
-        renormalize = (T.gt(self.desired_active_rate, self.active_rate) - 0.5) * 2
-        factor = renormalize * T.abs_(self.desired_active_rate - self.active_rate) * self.adjust_bias_factor
-        updates[b] += factor
+#     
+#     def censor_updates(self, updates):
+#         print "====censor_updates====="
+# 
+#         W, b = self.get_params()
+# 
+#         if self.mask_weights is not None:
+#             if W in updates:
+#                 updates[W] = updates[W] * self.mask
+# 
+#         if self.max_row_norm is not None:
+#             if W in updates:
+#                 updated_W = updates[W]
+#                 row_norms = T.sqrt(T.sum(T.sqr(updated_W), axis=1))
+#                 desired_norms = T.clip(row_norms, 0, self.max_row_norm)
+#                 updates[W] = updated_W * (desired_norms / (1e-7 + row_norms)).dimshuffle(0, 'x')
+# 
+#         if self.max_col_norm is not None:
+#             assert self.max_row_norm is None
+#             if W in updates:
+#                 updated_W = updates[W]
+#                 col_norms = T.sqrt(T.sum(T.sqr(updated_W), axis=0))
+#                 desired_norms = T.clip(col_norms, 0, self.max_col_norm)
+#                 updates[W] = updated_W * desired_norms / (1e-7 + col_norms)
+#         
+#         #assert b in updates
+# 
+#         #updates[b] += factor
                    
     def cost(self, *args, **kwargs):
         raise NotImplementedError()
@@ -129,7 +136,9 @@ class NoisyRELU(Linear):
 #         rval['==factor max=='] = T.max(factor)
 #         rval['==factor min=='] = T.min(factor)
 #         
-#         
+#       
+        rval["===p.shape[0]"] = state.shape[0]
+        rval['===p.shape[1]'] = state.shape[1]  
         rval['===max_active_rate===='] = max_active_rate
         rval['===min_active_rate===='] = min_active_rate
         rval['===mean_active_rate===='] = mean_active_rate
@@ -172,3 +181,6 @@ class NoisyRELU(Linear):
         rval['min_x_min_u'] = mn.min()
  
         return rval
+    
+    
+    

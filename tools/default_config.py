@@ -140,7 +140,7 @@ model_config = DD({
                     'dim'                   : ((50, 100), int),
                     'max_col_norm'          : ((0.1, 10.), float),
                     'noise_factor'          : ((1., 10.), float),
-                    'adjust_bias_factor'   : ((1., 10.), float),
+                    'adjust_threshold_factor'   : ((1., 10.), float),
                     'desired_active_rate'   : ((0.1, 0.4), float)
                     }),
 
