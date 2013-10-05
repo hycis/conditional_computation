@@ -2,10 +2,10 @@ from pylearn2.models.mlp import Linear, MLP
 import numpy as np
 import theano.tensor as T
 from theano.compat.python2x import OrderedDict
-#from theano.tensor.shared_randomstreams import RandomStreams
+from theano.tensor.shared_randomstreams import RandomStreams
 from pylearn2.utils import sharedX
 import theano
-from theano.sandbox.rng_mrg import MRG_RandomStreams as RandomStreams
+#from theano.sandbox.rng_mrg import MRG_RandomStreams as RandomStreams
 from pylearn2.space import CompositeSpace
 
 
@@ -36,11 +36,11 @@ class NoisyRELU(Linear):
         self.threshold = self.active_rate
         #T.abs_(self.desired_active_rate - self.active_rate) * self.adjust_threshold_factor
         #self.threshold += renormalize * T.abs_(self.desired_active_rate - self.active_rate) * self.adjust_threshold_factor
-        import pdb
-        pdb.set_trace()
+        #import pdb
+        #pdb.set_trace()
         
-        import traceback
-        trace = traceback.format_exc()
+        #import traceback
+        #trace = traceback.format_exc()
         
         rval = T.gt(p, self.active_rate).astype(theano.config.floatX)
         return rval
