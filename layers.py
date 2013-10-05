@@ -137,8 +137,8 @@ class NoisyRELU(Linear):
 #         rval['==factor min=='] = T.min(factor)
 #         
 #       
-        rval["===p.shape[0]"] = state.shape[0]
-        rval['===p.shape[1]'] = state.shape[1]  
+        rval["===p.shape[0]"] = state.shape[0] * 1. 
+        rval['===p.shape[1]'] = state.shape[1] * 1. 
         rval['===max_active_rate===='] = max_active_rate
         rval['===min_active_rate===='] = min_active_rate
         rval['===mean_active_rate===='] = mean_active_rate
