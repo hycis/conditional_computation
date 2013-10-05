@@ -54,6 +54,12 @@ class NoisyRELU(Linear):
 
         #return p
         
+    def get_data_specs(self, model):
+        space = CompositeSpace([model.get_input_space(), model.get_output_space()])
+        sources = (model.get_input_source(), model.get_target_source())
+        return (space, sources)        
+
+
 #     
 #     def censor_updates(self, updates):
 #         print "====censor_updates====="
