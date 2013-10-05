@@ -6,6 +6,8 @@ from theano.compat.python2x import OrderedDict
 from pylearn2.utils import sharedX
 import theano
 from theano.sandbox.rng_mrg import MRG_RandomStreams as RandomStreams
+from pylearn2.space import CompositeSpace
+
 
 class NoisyRELU(Linear):
 
@@ -58,6 +60,18 @@ class NoisyRELU(Linear):
         space = CompositeSpace([model.get_input_space(), model.get_output_space()])
         sources = (model.get_input_source(), model.get_target_source())
         return (space, sources)        
+
+
+    def get_monitoring_data_specs(self):
+        """
+        Return the (space, source) data_specs for self.get_monitoring_channels.
+
+        In this case, we want the inputs and targets.
+        """
+        space = CompositeSpace((self.get_input_space(),
+                                self.get_output_space()))
+        source = (self.get_input_source(), self.get_target_source())
+        return (space, source)
 
 
 #     
