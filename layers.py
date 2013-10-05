@@ -89,14 +89,22 @@ class NoisyRELU(Linear):
         col_norms = T.sqrt(sq_W.sum(axis=0))
          
         print 'get_monitoring ===== '
+        
+        max_active_rate = self.active_rate.max()
+        min_active_rate = self.active_rate.min()
+        mean_active_rate = self.active_rate.mean()
+        
+        max_noise = self.noise.max()
+        min_noise = self.noise.min()
+        mean_noise = self.noise.mean()
          
         return OrderedDict([
-#                             ('=====max_active_rate', max_active_rate),
-#                             ('=====mean_active_rate', mean_active_rate),
-#                             ('=====min_active_rate', min_active_rate),
-#                              ('=====max_noise=====', max_noise),
-#                              ('=====mean_noise=====', mean_noise),
-#                              ('=====min_noise=====', min_noise),
+                            ('=====max_active_rate', max_active_rate),
+                            ('=====mean_active_rate', mean_active_rate),
+                            ('=====min_active_rate', min_active_rate),
+                             ('=====max_noise=====', max_noise),
+                             ('=====mean_noise=====', mean_noise),
+                             ('=====min_noise=====', min_noise),
 #                             ('w_shape_0', W.shape[0] * 1.),
 #                             ('w_shape_1', W.shape[1] * 1.),
                             ('row_norms_min'  , row_norms.min()),
@@ -121,13 +129,13 @@ class NoisyRELU(Linear):
 #         for i in xrange(self.dim):
 #             active_rate.append(T.sum(T.neq(state[:][i], 0), dtype=theano.config.floatX) / (state.shape[0]))
 #  
-        max_active_rate = self.active_rate.max()
-        min_active_rate = self.active_rate.min()
-        mean_active_rate = self.active_rate.mean()
-        
-        max_noise = self.noise.max()
-        min_noise = self.noise.min()
-        mean_noise = self.noise.mean()
+#         max_active_rate = self.active_rate.max()
+#         min_active_rate = self.active_rate.min()
+#         mean_active_rate = self.active_rate.mean()
+#         
+#         max_noise = self.noise.max()
+#         min_noise = self.noise.min()
+#         mean_noise = self.noise.mean()
         
         
 #         num_row = self.active_rate.shape[0] * 1.
@@ -145,12 +153,12 @@ class NoisyRELU(Linear):
 #       
         #rval["===p.shape[0]"] = state.shape[0] * 1. 
         #rval['===p.shape[1]'] = state.shape[1] * 1. 
-        rval['===max_active_rate===='] = max_active_rate
-        rval['===min_active_rate===='] = min_active_rate
-        rval['===mean_active_rate===='] = mean_active_rate
-        rval['===max_noise==='] = max_noise
-        rval['===min_noise==='] = min_noise
-        rval['===mean_noise==='] = mean_noise
+#         rval['===max_active_rate===='] = max_active_rate
+#         rval['===min_active_rate===='] = min_active_rate
+#         rval['===mean_active_rate===='] = mean_active_rate
+#         rval['===max_noise==='] = max_noise
+#         rval['===min_noise==='] = min_noise
+#         rval['===mean_noise==='] = mean_noise
 #         rval['===num_row_active_rate===='] = num_row
 #         #rval['===num_col_active_rate===='] = num_col
 #         
