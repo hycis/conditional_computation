@@ -426,12 +426,7 @@ def dump_pkl(obj, path):
 
 
 def experiment(state, channel):
-    #path = '/data/lisa/exp/wuzhen/code/'
-    #sys.path.append(path)
-    #os.environ['PYTHONPATH'] += ':' + path
     state = update_default_layer_hyperparams(state)
-    #import pdb
-    #pdb.set_trace()
     hps = HPS(state=state)
     #import pdb
     #pdb.set_trace()

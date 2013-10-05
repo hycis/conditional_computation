@@ -136,34 +136,23 @@ class HPS:
         del test_X
         del test_Y
 	'''
-        #import pdb
-        #pdb.set_trace()
+
         if self.state.dataset == 'mnist':
-            self.train_ddm = MNIST(which_set='train', one_hot=True)
+            dataset = MNIST(which_set='train', shuffle=True, one_hot=True)
             self.test_ddm = MNIST(which_set='test', one_hot=True)
-            self.valid_ddm = MNIST(which_set='test', one_hot=True)
+            self.train_ddm, self.valid_ddm = dataset.split_dataset_holdout(train_size=50000)
 
         elif self.state.dataset == 'svhn':
-            #import pdb
-            #pdb.set_trace()
             self.train_ddm = SVHN(which_set='splitted_train')
             self.test_ddm = SVHN(which_set='test')
             self.valid_ddm = SVHN(which_set='valid')
-        
-        #self.monitoring_dataset = {'valid': self.valid_ddm}          
 
-
-        #self.nvis = self.train_ddm.get_design_matrix().shape[1]
-        #self.nout = self.train_ddm.get_targets().shape[1]
         self.nvis = self.train_ddm.X.shape[1]
         self.nout = self.train_ddm.y.shape[1]
         
-        #self.ntrain = self.train_ddm.get_design_matrix().shape[0]
         self.ntrain = self.train_ddm.X.shape[0]
         self.nvalid = self.valid_ddm.X.shape[0]
         self.ntest = self.test_ddm.X.shape[0]
-        #self.nvalid = self.valid_ddm.get_design_matrix().shape[0]
-        #self.ntest = self.test_ddm.get_design_matrix().shape[0]
 
         print "nvis, nout :", self.nvis, self.nout
         print "ntrain :", self.ntrain
@@ -481,23 +470,23 @@ class HPS:
 #         for channel_id in self.state.channel_array:
 #             fn = getattr(self, 'setup_channel_'+channel_id)
 #             fn(self.state.monitoring_dataset)
-
-    def add_channel(self, channel_name, tensor_var,
-                    dataset_names=['valid','test']):
-        for dataset_name in dataset_names:
-            if dataset_name == 'valid':
-                ddm = self.valid_ddm
-            elif dataset_name == 'test':
-                if self.test_ddm is None:
-                    continue
-                ddm = self.test_ddm
-            log_channel_name = dataset_name+'_hps_'+channel_name
-
-            self.log_channel_names.append(log_channel_name)
-
-            self.monitor.add_channel(log_channel_name,
-                                (self.minibatch, self.target),
-                                tensor_var, ddm)
+# 
+#     def add_channel(self, channel_name, tensor_var,
+#                     dataset_names=['valid','test']):
+#         for dataset_name in dataset_names:
+#             if dataset_name == 'valid':
+#                 ddm = self.valid_ddm
+#             elif dataset_name == 'test':
+#                 if self.test_ddm is None:
+#                     continue
+#                 ddm = self.test_ddm
+#             log_channel_name = dataset_name+'_hps_'+channel_name
+# 
+#             self.log_channel_names.append(log_channel_name)
+# 
+#             self.monitor.add_channel(log_channel_name,
+#                                 (self.minibatch, self.target),
+#                                 tensor_var, ddm)
 
 '''
 def get_data_path(state):
