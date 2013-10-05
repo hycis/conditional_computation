@@ -357,23 +357,23 @@ class HPS:
                     init_momentum=self.state.init_momentum,
                     train_iteration_mode=train_iter_mode)
 
-    def get_costs(self):
-        costs = []
-        for cost_type in self.state.cost_array:
-            costs.extend(self.get_cost(cost_type))
-
-        if len(costs) > 1:
-            cost = SumOfCosts(costs)
-        else:
-            cost = costs[0]
-
-        return cost
-
-    def get_cost(self, cost_type):
-        #import pdb
-        #pdb.set_trace()
-        fn = getattr(self, 'get_cost_'+cost_type)
-        return fn()
+#     def get_costs(self):
+#         costs = []
+#         for cost_type in self.state.cost_array:
+#             costs.extend(self.get_cost(cost_type))
+# 
+#         if len(costs) > 1:
+#             cost = SumOfCosts(costs)
+#         else:
+#             cost = costs[0]
+# 
+#         return cost
+# 
+#     def get_cost(self, cost_type):
+#         #import pdb
+#         #pdb.set_trace()
+#         fn = getattr(self, 'get_cost_'+cost_type)
+#         return fn()
 
 #     def get_cost_mlp(self):
 #         raise NotImplementedError('get_cost_mlp not supported!')
