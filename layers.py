@@ -8,7 +8,7 @@ import theano
 from theano.sandbox.rng_mrg import MRG_RandomStreams as RandomStreams
 from pylearn2.space import CompositeSpace
 
-import theano.config as config
+from theano as config
 
 
 class NoisyRELU(Linear):
