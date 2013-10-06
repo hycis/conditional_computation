@@ -37,7 +37,8 @@ class NoisyRELU(Linear):
         #self.threshold = T.zeros(shape=(self.dim,), dtype=theano.config.floatX)
 
         batch_size = p.shape[0]
-        self.active_rate = (T.gt(p, self.threshold).sum(axis=0, dtype=theano.config.floatX) / batch_size).astype(theano.config.floatX)
+        self.active_rate = (T.gt(p, self.threshold).sum(axis=0, 
+                            dtype=theano.config.floatX) / batch_size).astype(theano.config.floatX)
                 #import pdb
         #pdb.set_trace()
         
@@ -107,7 +108,9 @@ class NoisyRELU(Linear):
         #T.abs_(self.desired_active_rate - self.active_rate) * self.adjust_threshold_factor
         #import pdb
         #pdb.set_trace()
-        updates[self.threshold] += renormalize * T.abs_(self.desired_active_rate - self.active_rate) * self.adjust_threshold_factor
+        self.factor = renormalize * T.abs_(self.desired_active_rate - 
+                    self.active_rate) * self.adjust_threshold_factor
+        updates[self.threshold] += self.factor
 
                    
     def cost(self, *args, **kwargs):
@@ -205,7 +208,8 @@ class NoisyRELU(Linear):
         rval['===<active_rate_100_threshold>'] = self.threshold[100]
 
         rval['===max_active_rate_threshold>'] = self.threshold[self.active_rate.argmax()]
-        rval['===min_active_rate_threshold>'] = self.threshold[self.active_rate.argmin()]
+        rval['===max_active_rate_factor'] = self.factor[self.active_rate.argmax()]
+        #rval['===min_active_rate_threshold>'] = self.threshold[self.active_rate.argmin()]
 
         
 #         rval['===num_row_active_rate===='] = num_row
