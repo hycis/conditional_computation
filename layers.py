@@ -8,7 +8,7 @@ import theano
 from theano.sandbox.rng_mrg import MRG_RandomStreams as RandomStreams
 from pylearn2.space import CompositeSpace
 
-import theano.config.floatX as floatX
+import theano.config as config
 
 
 class NoisyRELU(Linear):
@@ -21,9 +21,9 @@ class NoisyRELU(Linear):
         #self.threshold = theano.shared(np.zeros(shape=(self.dim,)))
         
         
-        #self.threshold = T.zeros(shape=(self.dim,), dtype=floatX)
+        #self.threshold = T.zeros(shape=(self.dim,), dtype=config.floatX)
         #self.threshold = theano.sparse.basic.as_sparse_or_tensor_variable(np.zeros(shape=(self.dim,)))
-        #self.active_rate = theano.tensor.zeros(shape=(self.dim,), dtype=floatX)
+        #self.active_rate = theano.tensor.zeros(shape=(self.dim,), dtype=config.floatX)
         
     def fprop(self, state_below):
         print "======fprop====="
@@ -34,22 +34,22 @@ class NoisyRELU(Linear):
         un = rng.uniform(size=size, low=0., high=1.)
         self.noise = T.log(un/(1-un))
         p = self._linear_part(state_below) + self.noise * self.noise_factor
-        #self.threshold = T.zeros(shape=(self.dim,), dtype=floatX)
+        #self.threshold = T.zeros(shape=(self.dim,), dtype=config.floatX)
 
         batch_size = p.shape[0]
         self.active_rate = (T.gt(p, self.threshold).sum(axis=0, 
-                            dtype=floatX) / batch_size).astype(floatX)
+                            dtype=config.floatX) / batch_size).astype(config.floatX)
                 #import pdb
         #pdb.set_trace()
         
         #import traceback
         #trace = traceback.format_exc()
         
-        rval = T.gt(p, self.threshold).astype(floatX) * p
+        rval = T.gt(p, self.threshold).astype(config.floatX) * p
         return rval
         
         #batch_size = p.shape[0] 
-        #self.active_rate = T.gt(p, 0).sum(axis=0, dtype=floatX) / batch_size
+        #self.active_rate = T.gt(p, 0).sum(axis=0, dtype=config.floatX) / batch_size
         
         #factor = renormalize * T.abs_(self.desired_active_rate - self.active_rate) * self.adjust_threshold_factor
         
@@ -92,7 +92,7 @@ class NoisyRELU(Linear):
         
         self.threshold = sharedX(np.zeros(shape=(self.dim,)), 'threshold')
         
-        #T.zeros(shape=(self.dim,), dtype=floatX, name='threshold')
+        #T.zeros(shape=(self.dim,), dtype=config.floatX, name='threshold')
         
         #self._params.append(self.threshold)
 
@@ -167,7 +167,7 @@ class NoisyRELU(Linear):
          
 #         active_rate = []
 #         for i in xrange(self.dim):
-#             active_rate.append(T.sum(T.neq(state[:][i], 0), dtype=floatX) / (state.shape[0]))
+#             active_rate.append(T.sum(T.neq(state[:][i], 0), dtype=config.floatX) / (state.shape[0]))
 #  
         max_active_rate = self.active_rate.max()
         min_active_rate = self.active_rate.min()
@@ -214,7 +214,7 @@ class NoisyRELU(Linear):
         rval['===<active_rate_100>==='] = self.active_rate[100]
         rval['===<active_rate_100_threshold>'] = self.threshold[100]
         rval['===<active_rate_100_factor'] = factor[100]
-        rval['===<active_rate_100_normalize'] = renormalize[100].astype(floatX)
+        rval['===<active_rate_100_normalize'] = renormalize[100].astype(config.floatX)
 
 
         rval['===max_active_rate_threshold>'] = self.threshold[self.active_rate.argmax()]
