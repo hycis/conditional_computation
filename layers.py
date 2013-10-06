@@ -153,7 +153,8 @@ class NoisyRELU(Linear):
     def get_monitoring_channels_from_state(self, state, target=None):
         
         rng = RandomStreams()
-        renormalize = T.lt(rng.uniform(size=(1000,), low=0., high=1.), self.desired_active_rate)
+        renormalize = T.lt(rng.uniform(size=(1000,), low=0., high=1.), self.desired_active_rate, 
+                           dtype=theano.config.floatX)
         
         factor = renormalize * T.abs_(self.desired_active_rate - 
                     self.active_rate) * self.adjust_threshold_factor
@@ -214,7 +215,7 @@ class NoisyRELU(Linear):
         rval['===<active_rate_100>==='] = self.active_rate[100]
         rval['===<active_rate_100_threshold>'] = self.threshold[100]
         rval['===<active_rate_100_factor'] = factor[100]
-        rval['===<active_rate_100_normalize'] = renormalize[100].astype(theano.config.floatX)
+        rval['===<active_rate_100_normalize'] = renormalize[100]
 
 
         rval['===max_active_rate_threshold>'] = self.threshold[self.active_rate.argmax()]
