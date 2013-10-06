@@ -142,7 +142,7 @@ model_config = DD({
                     'sparse_init'           : 15,
                     'dim'                   : 1000,
                     'max_col_norm'          : ((0.1, 10.), float),
-                    'noise_factor'          : 1,
+                    'noise_factor'          : 0,
                     'adjust_threshold_factor'   : 1,
                     'desired_active_rate'   : ((0.1, 0.4), float)
                     }),
