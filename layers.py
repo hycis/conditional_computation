@@ -153,7 +153,7 @@ class NoisyRELU(Linear):
     def get_monitoring_channels_from_state(self, state, target=None):
         
         
-        renormalize = (T.gt(self.active_rate, self.desired_active_rate) - 0.5)
+        renormalize = T.gt(self.active_rate, self.desired_active_rate)
         
         factor = renormalize * T.abs_(self.desired_active_rate - 
                     self.active_rate) * self.adjust_threshold_factor
