@@ -30,145 +30,45 @@ class NoisyRELU(Linear):
         
         rng = RandomStreams(seed=234)
 
-        size = theano.tensor.as_tensor_variable((state_below.shape[0], self.dim))
-        un = rng.uniform(size=size, low=0., high=1.)
+        #size = theano.tensor.as_tensor_variable((state_below.shape[0], self.dim))
+        un = rng.uniform(size=(state_below.shape[0], self.dim), low=0., high=1.)
         self.noise = T.log(un/(1-un))
         p = self._linear_part(state_below) + self.noise * self.noise_factor
-        #self.threshold = T.zeros(shape=(self.dim,), dtype=config.floatX)
 
         batch_size = p.shape[0]
-        self.active_rate = (T.gt(p, self.threshold).sum(axis=0, 
-                            dtype=config.floatX) / batch_size).astype(config.floatX)
-                #import pdb
-        #pdb.set_trace()
+        self.active_rate = T.gt(p, self.threshold).sum(axis=0, dtype=config.floatX) / batch_size
         
-        #import traceback
-        #trace = traceback.format_exc()
+        return T.gt(p, self.threshold) * p
         
-        rval = T.gt(p, self.threshold).astype(config.floatX) * p
-        return rval
-        
-        #batch_size = p.shape[0] 
-        #self.active_rate = T.gt(p, 0).sum(axis=0, dtype=config.floatX) / batch_size
-        
-        #factor = renormalize * T.abs_(self.desired_active_rate - self.active_rate) * self.adjust_threshold_factor
-        
-        #self.threshold += factor
-        #p = T.maximum(0, p)
 
-
-        #return p
-        
-#     def get_data_specs(self, model):
-#         space = CompositeSpace([model.get_input_space(), model.get_output_space()])
-#         sources = (model.get_input_source(), model.get_target_source())
-#         return (space, sources)        
-# 
-# 
-#     def get_monitoring_data_specs(self):
-#         """
-#         Return the (space, source) data_specs for self.get_monitoring_channels.
-# 
-#         In this case, we want the inputs and targets.
-#         """
-#         space = CompositeSpace((self.get_input_space(),
-#                                 self.get_output_space()))
-#         source = (self.get_input_source(), self.get_target_source())
-#         return (space, source)
 
     def get_params(self):
         print "===get_params==="
-        #import pdb
-        #pdb.set_trace()
         return super(NoisyRELU, self).get_params() + [self.threshold]
 
 
  
     def set_input_space(self, space):
-        print "===set_input_space"
+        print "===set_input_space==="
         super(NoisyRELU, self).set_input_space(space)
-        #import pdb
-        #pdb.set_trace()
-        
         self.threshold = sharedX(np.zeros(shape=(self.dim,)), 'threshold')
-        
-        #T.zeros(shape=(self.dim,), dtype=config.floatX, name='threshold')
-        
-        #self._params.append(self.threshold)
+
 
 #     
     def censor_updates(self, updates):
-        print "====censor_updates====="
+        print "===censor_updates==="
  
-        super(NoisyRELU, self).censor_updates(updates)
-
-        
+        super(NoisyRELU, self).censor_updates(updates)        
         renormalize = (T.gt(self.active_rate, self.desired_active_rate) - 0.5) * 2.
-        #self.threshold = self.active_rate
-        #T.abs_(self.desired_active_rate - self.active_rate) * self.adjust_threshold_factor
-        #import pdb
-        #pdb.set_trace()
-        
         updates[self.threshold] += renormalize * T.abs_(self.desired_active_rate - 
                     self.active_rate) * self.adjust_threshold_factor
-        
-        #self.mlp.monitor.add_channel(name='factor for argmax', val=self.factor[self.active_rate.argmax()])
 
-                   
-    def cost(self, *args, **kwargs):
-        raise NotImplementedError()
-     
-    def get_monitoring_channels(self):
- 
-        W ,= self.transformer.get_params()
- 
-        assert W.ndim == 2
- 
-        sq_W = T.sqr(W)
- 
-        row_norms = T.sqrt(sq_W.sum(axis=1))
-        col_norms = T.sqrt(sq_W.sum(axis=0))
-         
-        print 'get_monitoring ===== '
-        
-        
-         
-        return OrderedDict([
-#                             ('=====max_active_rate', max_active_rate),
-#                             ('=====mean_active_rate', mean_active_rate),
-#                             ('=====min_active_rate', min_active_rate),
-#                              ('=====max_noise=====', max_noise),
-#                              ('=====mean_noise=====', mean_noise),
-#                              ('=====min_noise=====', min_noise),
-#                             ('w_shape_0', W.shape[0] * 1.),
-#                             ('w_shape_1', W.shape[1] * 1.),
-                            ('row_norms_min'  , row_norms.min()),
-                            ('row_norms_mean' , row_norms.mean()),
-                            ('row_norms_max'  , row_norms.max()),
-                            ('col_norms_min'  , col_norms.min()),
-                            ('col_norms_mean' , col_norms.mean()),
-                            ('col_norms_max'  , col_norms.max()),
-                            ])
- 
     def get_monitoring_channels_from_state(self, state, target=None):
         
-        rng = RandomStreams()
-        renormalize = T.cast((rng.uniform(size=(1000,), low=0., high=1.) > self.desired_active_rate), 'float64')
+        rval = super(NoisyRELU, self).get_monitoring_channels_from_state(state)
         
-        factor = renormalize * T.abs_(self.desired_active_rate - 
-                    self.active_rate) * self.adjust_threshold_factor
-        print "=========get monitor channels from state"
-        rval =  OrderedDict()
- 
-        mx = state.max(axis=0)
-        mean = state.mean(axis=0)
-        mn = state.min(axis=0)
-        rg = mx - mn
-         
-#         active_rate = []
-#         for i in xrange(self.dim):
-#             active_rate.append(T.sum(T.neq(state[:][i], 0), dtype=config.floatX) / (state.shape[0]))
-#  
+        print "===get_monitor_channels_from_state==="
+        
         max_active_rate = self.active_rate.max()
         min_active_rate = self.active_rate.min()
         mean_active_rate = self.active_rate.mean()
@@ -215,12 +115,9 @@ class NoisyRELU(Linear):
         
         rval['===<active_rate_100>==='] = self.active_rate[100]
         rval['===<active_rate_100_threshold>'] = self.threshold[100]
-        rval['===<active_rate_100_factor'] = factor[100]
-        rval['===<active_rate_100_normalize'] = renormalize[100]
         
         
         rval['===max_active_rate_threshold>'] = self.threshold[self.active_rate.argmax()]
-        rval['===max_active_rate_factor'] = factor[self.active_rate.argmax()]
         #rval['===min_active_rate_threshold>'] = self.threshold[self.active_rate.argmin()]
 
         
@@ -234,31 +131,7 @@ class NoisyRELU(Linear):
 #         rval['active_rate_30'] = active_rate[30]
 #         rval['active_rate_45'] = active_rate[45]
 #         rval['active_rate_50'] = active_rate[50]
-#         rval['active_rate_mean'] = T.sum(active_rate) / self.dim
-#  
-        #rval['active_shape_0'] = self.active_rate.shape[0] * 1.
-#         rval['active_shape_1'] = self.active_rate.shape[1] * 1.
-#          
-        #self.noise -= 10
-         
-        #rval['state_shape[1]'] = float(state.shape[1])
-         
-        rval['range_x_max_u'] = rg.max()
-        rval['range_x_mean_u'] = rg.mean()
-        rval['range_x_min_u'] = rg.min()
- 
-        rval['max_x_max_u'] = mx.max()
-        rval['max_x_mean_u'] = mx.mean()
-        rval['max_x_min_u'] = mx.min()
- 
-        rval['mean_x_max_u'] = mean.max()
-        rval['mean_x_mean_u'] = mean.mean()
-        rval['mean_x_min_u'] = mean.min()
- 
-        rval['min_x_max_u'] = mn.max()
-        rval['min_x_mean_u'] = mn.mean()
-        rval['min_x_min_u'] = mn.min()
- 
+
         return rval
     
     
