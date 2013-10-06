@@ -70,7 +70,7 @@ model_config = DD({
             'monitoring_dataset'           : ['test', 'valid'],
 
             'random_seed'                   : 251,
-            'batch_size'                    : 64,
+            'batch_size'                    : 200,
             'learning_rate'                 : ((1e-5, 0.01), float),
             'init_momentum'                 : ((0.5, 0.99), float),
 

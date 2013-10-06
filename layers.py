@@ -205,6 +205,8 @@ class NoisyRELU(Linear):
         rval['===<active_rate_100_threshold>'] = self.threshold[100]
 
         rval['===max_active_rate_threshold>'] = self.threshold[self.active_rate.argmax()]
+        rval['===min_active_rate_threshold>'] = self.threshold[self.active_rate.argmin()]
+
         
 #         rval['===num_row_active_rate===='] = num_row
 #         #rval['===num_col_active_rate===='] = num_col
