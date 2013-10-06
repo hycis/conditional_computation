@@ -76,6 +76,8 @@ class NoisyRELU(Linear):
     def set_input_space(self, space):
         print "===set_input_space"
         super(NoisyRELU, self).set_input_space(space)
+        import pdb
+        pdb.set_trace()
         self._params.append(self.threshold)
 
 #     
