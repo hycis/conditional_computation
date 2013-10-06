@@ -32,7 +32,8 @@ class NoisyRELU(Linear):
         un = rng.uniform(size=size, low=0., high=1.)
         self.noise = T.log(un/(1-un))
         p = self._linear_part(state_below) + self.noise * self.noise_factor
-        
+        self.threshold = T.zeros(shape=(self.dim,), dtype=theano.config.floatX)
+
         batch_size = p.shape[0]
         self.active_rate = (T.gt(p, self.threshold).sum(axis=0, dtype=theano.config.floatX) / batch_size).astype(theano.config.floatX)
                 #import pdb
@@ -72,11 +73,10 @@ class NoisyRELU(Linear):
 #         source = (self.get_input_source(), self.get_target_source())
 #         return (space, source)
 
-#     def get_params(self):
-#         print "===get_params==="
-#         rval = super(NoisyRELU, self).get_params()
-#         rval.append(self.threshold)
-#         return rval
+    def get_params(self):
+        print "===get_params==="
+        return super(NoisyRELU, self).get_params() + [self.threshold]
+
 
  
     def set_input_space(self, space):
