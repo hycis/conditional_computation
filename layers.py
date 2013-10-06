@@ -103,7 +103,7 @@ class NoisyRELU(Linear):
         super(NoisyRELU, self).censor_updates(updates)
 
         
-        renormalize = (T.gt(self.active_rate, self.desired_active_rate) - 0.5) * 2
+        renormalize = (T.gt(self.active_rate, self.desired_active_rate) - 0.5) * 2.
         #self.threshold = self.active_rate
         #T.abs_(self.desired_active_rate - self.active_rate) * self.adjust_threshold_factor
         #import pdb
