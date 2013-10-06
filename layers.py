@@ -78,14 +78,14 @@ class NoisyRELU(Linear):
         rval.append(self.threshold)
         return rval
 
-# 
-#     def set_input_space(self, space):
-#         print "===set_input_space"
-#         super(NoisyRELU, self).set_input_space(space)
-#         import pdb
-#         pdb.set_trace()
-#         
-#         self._params.append(self.threshold)
+ 
+    def set_input_space(self, space):
+        print "===set_input_space"
+        super(NoisyRELU, self).set_input_space(space)
+        #import pdb
+        #pdb.set_trace()
+        self.threshold = theano.shared(np.zeros(shape=(self.dim,)))
+        #self._params.append(self.threshold)
 
 #     
     def censor_updates(self, updates):
