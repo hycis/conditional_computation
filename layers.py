@@ -111,6 +111,7 @@ class NoisyRELU(Linear):
         self.factor = renormalize * T.abs_(self.desired_active_rate - 
                     self.active_rate) * self.adjust_threshold_factor
         updates[self.threshold] += self.factor
+        self.mlp.monitor.add_channel(name='factor for argmax', val=self.factor[self.active_rate.argmax()])
 
                    
     def cost(self, *args, **kwargs):
@@ -208,7 +209,7 @@ class NoisyRELU(Linear):
         rval['===<active_rate_100_threshold>'] = self.threshold[100]
 
         rval['===max_active_rate_threshold>'] = self.threshold[self.active_rate.argmax()]
-        rval['===max_active_rate_factor'] = self.factor[self.active_rate.argmax()]
+        #rval['===max_active_rate_factor'] = self.factor[self.active_rate.argmax()]
         #rval['===min_active_rate_threshold>'] = self.threshold[self.active_rate.argmin()]
 
         
