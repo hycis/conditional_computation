@@ -140,18 +140,18 @@ model_config = DD({
                 'hidden1' : DD({
                     'layer_class'           : 'noisyRELU',
                     'sparse_init'           : 15,
-                    'dim'                   : 1000,
+                    'dim'                   : 2000,
                     'max_col_norm'          : 1.,
                     'noise_factor'          : 0.1,
                     'adjust_threshold_factor'   : 1.,
-                    'desired_active_rate'   : 0.5
+                    'desired_active_rate'   : 0.1
                     }),
 
                 #Second hidden layer
                 'hidden2' : DD({
                     'layer_class'           : 'tanh',
                     #'dim'                   : ((100, 2000), int),
-                    'dim'                   : 100,
+                    'dim'                   : 200,
                     'max_col_norm'          : ((0.1, 5.), float),
                     #'weight_decay'          : ((1., 9.), float),
 

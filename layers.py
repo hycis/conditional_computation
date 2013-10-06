@@ -124,13 +124,13 @@ class NoisyRELU(Linear):
 #         rval['===num_row_active_rate===='] = num_row
 #         #rval['===num_col_active_rate===='] = num_col
 #         
-#         
-#         rval['active_rate_cal_1'] = self.active_rate[1]
-#         rval['active_rate_1'] = active_rate[1]
-#         rval['active_rate_15'] = active_rate[15]
-#         rval['active_rate_30'] = active_rate[30]
-#         rval['active_rate_45'] = active_rate[45]
-#         rval['active_rate_50'] = active_rate[50]
+#
+        active_rate = self.active_rate
+        rval['active_rate_1'] = active_rate[1]
+        rval['active_rate_15'] = active_rate[15]
+        rval['active_rate_300'] = active_rate[30]
+        rval['active_rate_450'] = active_rate[45]
+        rval['active_rate_700'] = active_rate[50]
 
         return rval
     
