@@ -10,6 +10,7 @@ from pylearn2.space import CompositeSpace
 
 
 
+
 class NoisyRELU(Linear):
 
     def __init__(self, noise_factor=1, desired_active_rate=0.1, adjust_threshold_factor=1, **kwargs):
@@ -87,7 +88,11 @@ class NoisyRELU(Linear):
         super(NoisyRELU, self).set_input_space(space)
         #import pdb
         #pdb.set_trace()
-        self.threshold = T.zeros(shape=(self.dim,), dtype=theano.config.floatX, name='threshold')
+        
+        self.threshold = sharedX(np.zeros(shape=(self.dim,)), 'threshold')
+        
+        #T.zeros(shape=(self.dim,), dtype=theano.config.floatX, name='threshold')
+        
         #self._params.append(self.threshold)
 
 #     
