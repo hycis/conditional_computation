@@ -16,7 +16,7 @@ class NoisyRELU(Linear):
         self.noise_factor = noise_factor
         self.adjust_threshold_factor = adjust_threshold_factor
         self.desired_active_rate = desired_active_rate
-        self.threshold = theano.shared(np.zeros(shape=(self.dim,)))
+        #self.threshold = theano.shared(np.zeros(shape=(self.dim,)))
         
         
         #self.threshold = T.zeros(shape=(self.dim,), dtype=theano.config.floatX)
@@ -72,11 +72,11 @@ class NoisyRELU(Linear):
 #         source = (self.get_input_source(), self.get_target_source())
 #         return (space, source)
 
-    def get_params(self):
-        print "===get_params==="
-        rval = super(NoisyRELU, self).get_params()
-        rval.append(self.threshold)
-        return rval
+#     def get_params(self):
+#         print "===get_params==="
+#         rval = super(NoisyRELU, self).get_params()
+#         rval.append(self.threshold)
+#         return rval
 
  
     def set_input_space(self, space):
@@ -84,7 +84,7 @@ class NoisyRELU(Linear):
         super(NoisyRELU, self).set_input_space(space)
         #import pdb
         #pdb.set_trace()
-        self.threshold = theano.shared(np.zeros(shape=(self.dim,)))
+        self.threshold = T.zeros(shape=(self.dim,), dtype=theano.config.floatX)
         #self._params.append(self.threshold)
 
 #     
