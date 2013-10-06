@@ -144,7 +144,7 @@ model_config = DD({
                     'max_col_norm'          : 1.,
                     'noise_factor'          : 0.1,
                     'adjust_threshold_factor'   : 1.,
-                    'desired_active_rate'   : 0.1
+                    'desired_active_rate'   : 0.5
                     }),
 
                 #Second hidden layer
