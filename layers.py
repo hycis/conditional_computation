@@ -75,6 +75,8 @@ class NoisyRELU(Linear):
 
     def get_params(self):
         print "===get_params==="
+        import pdb
+        pdb.set_trace()
         return super(NoisyRELU, self).get_params() + [self.threshold]
 
 
