@@ -32,7 +32,7 @@ class NoisyRELU(Linear):
         un = rng.uniform(size=size, low=0., high=1.)
         self.noise = T.log(un/(1-un))
         p = self._linear_part(state_below) + self.noise * self.noise_factor
-        self.threshold = T.zeros(shape=(self.dim,), dtype=theano.config.floatX)
+        #self.threshold = T.zeros(shape=(self.dim,), dtype=theano.config.floatX)
 
         batch_size = p.shape[0]
         self.active_rate = (T.gt(p, self.threshold).sum(axis=0, dtype=theano.config.floatX) / batch_size).astype(theano.config.floatX)
