@@ -108,10 +108,11 @@ class NoisyRELU(Linear):
         #T.abs_(self.desired_active_rate - self.active_rate) * self.adjust_threshold_factor
         #import pdb
         #pdb.set_trace()
-        self.factor = renormalize * T.abs_(self.desired_active_rate - 
+        
+        updates[self.threshold] += renormalize * T.abs_(self.desired_active_rate - 
                     self.active_rate) * self.adjust_threshold_factor
-        updates[self.threshold] += self.factor
-        self.mlp.monitor.add_channel(name='factor for argmax', val=self.factor[self.active_rate.argmax()])
+        
+        #self.mlp.monitor.add_channel(name='factor for argmax', val=self.factor[self.active_rate.argmax()])
 
                    
     def cost(self, *args, **kwargs):
@@ -151,6 +152,11 @@ class NoisyRELU(Linear):
  
     def get_monitoring_channels_from_state(self, state, target=None):
         
+        
+        renormalize = (T.gt(self.active_rate, self.desired_active_rate) - 0.5) * 2
+        
+        factor = renormalize * T.abs_(self.desired_active_rate - 
+                    self.active_rate) * self.adjust_threshold_factor
         print "=========get monitor channels from state"
         rval =  OrderedDict()
  
@@ -209,7 +215,7 @@ class NoisyRELU(Linear):
         rval['===<active_rate_100_threshold>'] = self.threshold[100]
 
         rval['===max_active_rate_threshold>'] = self.threshold[self.active_rate.argmax()]
-        #rval['===max_active_rate_factor'] = self.factor[self.active_rate.argmax()]
+        rval['===max_active_rate_factor'] = factor[self.active_rate.argmax()]
         #rval['===min_active_rate_threshold>'] = self.threshold[self.active_rate.argmin()]
 
         
