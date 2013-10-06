@@ -77,8 +77,8 @@ class NoisyRELU(Linear):
 
     def get_params(self):
         print "===get_params==="
-        import pdb
-        pdb.set_trace()
+        #import pdb
+        #pdb.set_trace()
         return super(NoisyRELU, self).get_params() + [self.threshold]
 
 
@@ -105,8 +105,8 @@ class NoisyRELU(Linear):
         renormalize = (T.gt(self.active_rate, self.desired_active_rate) - 0.5) * 2
         #self.threshold = self.active_rate
         #T.abs_(self.desired_active_rate - self.active_rate) * self.adjust_threshold_factor
-        import pdb
-        pdb.set_trace()
+        #import pdb
+        #pdb.set_trace()
         updates[self.threshold] += renormalize * T.abs_(self.desired_active_rate - self.active_rate) * self.adjust_threshold_factor
 
                    
@@ -200,6 +200,9 @@ class NoisyRELU(Linear):
         rval['===mean_threshold==='] = mean_threshold
         
         rval['===desired_active_rate==='] = self.desired_active_rate
+        
+        rval['===<active_rate_100>==='] = self.active_rate[100]
+        rval['===<active_rate_100_threshold'] = self.threshold[100]
         
 #         rval['===num_row_active_rate===='] = num_row
 #         #rval['===num_col_active_rate===='] = num_col
