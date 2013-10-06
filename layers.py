@@ -72,13 +72,20 @@ class NoisyRELU(Linear):
 #         source = (self.get_input_source(), self.get_target_source())
 #         return (space, source)
 
+    def get_params(self):
+        print "===get_params==="
+        rval = super(NoisyRELU, self).get_params()
+        rval.append(self.threshold)
+        return rval
 
-    def set_input_space(self, space):
-        print "===set_input_space"
-        super(NoisyRELU, self).set_input_space(space)
-        import pdb
-        pdb.set_trace()
-        self._params.append(self.threshold)
+# 
+#     def set_input_space(self, space):
+#         print "===set_input_space"
+#         super(NoisyRELU, self).set_input_space(space)
+#         import pdb
+#         pdb.set_trace()
+#         
+#         self._params.append(self.threshold)
 
 #     
     def censor_updates(self, updates):
