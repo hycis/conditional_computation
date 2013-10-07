@@ -151,8 +151,8 @@ class HPS:
             self.test_ddm = SVHN(which_set='test')
             self.valid_ddm = SVHN(which_set='valid')
 
-        #import pdb
-        #pdb.set_trace()
+        import pdb
+        pdb.set_trace()
         self.nvis = self.train_ddm.X.shape[1]
         self.nout = self.train_ddm.y.shape[1]
         
