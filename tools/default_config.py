@@ -61,7 +61,7 @@ model_config = DD({
             # for mnist
             #'train_iteration_mode'          : 'random_uniform',
             # for svhn
-            'train_iteration_mode'          : 'batchwise_shuffled_equential',
+            'train_iteration_mode'          : 'batchwise_shuffled_sequential',
 
             # Momentum and exponential decay
             'ext_array'                     : DD({
