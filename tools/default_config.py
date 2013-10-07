@@ -35,7 +35,7 @@ model_config = DD({
         'mlp' : DD({
             'model_class'                   : 'mlp',
             'train_class'                   : 'sgd',
-            'config_id'                     : 12345,
+            'config_id'                     : 'Noisy2000',
             # TODO: cached should always be True!
             'cached'                        : True,
             
@@ -71,7 +71,7 @@ model_config = DD({
 
             'random_seed'                   : 251,
             'batch_size'                    : 200,
-            'learning_rate'                 : ((1e-5, 0.01), float),
+            'learning_rate'                 : ((1e-4, 0.1), float),
             'init_momentum'                 : ((0.5, 0.99), float),
 
             # Cost
@@ -99,7 +99,7 @@ model_config = DD({
                 # Max number of training epochs
                 'epoch_count' : DD({
                     'term_class'            : 'epochcounter',
-                    'max_epochs'            : 50,
+                    'max_epochs'            : 100,
                 }),
                 # Early stopping on validation set
                 # If after max_epochs, we don't see significant improvement
@@ -141,9 +141,9 @@ model_config = DD({
                     'layer_class'           : 'noisyRELU',
                     'sparse_init'           : 15,
                     'dim'                   : 2000,
-                    'max_col_norm'          : 1.,
-                    'noise_factor'          : 1,
-                    'adjust_threshold_factor'   : 0.1,
+                    'max_col_norm'          : ((0.1, 1.), float),
+                    'noise_factor'          : ((0.1, 5.), float),
+                    'adjust_threshold_factor'   : ((0.01, 2), float),
                     'desired_active_rate'   : 0.1
                     }),
 
