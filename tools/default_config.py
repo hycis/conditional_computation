@@ -35,7 +35,7 @@ model_config = DD({
         'mlp' : DD({
             'model_class'                   : 'mlp',
             'train_class'                   : 'sgd',
-            'config_id'                     : 'Noisy2000',
+            'config_id'                     : 'Noiseless200',
             # TODO: cached should always be True!
             'cached'                        : True,
             
@@ -125,27 +125,27 @@ model_config = DD({
                 # NOTE: the supported activation functions are:
                 # tanh, sigmoid, rectifiedlinear, softmax
 
-                # First hidden layer
-#                 'hidden1' : DD({
-#                     'layer_class'           : 'tanh',
-#                     #'dim'                   : ((100, 2000), int),
-#                     'dim'                   : ((200, 1000), int),
-#                     'max_col_norm'          : ((0.1, 8.), float)
-#                     #'weight_decay'          : ((0.1, 7.), float),
-#                     #'sparse_init'           : 15
-#                 }),
+#                First hidden layer
+                'hidden1' : DD({
+                    'layer_class'           : 'rectifiedlinear',
+                    #'dim'                   : ((100, 2000), int),
+                    'dim'                   : 200,
+                    'max_col_norm'          : ((0.1, 8.), float),
+                    #'weight_decay'          : ((0.1, 7.), float),
+                    'sparse_init'           : 15
+                }),
 
 
                 #First hidden layer
-                'hidden1' : DD({
-                    'layer_class'           : 'noisyRELU',
-                    'sparse_init'           : 15,
-                    'dim'                   : 2000,
-                    'max_col_norm'          : ((0.1, 1.), float),
-                    'noise_factor'          : ((0.1, 5.), float),
-                    'adjust_threshold_factor'   : ((0.01, 2), float),
-                    'desired_active_rate'   : 0.1
-                    }),
+#                 'hidden1' : DD({
+#                     'layer_class'           : 'noisyRELU',
+#                     'sparse_init'           : 15,
+#                     'dim'                   : 2000,
+#                     'max_col_norm'          : ((0.1, 1.), float),
+#                     'noise_factor'          : ((0.1, 5.), float),
+#                     'adjust_threshold_factor'   : ((0.01, 2), float),
+#                     'desired_active_rate'   : 0.1
+#                     }),
 
                 #Second hidden layer
                 'hidden2' : DD({
