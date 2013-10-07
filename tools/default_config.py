@@ -35,12 +35,12 @@ model_config = DD({
         'mlp' : DD({
             'model_class'                   : 'mlp',
             'train_class'                   : 'sgd',
-            'config_id'                     : 'Noisy2000svhn',
+            'config_id'                     : 'Noisy2000mnist',
             # TODO: cached should always be True!
             'cached'                        : True,
             
             # dataset can be mnist or svhn
-            'dataset'                       : 'svhn',
+            'dataset'                       : 'mnist',
             
             # task can be fun or diff.
             #'task'                          : 'fun',
@@ -99,7 +99,7 @@ model_config = DD({
                 # Max number of training epochs
                 'epoch_count' : DD({
                     'term_class'            : 'epochcounter',
-                    'max_epochs'            : 100,
+                    'max_epochs'            : 200,
                 }),
                 # Early stopping on validation set
                 # If after max_epochs, we don't see significant improvement
@@ -107,7 +107,7 @@ model_config = DD({
                 'early_stopping' : DD({
                     'term_class'            : 'monitorbased',
                     'proportional_decrease' : 1e-4,
-                    'max_epochs'            : 20,
+                    'max_epochs'            : 30,
                     'channel_name'          : 'valid_softmax2_misclass',
                     'save_best_channel'     : 'valid_softmax2_nll',
                 })
@@ -143,7 +143,7 @@ model_config = DD({
                     'dim'                   : 2000,
                     'max_col_norm'          : ((0.1, 1.), float),
                     'noise_factor'          : ((0.1, 5.), float),
-                    'adjust_threshold_factor'   : ((0.01, 2), float),
+                    'adjust_threshold_factor'   : ((0.001, 2), float),
                     'desired_active_rate'   : 0.1
                     }),
 

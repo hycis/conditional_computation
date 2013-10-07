@@ -335,10 +335,10 @@ class HPS:
             else:
                 monitoring_dataset = None
             
-        #if self.state.dataset == 'svhn':
-         #   train_iter_mode = 'batchwise_shuffled_equential'
-        #elif self.state.dataset == 'mnist':
-        train_iter_mode = self.state.train_iteration_mode
+        if self.state.dataset == 'svhn':
+            train_iter_mode = 'batchwise_shuffled_equential'
+        elif self.state.dataset == 'mnist':
+            train_iter_mode = self.state.train_iteration_mode
             
         return SGD( learning_rate=self.state.learning_rate,
                     batch_size=self.state.batch_size,
