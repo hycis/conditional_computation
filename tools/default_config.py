@@ -35,27 +35,13 @@ model_config = DD({
         'mlp' : DD({
             'model_class'                   : 'mlp',
             'train_class'                   : 'sgd',
-            'config_id'                     : 'Noisy2000mnist',
+            'config_id'                     : 'Noisy2000svhn',
             # TODO: cached should always be True!
             'cached'                        : True,
             
             # dataset can be mnist or svhn
-            'dataset'                       : 'mnist',
+            'dataset'                       : 'svhn',
             
-            # task can be fun or diff.
-            #'task'                          : 'fun',
-            #'pack'                          : 'pack15',
-            # Available datasets for fun pack 15:
-            # default
-            # default+ratios
-            # default+cfeatures
-            # default+extra
-            # Available datasets for diff pack 15:
-            # only test.
-            # They will be regenerated since
-            # we found some nan values in the default diff pack 15 datasets.
-            #'dataset'                       : 'default+ratios',
-
             'input_space_id'                : None,
             'nvis'                          : None,
 
@@ -64,8 +50,6 @@ model_config = DD({
             #'channel_array'                 : ['mca'],
             'channel_array'                 : None,
             
-            
-
             # valid or test or both
             'monitoring_dataset'           : ['test', 'valid'],
 
@@ -74,10 +58,10 @@ model_config = DD({
             'learning_rate'                 : ((1e-4, 0.1), float),
             'init_momentum'                 : ((0.5, 0.99), float),
 
-            # Cost
-            'train_iteration_mode'          : 'random_uniform',
-            # fun1 or hint1 works with output1 layer set as fun1 or hint1
-            #'cost_array'                    : ['fun1'],
+            # for mnist
+            #'train_iteration_mode'          : 'random_uniform',
+            # for svhn
+            'train_iteration_mode'          : 'batchwise_shuffled_equential',
 
             # Momentum and exponential decay
             'ext_array'                     : DD({
@@ -141,8 +125,8 @@ model_config = DD({
                     'layer_class'           : 'noisyRELU',
                     'sparse_init'           : 15,
                     'dim'                   : 2000,
-                    'max_col_norm'          : ((0.1, 1.), float),
-                    'noise_factor'          : ((0.1, 5.), float),
+                    'max_col_norm'          : ((0.1, 5.), float),
+                    'noise_factor'          : ((0.01, 5.), float),
                     'adjust_threshold_factor'   : ((0.001, 2), float),
                     'desired_active_rate'   : 0.1
                     }),
