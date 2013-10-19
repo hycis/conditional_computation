@@ -115,8 +115,8 @@ class HPS:
         # of features kept based on MI.
         #base_path = get_data_path(self.state)
         #self.base_path = base_path
-	
-	'''
+
+    '''
         task = self.state.task
         train_X = np.load(os.path.join(base_path, 'train_%s_cached_X.npy'%task))
         train_Y = np.load(os.path.join(base_path, 'train_%s_cached_Y.npy'%task))
@@ -367,63 +367,6 @@ class HPS:
                     init_momentum=self.state.init_momentum,
                     train_iteration_mode=self.state.train_iteration_mode)
 
-#     def get_costs(self):
-#         costs = []
-#         for cost_type in self.state.cost_array:
-#             costs.extend(self.get_cost(cost_type))
-# 
-#         if len(costs) > 1:
-#             cost = SumOfCosts(costs)
-#         else:
-#             cost = costs[0]
-# 
-#         return cost
-# 
-#     def get_cost(self, cost_type):
-#         #import pdb
-#         #pdb.set_trace()
-#         fn = getattr(self, 'get_cost_'+cost_type)
-#         return fn()
-
-#     def get_cost_mlp(self):
-#         raise NotImplementedError('get_cost_mlp not supported!')
-#         # TODO: add missing_target_value as a config option.
-#         missing_target_value = None
-#         # TODO: check if default_dropout_prob is the same as dropout_probability
-#         # and should it be taken from the last layer.
-#         default_dropout_prob = self.state.layers[-1]['dropout_probability']
-#         default_dropout_scale = self.state.layers[-1]['dropout_scale']
-#         mlp_cost = MLPCost(cost_type=self.state.cost_type,
-#                             missing_target_value=missing_target_value)
-#         #import pdb
-#         #pdb.set_trace()
-#         # default monitor based save best channel:
-#         test_cost = mlp_cost.get_test_cost(self.model,
-#                                            self.minibatch,
-#                                            self.target)
-#         self.add_channel('cost',test_cost)
-#  
-#         if self.dropout:
-#             mlp_cost.setup_dropout(
-#                 default_input_include_prob=(1.-default_dropout_prob),
-#                 default_input_scale=default_dropout_scale,
-#                 input_scales=self.input_scales,
-#                 input_include_probs=self.input_include_probs)
-#  
-#         costs = [mlp_cost]
-#         if self.weight_decay:
-#             coeffs = []
-#             for layer in self.mlp.layers:
-#                 coeffs.append(self.weight_decays[layer.layer_name])
-#             wd_cost = WeightDecay(coeffs)
-#             costs.append(wd_cost)
-#         if self.l1_weight_decay:
-#             coeffs = []
-#             for layer in self.mlp.layers:
-#                 coeffs.append(self.l1_weight_decays[layer.layer_name])
-#             lwd_cost = L1WeightDecay(coeffs)
-#             costs.append(lwd_cost)
-#         return costs
 
     def get_terminations(self):
         if 'term_array' not in self.state:
@@ -484,30 +427,6 @@ class HPS:
             saturate=ext_obj.saturate_epoch
         )
 
-#     def setup_channels(self):
-#         if self.state.channel_array is None:
-#             return
-# 
-#         for channel_id in self.state.channel_array:
-#             fn = getattr(self, 'setup_channel_'+channel_id)
-#             fn(self.state.monitoring_dataset)
-# 
-#     def add_channel(self, channel_name, tensor_var,
-#                     dataset_names=['valid','test']):
-#         for dataset_name in dataset_names:
-#             if dataset_name == 'valid':
-#                 ddm = self.valid_ddm
-#             elif dataset_name == 'test':
-#                 if self.test_ddm is None:
-#                     continue
-#                 ddm = self.test_ddm
-#             log_channel_name = dataset_name+'_hps_'+channel_name
-# 
-#             self.log_channel_names.append(log_channel_name)
-# 
-#             self.monitor.add_channel(log_channel_name,
-#                                 (self.minibatch, self.target),
-#                                 tensor_var, ddm)
 
 '''
 def get_data_path(state):
