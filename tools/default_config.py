@@ -35,7 +35,7 @@ model_config = DD({
         'mlp' : DD({
             'model_class'                   : 'mlp',
             'train_class'                   : 'sgd',
-            'config_id'                     : 'Noisy2000svhn',
+            'config_id'                     : 'GaussianNoise3000svhn200epoch',
             # TODO: cached should always be True!
             'cached'                        : True,
             
@@ -59,9 +59,9 @@ model_config = DD({
             'init_momentum'                 : ((0.5, 0.99), float),
 
             # for mnist
-            'train_iteration_mode'          : 'random_uniform',
+            #train_iteration_mode'          : 'random_uniform',
             # for svhn
-            #'train_iteration_mode'          : 'batchwise_shuffled_sequential',
+            'train_iteration_mode'          : 'batchwise_shuffled_sequential',
 
             # Momentum and exponential decay
             'ext_array'                     : DD({
@@ -83,7 +83,7 @@ model_config = DD({
                 # Max number of training epochs
                 'epoch_count' : DD({
                     'term_class'            : 'epochcounter',
-                    'max_epochs'            : 200,
+                    'max_epochs'            : 100,
                 }),
                 # Early stopping on validation set
                 # If after max_epochs, we don't see significant improvement
@@ -91,7 +91,7 @@ model_config = DD({
                 'early_stopping' : DD({
                     'term_class'            : 'monitorbased',
                     'proportional_decrease' : 1e-4,
-                    'max_epochs'            : 30,
+                    'max_epochs'            : 20,
                     'channel_name'          : 'valid_softmax2_misclass',
                     'save_best_channel'     : 'valid_softmax2_nll',
                 })
@@ -119,24 +119,51 @@ model_config = DD({
 #                     'sparse_init'           : 15
 #                 }),
 
+ #               First hidden layer
+#                 'hidden1' : DD({
+#                     'layer_class'           : 'tanh',
+#                     #'dim'                   : ((100, 2000), int),
+#                     'dim'                   : 300,
+#                     'max_col_norm'          : ((0.1, 5.), float),
+#                     'weight_decay'          : ((1., 9.), float),
+# 
+#                     #'sparse_init'           : 15
+#                 }),
+
+                'hidden1' : DD({
+                    'layer_class'           : 'gaussianRELU',
+                    #'dim'                   : ((100, 2000), int),
+                    'dim'                   : 3000,
+                    'max_col_norm'          : ((0.1, 5.), float),
+                    'adjust_threshold_factor'   : ((0.0001, 1), float),
+                    'desired_active_rate'   : 0.1,
+                    'noise_std'             : ((0.1, 10), float),
+                    
+                    #'weight_decay'          : ((1., 9.), float),
+
+                    'sparse_init'           : 15
+                }),
+                                            
+
 
                 #First hidden layer
-                'hidden1' : DD({
-                    'layer_class'           : 'noisyRELU',
-                    'sparse_init'           : 15,
-                    'dim'                   : 100,
-                    'max_col_norm'          : ((0.1, 5.), float),
-                    'noise_factor'          : ((0.01, 5.), float),
-                    'adjust_threshold_factor'   : ((0.001, 2), float),
-                    'desired_active_rate'   : 0.1
-                    }),
-
+   
+#                 'hidden1' : DD({
+#                     'layer_class'           : 'noisyRELU',
+#                     'sparse_init'           : 15,
+#                     'dim'                   : 3000,
+#                     'max_col_norm'          : ((0.1, 5.), float),
+#                     'noise_factor'          : ((0.0001, 1.), float),
+#                     'adjust_threshold_factor'   : ((0.0001, 1), float),
+#                     'desired_active_rate'   : 0.1
+#                     }),
+# 		
                 #Second hidden layer
                 'hidden2' : DD({
                     'layer_class'           : 'tanh',
                     #'dim'                   : ((100, 2000), int),
                     'dim'                   : 100,
-                    'max_col_norm'          : ((0.1, 5.), float),
+                    'max_col_norm'          : ((0.1, 5.), float)
                     #'weight_decay'          : ((1., 9.), float),
 
                     #'sparse_init'           : 15
@@ -148,7 +175,7 @@ model_config = DD({
                 'output1' : DD({
                     'layer_class'           : 'softmax',
                     'dim'                   : 10,
-                    'irange'                : 0.05,
+                    'irange'                : 0.05
                     #'sparse_init'           : 15
                 })
             }),

@@ -38,7 +38,7 @@ from pylearn2.train_extensions.best_params import MonitorBasedSaveBest
 from pylearn2.datasets.dense_design_matrix import DenseDesignMatrix
 from pylearn2.datasets import preprocessing as pp
 
-from layers import NoisyRELU
+from layers import NoisyRELU, GaussianRELU
 
 
 from pylearn2_objects import *
@@ -278,6 +278,24 @@ class HPS:
                         noise_factor=layer.noise_factor,
                         desired_active_rate=layer.desired_active_rate,
                         adjust_threshold_factor=layer.adjust_threshold_factor
+                        )
+        
+    def get_layer_gaussianRELU(self, layer):
+        
+        return GaussianRELU(
+                        dim=layer.dim,
+                        layer_name=layer.layer_name,
+                        irange=layer.irange,
+                        sparse_init=layer.sparse_init,
+                        W_lr_scale=layer.W_lr_scale,
+                        b_lr_scale=layer.b_lr_scale,
+                        mask_weights = None,
+                        max_row_norm=layer.max_row_norm,
+                        max_col_norm=layer.max_col_norm,
+                        use_bias=True,
+                        desired_active_rate=layer.desired_active_rate,
+                        adjust_threshold_factor=layer.adjust_threshold_factor,
+                        noise_std=layer.noise_std
                         )
 
     def setup_monitor(self):

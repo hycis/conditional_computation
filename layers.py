@@ -11,11 +11,11 @@ from pylearn2.space import CompositeSpace
 from theano import config
 
 
-class NoisyRELU(Linear):
+class GaussianRELU(Linear):
 
-    def __init__(self, noise_factor=1, desired_active_rate=0.1, adjust_threshold_factor=1, **kwargs):
-        super(NoisyRELU, self).__init__(**kwargs)
-        self.noise_factor = noise_factor
+    def __init__(self, noise_std=1, desired_active_rate=0.1, adjust_threshold_factor=1, **kwargs):
+        super(GaussianRELU, self).__init__(**kwargs)
+        self.std = noise_std
         self.adjust_threshold_factor = adjust_threshold_factor
         self.desired_active_rate = desired_active_rate
         #self.threshold = theano.shared(np.zeros(shape=(self.dim,)))
@@ -31,11 +31,11 @@ class NoisyRELU(Linear):
         rng = RandomStreams(seed=234)
 
         #size = theano.tensor.as_tensor_variable((state_below.shape[0], self.dim))
-        un = rng.uniform(size=(state_below.shape[0], self.dim), low=0., high=1.)
-        self.noise = T.log(un/(1-un))
-        p = self._linear_part(state_below) + self.noise * self.noise_factor
+        self.noise = rng.normal(size=(state_below.shape[0], self.dim), avg=0, std=self.std)
+        #self.noise = T.log(un/(1-un))
+        p = self._linear_part(state_below) + self.noise
 
-        batch_size = p.shape[0]
+        batch_size = (p.shape[0]).astype(config.floatX)
         self.active_rate = T.gt(p, self.threshold).sum(axis=0, dtype=config.floatX) / batch_size
         
         return T.gt(p, self.threshold) * p
@@ -44,13 +44,13 @@ class NoisyRELU(Linear):
 
     def get_params(self):
         print "===get_params==="
-        return super(NoisyRELU, self).get_params() + [self.threshold]
+        return super(GaussianRELU, self).get_params() + [self.threshold]
 
 
  
     def set_input_space(self, space):
         print "===set_input_space==="
-        super(NoisyRELU, self).set_input_space(space)
+        super(GaussianRELU, self).set_input_space(space)
         self.threshold = sharedX(np.zeros(shape=(self.dim,)), 'threshold')
 
 
@@ -58,20 +58,23 @@ class NoisyRELU(Linear):
     def censor_updates(self, updates):
         print "===censor_updates==="
  
-        super(NoisyRELU, self).censor_updates(updates)        
+        super(GaussianRELU, self).censor_updates(updates)        
         renormalize = (T.gt(self.active_rate, self.desired_active_rate) - 0.5) * 2.
         updates[self.threshold] += renormalize * T.abs_(self.desired_active_rate - 
                     self.active_rate) * self.adjust_threshold_factor
 
     def get_monitoring_channels_from_state(self, state, target=None):
         
-        rval = super(NoisyRELU, self).get_monitoring_channels_from_state(state)
+        rval = super(GaussianRELU, self).get_monitoring_channels_from_state(state)
         
         print "===get_monitor_channels_from_state==="
         
-        max_active_rate = self.active_rate.max()
-        min_active_rate = self.active_rate.min()
-        mean_active_rate = self.active_rate.mean()
+        active_rate = self.active_rate.astype(config.floatX)
+
+        
+        max_active_rate = active_rate.max()
+        min_active_rate = active_rate.min()
+        mean_active_rate = active_rate.mean()
         
         max_threshold = self.threshold.max()
         min_threshold = self.threshold.min()
@@ -113,8 +116,16 @@ class NoisyRELU(Linear):
         
         rval['===desired_active_rate==='] = self.desired_active_rate
         
-        rval['===<active_rate_100>==='] = self.active_rate[100]
-        rval['===<active_rate_100_threshold>'] = self.threshold[100]
+        rval['active_rate_1'] = active_rate[1]
+        rval['active_rate_15'] = active_rate[15]
+        rval['active_rate_300'] = active_rate[30]
+        rval['active_rate_450'] = active_rate[45]
+        rval['active_rate_700'] = active_rate[50]
+        
+        
+        rval['===<active_rate_100>==='] = active_rate[99]
+        
+        rval['===<active_rate_100_threshold>'] = self.threshold[99]
         
         
         rval['===max_active_rate_threshold>'] = self.threshold[self.active_rate.argmax()]
@@ -125,12 +136,140 @@ class NoisyRELU(Linear):
 #         #rval['===num_col_active_rate===='] = num_col
 #         
 #
-        active_rate = self.active_rate
+
+
+
+        return rval
+    
+
+
+class NoisyRELU(Linear):
+
+    def __init__(self, noise_factor=1, desired_active_rate=0.1, adjust_threshold_factor=1, **kwargs):
+        super(NoisyRELU, self).__init__(**kwargs)
+        self.noise_factor = noise_factor
+        self.adjust_threshold_factor = adjust_threshold_factor
+        self.desired_active_rate = desired_active_rate
+        #self.threshold = theano.shared(np.zeros(shape=(self.dim,)))
+        
+        
+        #self.threshold = T.zeros(shape=(self.dim,), dtype=config.floatX)
+        #self.threshold = theano.sparse.basic.as_sparse_or_tensor_variable(np.zeros(shape=(self.dim,)))
+        #self.active_rate = theano.tensor.zeros(shape=(self.dim,), dtype=config.floatX)
+        
+    def fprop(self, state_below):
+        print "======fprop====="
+        
+        rng = RandomStreams(seed=234)
+
+        #size = theano.tensor.as_tensor_variable((state_below.shape[0], self.dim))
+        un = rng.uniform(size=(state_below.shape[0], self.dim), low=0., high=1., dtype=config.floatX)
+        self.noise = T.log(un/(1-un))
+        p = self._linear_part(state_below) + self.noise * self.noise_factor
+
+        batch_size = (p.shape[0]).astype(config.floatX)
+        self.active_rate = T.gt(p, self.threshold).sum(axis=0, dtype=config.floatX) / batch_size
+        
+        return T.gt(p, self.threshold) * p
+        
+
+
+    def get_params(self):
+        print "===get_params==="
+        return super(NoisyRELU, self).get_params() + [self.threshold]
+
+
+ 
+    def set_input_space(self, space):
+        print "===set_input_space==="
+        super(NoisyRELU, self).set_input_space(space)
+        self.threshold = sharedX(np.zeros(shape=(self.dim,)), 'threshold')
+
+
+#     
+    def censor_updates(self, updates):
+        print "===censor_updates==="
+ 
+        super(NoisyRELU, self).censor_updates(updates)        
+        renormalize = (T.gt(self.active_rate, self.desired_active_rate) - 0.5) * 2.
+        updates[self.threshold] += renormalize * T.abs_(self.desired_active_rate - 
+                    self.active_rate) * self.adjust_threshold_factor
+
+    def get_monitoring_channels_from_state(self, state, target=None):
+        
+        rval = super(NoisyRELU, self).get_monitoring_channels_from_state(state)
+        
+        print "===get_monitor_channels_from_state==="
+        
+        active_rate = self.active_rate.astype(config.floatX)
+
+        
+        max_active_rate = active_rate.max()
+        min_active_rate = active_rate.min()
+        mean_active_rate = active_rate.mean()
+        
+        max_threshold = self.threshold.max()
+        min_threshold = self.threshold.min()
+        mean_threshold = self.threshold.mean()
+        
+        
+        max_noise = self.noise.max()
+        min_noise = self.noise.min()
+        mean_noise = self.noise.mean()
+         
+        
+        
+#         num_row = self.active_rate.shape[0] * 1.
+        #num_col = self.active_rate.shape[1] * 1.
+        
+        
+#         renormalize = (T.gt(self.desired_active_rate, self.active_rate) - 0.5) * 2
+#         factor = renormalize * T.abs_(self.desired_active_rate - self.active_rate) * self.bias_factor
+#         
+#         rval['==factor mean=='] = T.mean(factor)
+#         rval['==factor shape=='] = factor.shape[0] * 1.
+#         rval['==factor max=='] = T.max(factor)
+#         rval['==factor min=='] = T.min(factor)
+#         
+#       
+        #rval["===p.shape[0]"] = state.shape[0] * 1. 
+        #rval['===p.shape[1]'] = state.shape[1] * 1. 
+        
+        rval['===max_active_rate===='] = max_active_rate
+        rval['===min_active_rate===='] = min_active_rate
+        rval['===mean_active_rate===='] = mean_active_rate
+        rval['===max_noise==='] = max_noise
+        rval['===min_noise==='] = min_noise
+        rval['===mean_noise==='] = mean_noise
+        
+        rval['===max_threshold==='] = max_threshold
+        rval['===min_threshold==='] = min_threshold
+        rval['===mean_threshold==='] = mean_threshold
+        
+        rval['===desired_active_rate==='] = self.desired_active_rate
+        
         rval['active_rate_1'] = active_rate[1]
         rval['active_rate_15'] = active_rate[15]
         rval['active_rate_300'] = active_rate[30]
         rval['active_rate_450'] = active_rate[45]
         rval['active_rate_700'] = active_rate[50]
+        
+        
+        rval['===<active_rate_100>==='] = active_rate[99]
+        
+        rval['===<active_rate_100_threshold>'] = self.threshold[99]
+        
+        
+        rval['===max_active_rate_threshold>'] = self.threshold[self.active_rate.argmax()]
+        #rval['===min_active_rate_threshold>'] = self.threshold[self.active_rate.argmin()]
+
+        
+#         rval['===num_row_active_rate===='] = num_row
+#         #rval['===num_col_active_rate===='] = num_col
+#         
+#
+
+
 
         return rval
     

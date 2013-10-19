@@ -16,79 +16,93 @@ import matplotlib.pyplot as plt
 import matplotlib.gridspec as gridspec
 from matplotlib.figure import Figure
 
-def insertDB(dir, specs, model):
+def insertDB(dir, specs, model_id):
     
-    db = model + '.db'
+    db = model_id + '.db'
     
     folderlist = glob.glob(dir + '/jobman*')
     opt_model_path = ''
     table = []
     for folder in folderlist:
         state_path = folder + '/state.pkl'
-        opt_model_path = folder + '/model_' + model + '_optimum.pkl'
+
+        opt_model_path = folder + '/model_' + model_id + '_optimum.pkl'
         
         
         if os.path.exists(state_path) and os.path.exists(opt_model_path): 
+            
             with open(state_path, 'rb') as f:
                 state = cPickle.load(f)
-  
-          #  print state_path
-           # print opt_model_path
             with open(opt_model_path, 'rb') as g:
                 model = cPickle.load(g)
-            arr = model.monitor.channels['valid_softmax2_misclass'].val_record
-            best_valid_error = np.sort(arr)[0]
+                
+            test_error = model.monitor.channels['test_softmax2_misclass'].val_record
+            valid_error = model.monitor.channels['valid_softmax2_misclass'].val_record
+            best_test_error = np.sort(test_error)[0]
+            best_valid_error = np.sort(valid_error)[0]
+
              
 	    #print state.dataset
-	   # print 'best valid error', np.asscalar(best_valid_error)
+            print 'best valid error', np.asscalar(best_valid_error)
+            print 'best test error', np.asscalar(best_test_error)
+
 	    #print state.batch_size.__class__
             #print 'EXIST', folder
             #import pdb
             #pdb.set_trace()
-            if state.dataset == 'mnist':
-                print state.dataset, 'EXISTS'
-                print state.config_id
-                print "best valid error", np.asscalar(best_valid_error)
-                table.append((folder,
-                            state.dataset,
-                            np.asscalar(best_valid_error),
-                            state.batch_size, 
-                            state.learning_rate, 
-                            state.init_momentum, 
-                            state.ext_array.moment_adj.final_momentum,
-                            state.layers.hidden1.max_col_norm,
-                            state.layers.hidden1.weight_decay,
-                            state.layers.hidden1.dim,
-                            state.layers.hidden2.max_col_norm,
-                            state.layers.hidden2.weight_decay,
-                            state.layers.hidden2.dim
-                            ))
+#             if state.dataset == 'mnist':
+#             for spec in specs:
+#                 table.append(getattr(state, spec))
+#                 
+                
+#                 
+#                 print state.dataset, 'EXISTS'
+#                 print state.config_id
+#                 print "best test error", np.asscalar(best_valid_error)
+#                 
+#                 
+                
+#                 table.append((folder,
+#                 
+#                             state.dataset,
+#                             np.asscalar(best_test_error),
+#                             state.batch_size, 
+#                             state.learning_rate, 
+#                             state.init_momentum, 
+#                             state.ext_array.moment_adj.final_momentum,
+#                             state.layers.hidden1.max_col_norm,
+#                             state.layers.hidden1.weight_decay,
+#                             state.layers.hidden1.dim,
+#                             state.layers.hidden2.max_col_norm,
+#                             state.layers.hidden2.weight_decay,
+#                             state.layers.hidden2.dim
+#                             ))
 
        # else:
         #    print (state_path +' or ' + opt_model_path,
          #   'does not exist')
     
-    
-    conn = lite.connect(db)
-
-    with conn:
-        cur = conn.cursor()
-        cur.execute("DROP TABLE IF EXISTS stats")
-        cur.execute("CREATE TABLE stats(folder TEXT PRIMARY KEY, \
-					dataset TEXT, \
-                                        valid_error REAL, \
-                                        batch_size INT, \
-                                        learning_rate REAL, \
-                                        init_momentum REAL, \
-                                        final_momentum REAL, \
-                                        h1_max_col_norm REAL, \
-                                        h1_weight_decay REAL, \
-                                        h1_dim, \
-                                        h2_max_col_norm REAL, \
-                                        h2_weight_decay REAL, \
-                                        h2_dim)")
-        cur.executemany("INSERT INTO stats VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?)", table)
-        conn.commit()
+#     
+#     conn = lite.connect(db)
+# 
+#     with conn:
+#         cur = conn.cursor()
+#         cur.execute("DROP TABLE IF EXISTS stats")
+#         cur.execute("CREATE TABLE stats(folder TEXT PRIMARY KEY, \
+# 					                    dataset TEXT, \
+#                                         test_error REAL, \
+#                                         batch_size INT, \
+#                                         learning_rate REAL, \
+#                                         init_momentum REAL, \
+#                                         final_momentum REAL, \
+#                                         h1_max_col_norm REAL, \
+#                                         h1_weight_decay REAL, \
+#                                         h1_dim, \
+#                                         h2_max_col_norm REAL, \
+#                                         h2_weight_decay REAL, \
+#                                         h2_dim)")
+#         cur.executemany("INSERT INTO stats VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?)", table)
+#         conn.commit()
         
         #cur.execute(".header on")
         #cur.execute(".mode column")
@@ -178,13 +192,25 @@ if __name__ == '__main__':
     dir = './mlp'
     #db = 'config_mlp_mnist_noisy.db'
 
-    specs = ["batch_size", "learning_rate", "init_momentum", 
-		"final_momentum", "h1_max_col_norm", "h1_weight_decay",
-		"h1_dim", "h2_max_col_norm", "h2_weight_decay", "h2_dim"]
-		
-    model_id = 'Noisy_2000mnist'
+#     specs = ["batch_size", "learning_rate", "init_momentum", 
+# 		"final_momentum", "h1_max_col_norm", "h1_weight_decay",
+# 		"h1_dim", "h2_max_col_norm", "h2_weight_decay", "h2_dim"]
+
+    specs = ["batch_size", 
+	    "learning_rate", 
+	    "init_momentum", 
+	    "ext_array.moment_adj.final_momentum",
+	    "layers.hidden1.max_col_norm",
+	    "layers.hidden1.weight_decay",
+	    "layers.hidden1.dim",
+	    "layers.hidden2.max_col_norm",
+	    "layers.hidden2.weight_decay",
+	    "layers.hidden2.dim"]
+
+
+    model_id = 'Noiseless300svhn'
     insertDB(dir, specs, model_id)
-    queryDB(specs, model_id)
+#     queryDB(specs, model_id)
     
     
     

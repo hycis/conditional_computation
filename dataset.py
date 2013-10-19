@@ -1,4 +1,4 @@
-from pylearn2.datasets.svhn import SVNH
+from pylearn2.datasets.svhn import SVHN
 
 import os
 import gc
@@ -83,8 +83,11 @@ class My_SVHN(SVHN):
         
         if which_set is 'splitted_train':
             count = {}
+            for i in xrange(10):
+                count[str(i)] = 0
             for ele in data.y:
                 index = np.argmax(ele, axis=0)
+                #print index
                 count[str(index)] += 1
             min = float('Inf')
             for val in count.itervalues():
@@ -104,7 +107,8 @@ class My_SVHN(SVHN):
                 
                 label = np.argmax(data.y[i])
                 index_label = i % 10
-                
+                import pdb
+                pdb.set_trace()
                 if label != index_label:
                     index = search(i, label)
                     tmp = data.y[index]
@@ -114,6 +118,7 @@ class My_SVHN(SVHN):
                     tmp2 = data.X[index]
                     data.X[index] = data.X[i]
                     data.X[i] = tmp2
+
             data.X = data.X[:cutoff]
             data.y = data.y[:cutoff]
                 
