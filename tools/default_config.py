@@ -39,8 +39,8 @@ model_config = DD({
             # TODO: cached should always be True!
             'cached'                        : True,
             
-            # dataset can be mnist or svhn
-            'dataset'                       : 'svhn',
+            # dataset can be mnist or svhn or cifar10
+            'dataset'                       : 'mnist',
             
             'input_space_id'                : None,
             'nvis'                          : None,
@@ -51,7 +51,7 @@ model_config = DD({
             'channel_array'                 : None,
             
             # valid or test or both
-            'monitoring_dataset'           : ['test', 'valid'],
+            'monitoring_dataset'           : ['test'],
 
             'random_seed'                   : 251,
             'batch_size'                    : 200,
