@@ -317,11 +317,11 @@ class HPS:
         self.log_channel_names = []
         self.log_channel_names.extend(self.base_channel_names)
 
-        self.monitor.add_dataset(self.valid_ddm, self.state.train_iteration_mode,
-                                    self.batch_size)
-        if self.test_ddm is not None:
-            self.monitor.add_dataset(self.test_ddm, self.state.train_iteration_mode,
-                                        self.batch_size)
+#         self.monitor.add_dataset(self.valid_ddm, self.state.train_iteration_mode,
+#                                     self.batch_size)
+#         if self.test_ddm is not None:
+#             self.monitor.add_dataset(self.test_ddm, self.state.train_iteration_mode,
+#                                         self.batch_size)
 
     def get_train(self):
         train_class = self.state.train_class
