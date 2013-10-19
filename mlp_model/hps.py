@@ -68,18 +68,12 @@ class HPS:
             = self.get_config()
         try:
             print 'learning'
-            #import pdb
-            #pdb.set_trace()            
+          
             learner.main_loop()
 
         except Exception, e:
             print e
 
-        # Compute the model NLL on train, valid and test.
-#         compute_nll(exp_base_path=os.getcwd(), target_base_path=self.base_path,
-#                     model_name=self.save_path,
-#                     cache=(self.train_ddm, self.valid_ddm, self.test_ddm),
-#                     state=self.state)
         print 'End of model training'
 
     def get_config(self):
@@ -116,7 +110,7 @@ class HPS:
         #base_path = get_data_path(self.state)
         #self.base_path = base_path
 
-    '''
+        '''
         task = self.state.task
         train_X = np.load(os.path.join(base_path, 'train_%s_cached_X.npy'%task))
         train_Y = np.load(os.path.join(base_path, 'train_%s_cached_Y.npy'%task))
@@ -135,7 +129,7 @@ class HPS:
         self.test_ddm = DenseDesignMatrix(X=test_X, y=test_Y)
         del test_X
         del test_Y
-	'''
+        '''
 
         if self.state.dataset == 'mnist':
             self.test_ddm = MNIST(which_set='test', one_hot=True)
@@ -151,8 +145,7 @@ class HPS:
             self.test_ddm = SVHN(which_set='test')
             self.valid_ddm = SVHN(which_set='valid')
 
-        #import pdb
-        #pdb.set_trace()
+
         self.nvis = self.train_ddm.X.shape[1]
         self.nout = self.train_ddm.y.shape[1]
         
@@ -324,10 +317,10 @@ class HPS:
         self.log_channel_names = []
         self.log_channel_names.extend(self.base_channel_names)
 
-        self.monitor.add_dataset(self.valid_ddm, 'sequential',
+        self.monitor.add_dataset(self.valid_ddm, self.state.train_iteration_mode,
                                     self.batch_size)
         if self.test_ddm is not None:
-            self.monitor.add_dataset(self.test_ddm, 'sequential',
+            self.monitor.add_dataset(self.test_ddm, self.state.train_iteration_mode,
                                         self.batch_size)
 
     def get_train(self):
@@ -376,8 +369,6 @@ class HPS:
         for term_obj in self.state.term_array.values():
             fn = getattr(self, 'get_term_' + term_obj.term_class)
             terminations.append(fn(term_obj))
-            #import pdb
-            #pdb.set_trace()
         if len(terminations) > 1:
             return And(terminations)
         return terminations[0]
