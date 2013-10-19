@@ -51,7 +51,7 @@ model_config = DD({
             'channel_array'                 : None,
             
             # valid or test or both
-            'monitoring_dataset'           : ['test'],
+            'monitoring_dataset'           : ['test', 'valid'],
 
             'random_seed'                   : 251,
             'batch_size'                    : 200,
