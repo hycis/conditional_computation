@@ -168,14 +168,14 @@ model_config = DD({
 #                     }),
 # 		
                 #Second hidden layer
-                'hidden2' : DD({
-                    'layer_class'           : 'tanh',
-                    #'dim'                   : ((100, 2000), int),
-                    'dim'                   : 100,
-                    'max_col_norm'          : ((0.1, 5.), float)
-                    #'weight_decay'          : ((1., 9.), float),
- 
-                }),
+#                 'hidden2' : DD({
+#                     'layer_class'           : 'tanh',
+#                     #'dim'                   : ((100, 2000), int),
+#                     'dim'                   : 100,
+#                     'max_col_norm'          : ((0.1, 5.), float)
+#                     #'weight_decay'          : ((1., 9.), float),
+#  
+#                 }),
 
 
                 # Last (output) layer

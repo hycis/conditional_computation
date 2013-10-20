@@ -180,6 +180,7 @@ class HPS:
             layer = self.get_layer(layer, i)
             layers.append(layer)
         # create MLP:
+        print layers
         model = MLP(layers=layers,input_space=input_space,nvis=nvis,
                     batch_size=self.batch_size)
         self.mlp = model
