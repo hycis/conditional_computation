@@ -111,27 +111,6 @@ class HPS:
         #base_path = get_data_path(self.state)
         #self.base_path = base_path
 
-        '''
-        task = self.state.task
-        train_X = np.load(os.path.join(base_path, 'train_%s_cached_X.npy'%task))
-        train_Y = np.load(os.path.join(base_path, 'train_%s_cached_Y.npy'%task))
-        self.train_ddm = DenseDesignMatrix(X=train_X, y=train_Y)
-        del train_X
-        del train_Y
-
-        valid_X = np.load(os.path.join(base_path, 'valid_%s_cached_X.npy'%task))
-        valid_Y = np.load(os.path.join(base_path, 'valid_%s_cached_Y.npy'%task))
-        self.valid_ddm = DenseDesignMatrix(X=valid_X, y=valid_Y)
-        del valid_X
-        del valid_Y
- 
-        test_X = np.load(os.path.join(base_path, 'test_%s_cached_X.npy'%task))
-        test_Y = np.load(os.path.join(base_path, 'test_%s_cached_Y.npy'%task))
-        self.test_ddm = DenseDesignMatrix(X=test_X, y=test_Y)
-        del test_X
-        del test_Y
-        '''
-
         if self.state.dataset == 'mnist':
             self.test_ddm = MNIST(which_set='test', one_hot=True)
 
@@ -146,6 +125,15 @@ class HPS:
             self.test_ddm = SVHN(which_set='test')
             self.valid_ddm = SVHN(which_set='valid')
 
+
+        
+        
+        elif self.state.dateset == 'cifar10':
+            import pdb
+            pdb.set_trace()
+            self.train_ddm = My_CIFAR10(which_set='train', one_hot=True)
+            self.test_ddm = None
+            self.valid_ddm = My_CIFAR10(which_set='test', one_hot=True)
 
         
         if self.train_ddm is not None:
@@ -350,11 +338,6 @@ class HPS:
                 monitoring_dataset['valid'] = self.valid_ddm
             else:
                 monitoring_dataset = None
-            
-#         if self.state.dataset == 'svhn':
-#             train_iter_mode = 'batchwise_shuffled_equential'
-#         elif self.state.dataset == 'mnist':
-        #train_iter_mode = 
             
         return SGD( learning_rate=self.state.learning_rate,
                     batch_size=self.state.batch_size,
