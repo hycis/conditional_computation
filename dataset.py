@@ -251,20 +251,24 @@ class My_CIFAR10(dense_design_matrix.DenseDesignMatrix):
         TODO: wtf is this? why not just use serial.load like the CIFAR-100 class?
         whoever wrote it shows up as "unknown" in git blame
         """
-        from pylearn2.utils import string_utils
-        fname = os.path.join(
-                string_utils.preprocess('${PYLEARN2_DATA_PATH}'),
-                'cifar10',
-                'cifar-10-batches-py',
-                file)
-        if not os.path.exists(fname):
-            raise IOError(fname+" was not found. You probably need to download "
-                    " the CIFAR-10 dataset from http://www.cs.utoronto.ca/~kriz/cifar.html")
-        _logger.info('loading file %s' % fname)
-        fo = open(fname, 'rb')
-        dict = cPickle.load(fo)
-        fo.close()
-        return dict
+#         from pylearn2.utils import string_utils
+#         fname = os.path.join(
+#                 string_utils.preprocess('${PYLEARN2_DATA_PATH}'),
+#                 'cifar10',
+#                 'cifar-10-batches-py',
+#                 file)
+#         if not os.path.exists(fname):
+#             raise IOError(fname+" was not found. You probably need to download "
+#                     " the CIFAR-10 dataset from http://www.cs.utoronto.ca/~kriz/cifar.html")
+#         _logger.info('loading file %s' % fname)
+#         fo = open(fname, 'rb')
+#         dict = cPickle.load(fo)
+#         fo.close()
+#         return dict
+        with open(file) as f:
+            pk = cPickle.load(f)
+        _logger.info('loading file %s' % file)
+        return pk
 
 
 
