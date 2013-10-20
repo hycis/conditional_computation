@@ -128,7 +128,7 @@ class HPS:
             self.test_ddm = SVHN(which_set='test')
             self.valid_ddm = SVHN(which_set='valid')
 
-        elif self.state.dateset == 'cifar10':
+        elif self.state.dataset == 'cifar10':
 
             self.train_ddm = My_CIFAR10(which_set='train', one_hot=True)
             self.test_ddm = None
