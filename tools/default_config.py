@@ -36,7 +36,9 @@ model_config = DD({
             'model_class'                   : 'mlp',
             'train_class'                   : 'sgd',
             #'config_id'                     : 'GaussianNoise1000cifar200epoch',
-            'config_id'                     : 'Clean100cifar200epoch',
+            #'config_id'                     : 'Clean100cifar200epoch',
+            'config_id'                     : 'Clean100cifar200epochPreproc',
+
 
             # TODO: cached should always be True!
             'cached'                        : True,
