@@ -37,7 +37,8 @@ model_config = DD({
             'train_class'                   : 'sgd',
             #'config_id'                     : 'GaussianNoise1000cifar200epoch',
             #'config_id'                     : 'Clean100cifar200epoch',
-            'config_id'                     : 'Clean100cifar200epochPreproc',
+            #'config_id'                     : 'Clean100cifar200epochPreproc',
+            'config_id'                     : 'GaussianNoise1000cifar200epochPreproc',
 
 
             # TODO: cached should always be True!
@@ -132,29 +133,29 @@ model_config = DD({
 #                 }),
 
 #                 First hidden layer
-                 'hidden1' : DD({
-                     'layer_class'           : 'tanh',
-                     #'dim'                   : ((100, 2000), int),
-                     'dim'                   : 100,
-                     'max_col_norm'          : ((0.1, 5.), float)
-                     #'weight_decay'          : ((1., 9.), float),
- 
-                 }),
+#                  'hidden1' : DD({
+#                      'layer_class'           : 'tanh',
+#                      #'dim'                   : ((100, 2000), int),
+#                      'dim'                   : 100,
+#                      'max_col_norm'          : ((0.1, 5.), float)
+#                      #'weight_decay'          : ((1., 9.), float),
+#  
+#                  }),
 
-#                 'hidden1' : DD({
-#                     'layer_class'           : 'gaussianRELU',
-#                     #'dim'                   : ((100, 2000), int),
-#                     'dim'                   : 1000,
-#                     'max_col_norm'          : ((0.1, 5.), float),
-#                     'adjust_threshold_factor'   : ((0.0001, 1), float),
-#                     'desired_active_rate'   : 0.1,
-#                     'noise_std'             : ((0.1, 10), float),
-#                     
-#                     #'weight_decay'          : ((1., 9.), float),
-# 
-#                     'sparse_init'           : 15
-#                 }),
-#                                             
+                'hidden1' : DD({
+                    'layer_class'           : 'gaussianRELU',
+                    #'dim'                   : ((100, 2000), int),
+                    'dim'                   : 1000,
+                    'max_col_norm'          : ((0.1, 5.), float),
+                    'adjust_threshold_factor'   : ((0.0001, 1), float),
+                    'desired_active_rate'   : 0.1,
+                    'noise_std'             : ((0.1, 10), float),
+                     
+                    #'weight_decay'          : ((1., 9.), float),
+ 
+                    'sparse_init'           : 15
+                }),
+                                             
 
 
                 #First hidden layer
