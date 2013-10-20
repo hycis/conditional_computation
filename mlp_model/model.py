@@ -15,8 +15,9 @@ from tools.default_config import model_config, layer_config
 
 from pylearn2.datasets.mnist import MNIST
 from pylearn2.datasets.svhn import SVHN
-from pylearn2.datasets.cifar10 import CIFAR10
+#from pylearn2.datasets.cifar10 import CIFAR10
 import os
+from dataset import My_CIFAR10
 
 from pylearn2_objects import *
 
@@ -40,7 +41,7 @@ def get_dim_input(state):
         dataset = SVHN(which_set='test')
         dim = dataset.X.shape[1]
     elif state.dataset == 'cifar10':
-        dataset = CIFAR10(which_set='test')
+        dataset = My_CIFAR10(which_set='test')
         dim = dataset.X.shape[1]
     else:
         raise ValueError('only mnist, cifar10 and svhn are supported for now in get_dim_input')
