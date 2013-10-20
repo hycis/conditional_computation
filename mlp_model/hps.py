@@ -67,13 +67,13 @@ class HPS:
     def run(self):
         (model, learner, algorithm) \
             = self.get_config()
-        try:
-            print 'learning'
+#         try:
+        print 'learning'
           
-            learner.main_loop()
+        learner.main_loop()
 
-        except Exception, e:
-            print e
+#         except Exception, e:
+#             print 
 
         print 'End of model training'
 
