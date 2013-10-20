@@ -13,7 +13,156 @@ from theano import config
 from pylearn2.datasets import dense_design_matrix
 from pylearn2.utils.serial import load
 from pylearn2.utils.string_utils import preprocess
+from pylearn2.datasets.cifar10 import CIFAR10
+from pylearn2.expr.preprocessing import global_contrast_normalize
 
+
+class My_CIFAR10(CIFAR10):
+    
+    def __init__(self, which_set, center = False, rescale = False, gcn = None,
+            one_hot = False, start = None, stop = None, axes=('b', 0, 1, 'c'),
+            toronto_prepro = False, preprocessor = None):
+
+
+        # note: there is no such thing as the cifar10 validation set;
+        # pylearn1 defined one but really it should be user-configurable
+        # (as it is here)
+
+        self.axes = axes
+
+        # we define here:
+        dtype  = 'uint8'
+        ntrain = 50000
+        nvalid = 0  # artefact, we won't use it
+        ntest  = 10000
+
+        # we also expose the following details:
+        self.img_shape = (3,32,32)
+        self.img_size = np.prod(self.img_shape)
+        self.n_classes = 10
+        self.label_names = ['airplane', 'automobile', 'bird', 'cat', 'deer',
+                            'dog', 'frog','horse','ship','truck']
+
+        # prepare loading
+        fnames = ['data_batch_%i' % i for i in range(1,6)]
+        lenx = np.ceil((ntrain + nvalid) / 10000.)*10000
+        x = np.zeros((lenx,self.img_size), dtype=dtype)
+        y = np.zeros(lenx, dtype=dtype)
+
+        # load train data
+        nloaded = 0
+        for i, fname in enumerate(fnames):
+            data = CIFAR10._unpickle(fname)
+            x[i*10000:(i+1)*10000, :] = data['data']
+            y[i*10000:(i+1)*10000] = data['labels']
+            nloaded += 10000
+            if nloaded >= ntrain + nvalid + ntest: break;
+
+        # load test data
+        data = CIFAR10._unpickle('test_batch')
+
+        # process this data
+        Xs = {
+                'train' : x[0:ntrain],
+                'test'  : data['data'][0:ntest]
+            }
+
+        Ys = {
+                'train' : y[0:ntrain],
+                'test'  : data['labels'][0:ntest]
+            }
+
+        X = np.cast['float32'](Xs[which_set])
+        y = Ys[which_set]
+
+        if isinstance(y,list):
+            y = np.asarray(y)
+
+        if which_set == 'test':
+            assert y.shape[0] == 10000
+
+
+        if center:
+            X -= 127.5
+        self.center = center
+
+        if rescale:
+            X /= 127.5
+        self.rescale = rescale
+
+        if toronto_prepro:
+            assert not center
+            assert not gcn
+            X = X / 255.
+            if which_set == 'test':
+                other = CIFAR10(which_set='train')
+                oX = other.X
+                oX /= 255.
+                X = X - oX.mean(axis=0)
+            else:
+                X = X - X.mean(axis=0)
+        self.toronto_prepro = toronto_prepro
+
+        self.gcn = gcn
+        if gcn is not None:
+            gcn = float(gcn)
+            X = global_contrast_normalize(X, scale=gcn)
+
+        if start is not None:
+            # This needs to come after the prepro so that it doesn't change the pixel
+            # means computed above for toronto_prepro
+            assert start >= 0
+            assert stop > start
+            assert stop <= X.shape[0]
+            X = X[start:stop, :]
+            y = y[start:stop]
+            assert X.shape[0] == y.shape[0]
+
+        if which_set == 'test':
+            assert X.shape[0] == 10000
+
+        view_converter = dense_design_matrix.DefaultViewConverter((32,32,3), axes)
+        
+        if which_set == 'train':
+            length = X.shape[0]
+            def search_right_label(desired_label, i):
+                for idx in xrange(i, length):
+                    if y[idx] == desired_label:
+                        return idx
+            
+            def swap_ele(index, i):
+                x_tmp = X[i]
+                X[i] = X[index]
+                X[index] = x_tmp
+                
+                y_tmp = y[i]
+                y[i] = y[index]
+                y[index] = y_tmp
+                
+            desired_label = 0
+            for i in xrange(length):
+                desired_label = i % 10
+                if y[i] != desired_label:
+                    index = search_right_label(desired_label, i)
+                    swap_ele(index, i)
+            
+            for i in xrange(100):
+                print y[i]
+                        
+        self.one_hot = one_hot
+        if one_hot:
+            one_hot = np.zeros((y.shape[0],10),dtype='float32')
+            for i in xrange(y.shape[0]):
+                one_hot[i,y[i]] = 1.
+            y = one_hot
+        
+        super(My_CIFAR10,self).__init__(X = X, y = y, view_converter = view_converter)
+
+        assert not np.any(np.isnan(self.X))
+
+        if preprocessor:
+            preprocessor.apply(self)
+    
 
 class My_SVHN(SVHN):
     

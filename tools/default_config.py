@@ -51,7 +51,7 @@ model_config = DD({
             'channel_array'                 : None,
             
             # valid or test or both
-            'monitoring_dataset'           : [ 'valid'],
+            'monitoring_dataset'           : ['valid'],
 
             'random_seed'                   : 251,
             'batch_size'                    : 200,
@@ -61,7 +61,17 @@ model_config = DD({
             # for mnist
             #train_iteration_mode'          : 'random_uniform',
             # for svhn
-            'train_iteration_mode'          : 'batchwise_shuffled_sequential',
+            'train_iteration_mode'          : 'batchwise_shuffled_equential',
+            
+            '''
+            training modes:
+            sequential
+            shuffled_sequential
+            random_slice
+            random_uniform
+            batchwise_shuffled_equential
+            '''
+
 
             # Momentum and exponential decay
             'ext_array'                     : DD({

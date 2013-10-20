@@ -40,6 +40,7 @@ from pylearn2.datasets import preprocessing as pp
 
 from layers import NoisyRELU, GaussianRELU
 
+from dataset import My_CIFAR10
 
 from pylearn2_objects import *
 #from load_model import compute_nll
@@ -146,17 +147,21 @@ class HPS:
             self.valid_ddm = SVHN(which_set='valid')
 
 
-        self.nvis = self.train_ddm.X.shape[1]
-        self.nout = self.train_ddm.y.shape[1]
         
-        self.ntrain = self.train_ddm.X.shape[0]
-        self.nvalid = self.valid_ddm.X.shape[0]
-        self.ntest = self.test_ddm.X.shape[0]
-
-        print "nvis, nout :", self.nvis, self.nout
-        print "ntrain :", self.ntrain
-        print "nvalid :", self.nvalid
-        print "ntest :", self.ntest
+        if self.train_ddm is not None:
+            self.nvis = self.train_ddm.X.shape[1]
+            self.nout = self.train_ddm.y.shape[1]
+            print "nvis, nout :", self.nvis, self.nout
+            self.ntrain = self.train_ddm.X.shape[0]
+            print "ntrain :", self.ntrain
+        
+        if self.valid_ddm is not None:
+            self.nvalid = self.valid_ddm.X.shape[0]
+            print "nvalid :", self.nvalid
+        
+        if self.test_ddm is not None:
+            self.ntest = self.test_ddm.X.shape[0]
+            print "ntest :", self.ntest
 
     def load_model(self):
         model_class = self.state.model_class
