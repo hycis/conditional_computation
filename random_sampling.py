@@ -87,7 +87,7 @@ if __name__=='__main__':
                                              be launched.''')
 
     parser.add_argument('-m', '--memory', type=int, dest='mem',
-                        default=1000, 
+                        default=2000, 
                         help='''Memory usage limit by job in MB.''')
 
     parser.add_argument('-c', '--number_concurrent_jobs', type=int,

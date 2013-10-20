@@ -44,44 +44,57 @@ class My_CIFAR10(dense_design_matrix.DenseDesignMatrix):
         self.label_names = ['airplane', 'automobile', 'bird', 'cat', 'deer',
                             'dog', 'frog','horse','ship','truck']
 
-        # prepare loading
-        fnames = ['data_batch_%i' % i for i in range(1,6)]
-        lenx = np.ceil((ntrain + nvalid) / 10000.)*10000
-        x = np.zeros((lenx,self.img_size), dtype=dtype)
-        y = np.zeros(lenx, dtype=dtype)
+#         # prepare loading
+#         fnames = ['data_batch_%i' % i for i in range(1,6)]
+#         lenx = np.ceil((ntrain + nvalid) / 10000.)*10000
+#         x = np.zeros((lenx,self.img_size), dtype=dtype)
+#         y = np.zeros(lenx, dtype=dtype)
+# 
+#         # load train data
+#         nloaded = 0
+#         for i, fname in enumerate(fnames):
+#             data = CIFAR10._unpickle(fname)
+#             x[i*10000:(i+1)*10000, :] = data['data']
+#             y[i*10000:(i+1)*10000] = data['labels']
+#             nloaded += 10000
+#             if nloaded >= ntrain + nvalid + ntest: break;
+# 
+#         # load test data
+#         data = CIFAR10._unpickle('test_batch')
+# 
+#         # process this data
+#         Xs = {
+#                 'train' : x[0:ntrain],
+#                 'test'  : data['data'][0:ntest]
+#             }
+# 
+#         Ys = {
+#                 'train' : y[0:ntrain],
+#                 'test'  : data['labels'][0:ntest]
+#             }
 
-        # load train data
-        nloaded = 0
-        for i, fname in enumerate(fnames):
-            data = CIFAR10._unpickle(fname)
-            x[i*10000:(i+1)*10000, :] = data['data']
-            y[i*10000:(i+1)*10000] = data['labels']
-            nloaded += 10000
-            if nloaded >= ntrain + nvalid + ntest: break;
-
-        # load test data
-        data = CIFAR10._unpickle('test_batch')
-
-        # process this data
-        Xs = {
-                'train' : x[0:ntrain],
-                'test'  : data['data'][0:ntest]
-            }
-
-        Ys = {
-                'train' : y[0:ntrain],
-                'test'  : data['labels'][0:ntest]
-            }
-
-        X = np.cast['float32'](Xs[which_set])
-        y = Ys[which_set]
+        if which_set == 'train':
+            
+            pkl = self._unpickle(os.environ['PYLEARN2_DATA_PATH']+
+                                 'cifar10/pylearn2_gcn_whitened/train.pkl')
+            X = pkl.X
+            y = pkl.y
+        
+        elif which_set == 'test':
+            pkl = self._unpickle(os.environ['PYLEARN2_DATA_PATH']+
+                                 'cifar10/pylearn2_gcn_whitened/test.pkl')
+            X = pkl.X
+            y = pkl.y
+            
+            
+#         X = np.cast['float32'](Xs[which_set])
+#         y = Ys[which_set]
 
         if isinstance(y,list):
             y = np.asarray(y)
 
         if which_set == 'test':
             assert y.shape[0] == 10000
-
 
         if center:
             X -= 127.5
