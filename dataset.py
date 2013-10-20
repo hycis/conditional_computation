@@ -1,7 +1,8 @@
 from pylearn2.datasets.svhn import SVHN
+from pylearn2.expr.preprocessing import global_contrast_normalize
+import cPickle, logging, os
+_logger = logging.getLogger(__name__)
 
-import os
-import gc
 import warnings
 try:
     import tables
@@ -17,7 +18,7 @@ from pylearn2.datasets.cifar10 import CIFAR10
 from pylearn2.expr.preprocessing import global_contrast_normalize
 
 
-class My_CIFAR10(CIFAR10):
+class My_CIFAR10(dense_design_matrix.DenseDesignMatrix):
     
     def __init__(self, which_set, center = False, rescale = False, gcn = None,
             one_hot = False, start = None, stop = None, axes=('b', 0, 1, 'c'),
@@ -163,6 +164,96 @@ class My_CIFAR10(CIFAR10):
         if preprocessor:
             preprocessor.apply(self)
     
+
+    def adjust_for_viewer(self, X):
+        #assumes no preprocessing. need to make preprocessors mark the new ranges
+        rval = X.copy()
+
+        #patch old pkl files
+        if not hasattr(self,'center'):
+            self.center = False
+        if not hasattr(self,'rescale'):
+            self.rescale = False
+        if not hasattr(self,'gcn'):
+            self.gcn = False
+
+        if self.gcn is not None:
+            rval = X.copy()
+            for i in xrange(rval.shape[0]):
+                rval[i,:] /= np.abs(rval[i,:]).max()
+            return rval
+
+        if not self.center:
+            rval -= 127.5
+
+        if not self.rescale:
+            rval /= 127.5
+
+        rval = np.clip(rval,-1.,1.)
+
+        return rval
+
+    def adjust_to_be_viewed_with(self, X, orig, per_example = False):
+        # if the scale is set based on the data, display X oring the scale determined
+        # by orig
+        # assumes no preprocessing. need to make preprocessors mark the new ranges
+        rval = X.copy()
+
+        #patch old pkl files
+        if not hasattr(self,'center'):
+            self.center = False
+        if not hasattr(self,'rescale'):
+            self.rescale = False
+        if not hasattr(self,'gcn'):
+            self.gcn = False
+
+        if self.gcn is not None:
+            rval = X.copy()
+            if per_example:
+                for i in xrange(rval.shape[0]):
+                    rval[i,:] /= np.abs(orig[i,:]).max()
+            else:
+                rval /= np.abs(orig).max()
+            rval = np.clip(rval, -1., 1.)
+            return rval
+
+        if not self.center:
+            rval -= 127.5
+
+        if not self.rescale:
+            rval /= 127.5
+
+        rval = np.clip(rval,-1.,1.)
+
+        return rval
+
+    def get_test_set(self):
+        return CIFAR10(which_set='test', center=self.center, rescale=self.rescale, gcn=self.gcn,
+                one_hot=self.one_hot, toronto_prepro=self.toronto_prepro, axes=self.axes)
+
+
+    @classmethod
+    def _unpickle(cls, file):
+        """
+        TODO: wtf is this? why not just use serial.load like the CIFAR-100 class?
+        whoever wrote it shows up as "unknown" in git blame
+        """
+        from pylearn2.utils import string_utils
+        fname = os.path.join(
+                string_utils.preprocess('${PYLEARN2_DATA_PATH}'),
+                'cifar10',
+                'cifar-10-batches-py',
+                file)
+        if not os.path.exists(fname):
+            raise IOError(fname+" was not found. You probably need to download "
+                    " the CIFAR-10 dataset from http://www.cs.utoronto.ca/~kriz/cifar.html")
+        _logger.info('loading file %s' % fname)
+        fo = open(fname, 'rb')
+        dict = cPickle.load(fo)
+        fo.close()
+        return dict
+
+
 
 class My_SVHN(SVHN):
     
