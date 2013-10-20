@@ -111,8 +111,8 @@ class HPS:
         #base_path = get_data_path(self.state)
         #self.base_path = base_path
 
-        import pdb
-        pdb.set_trace()
+        #import pdb
+        #pdb.set_trace()
         
         if self.state.dataset == 'mnist':
             self.test_ddm = MNIST(which_set='test', one_hot=True)
