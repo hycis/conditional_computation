@@ -175,6 +175,8 @@ class HPS:
         self.topo_view = False
         assert nvis is not None
         layers = []
+        import pdb
+        pdb.set_trace()
         for i,layer in enumerate(nnet_layers.values()):
             layer = expand(layer)
             layer = self.get_layer(layer, i)
