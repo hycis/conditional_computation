@@ -134,7 +134,7 @@ model_config = DD({
                      'layer_class'           : 'tanh',
                      #'dim'                   : ((100, 2000), int),
                      'dim'                   : 100,
-                     'max_col_norm'          : ((0.1, 5.), float),
+                     'max_col_norm'          : ((0.1, 5.), float)
                      #'weight_decay'          : ((1., 9.), float),
  
                      #'sparse_init'           : 15

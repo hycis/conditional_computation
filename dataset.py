@@ -147,7 +147,7 @@ class My_CIFAR10(dense_design_matrix.DenseDesignMatrix):
                     index = search_right_label(desired_label, i)
                     swap_ele(index, i)
             
-            for i in xrange(100):
+            for i in xrange(length-100, length):
                 print y[i]
                         
         self.one_hot = one_hot
