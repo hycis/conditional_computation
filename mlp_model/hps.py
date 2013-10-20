@@ -111,6 +111,9 @@ class HPS:
         #base_path = get_data_path(self.state)
         #self.base_path = base_path
 
+        import pdb
+        pdb.set_trace()
+        
         if self.state.dataset == 'mnist':
             self.test_ddm = MNIST(which_set='test', one_hot=True)
 
@@ -125,12 +128,8 @@ class HPS:
             self.test_ddm = SVHN(which_set='test')
             self.valid_ddm = SVHN(which_set='valid')
 
-
-        
-        
         elif self.state.dateset == 'cifar10':
-            import pdb
-            pdb.set_trace()
+
             self.train_ddm = My_CIFAR10(which_set='train', one_hot=True)
             self.test_ddm = None
             self.valid_ddm = My_CIFAR10(which_set='test', one_hot=True)
