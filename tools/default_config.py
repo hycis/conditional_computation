@@ -137,7 +137,6 @@ model_config = DD({
                      'max_col_norm'          : ((0.1, 5.), float)
                      #'weight_decay'          : ((1., 9.), float),
  
-                     #'sparse_init'           : 15
                  }),
 
 #                 'hidden1' : DD({
@@ -169,15 +168,14 @@ model_config = DD({
 #                     }),
 # 		
                 #Second hidden layer
-#                 'hidden2' : DD({
-#                     'layer_class'           : 'tanh',
-#                     #'dim'                   : ((100, 2000), int),
-#                     'dim'                   : 100,
-#                     'max_col_norm'          : ((0.1, 5.), float)
-#                     #'weight_decay'          : ((1., 9.), float),
-# 
-#                     #'sparse_init'           : 15
-#                 }),
+                'hidden2' : DD({
+                    'layer_class'           : 'tanh',
+                    #'dim'                   : ((100, 2000), int),
+                    'dim'                   : 100,
+                    'max_col_norm'          : ((0.1, 5.), float)
+                    #'weight_decay'          : ((1., 9.), float),
+ 
+                }),
 
 
                 # Last (output) layer
