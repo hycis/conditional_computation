@@ -82,7 +82,7 @@ class My_CIFAR10(dense_design_matrix.DenseDesignMatrix):
             #X = pkl.X
             #y = pkl.y
             
-            X = np.zeros((300, 10))
+            X = np.zeros((300, 20))
             y = np.ones((300,))
         
         elif which_set == 'test':
@@ -90,7 +90,7 @@ class My_CIFAR10(dense_design_matrix.DenseDesignMatrix):
 #                                  'cifar10/pylearn2_gcn_whitened/test.pkl')
 #             X = pkl.X
 #             y = pkl.y
-            X = np.zeros((300, 10))
+            X = np.zeros((300, 20))
             y = np.ones((300,))
             
 #         X = np.cast['float32'](Xs[which_set])
