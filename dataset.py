@@ -82,8 +82,8 @@ class My_CIFAR10(dense_design_matrix.DenseDesignMatrix):
             #X = pkl.X
             #y = pkl.y
             
-            X = np.zeros((300, 20))
-            y = np.ones((300,))
+            X = np.zeros((60000, 3000))
+            y = np.ones((60000,))
         
         elif which_set == 'test':
 #             pkl = self._unpickle(os.environ['PYLEARN2_DATA_PATH']+
