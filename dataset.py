@@ -82,25 +82,25 @@ class My_CIFAR10(dense_design_matrix.DenseDesignMatrix):
             #X = pkl.X
             #y = pkl.y
             
-            X = np.zeros((60000, 3000))
-            y = np.ones((60000,))
+            X = np.load(os.environ['PYLEARN2_DATA_PATH'] + 'cifar10/train_X.npy')
+            y = np.load(os.environ['PYLEARN2_DATA_PATH'] + 'cifar10/train_y.npy')
         
         elif which_set == 'test':
 #             pkl = self._unpickle(os.environ['PYLEARN2_DATA_PATH']+
 #                                  'cifar10/pylearn2_gcn_whitened/test.pkl')
 #             X = pkl.X
 #             y = pkl.y
-            X = np.zeros((300, 20))
-            y = np.ones((300,))
+            X = np.load(os.environ['PYLEARN2_DATA_PATH'] + 'cifar10/test_X.npy')
+            y = np.load(os.environ['PYLEARN2_DATA_PATH'] + 'cifar10/test_y.npy')
             
 #         X = np.cast['float32'](Xs[which_set])
 #         y = Ys[which_set]
 
+        if which_set == 'test':
+            assert X.shape[0] == 10000
+            
         if isinstance(y,list):
             y = np.asarray(y)
-
-#         if which_set == 'test':
-#             assert y.shape[0] == 10000
 
         if center:
             X -= 127.5
@@ -138,36 +138,34 @@ class My_CIFAR10(dense_design_matrix.DenseDesignMatrix):
             y = y[start:stop]
             assert X.shape[0] == y.shape[0]
 
-#         if which_set == 'test':
-#             assert X.shape[0] == 10000
 
         view_converter = dense_design_matrix.DefaultViewConverter((32,32,3), axes)
         
-#         if which_set == 'train':
-#             length = X.shape[0]
-#             def search_right_label(desired_label, i):
-#                 for idx in xrange(i, length):
-#                     if y[idx] == desired_label:
-#                         return idx
-#             
-#             def swap_ele(index, i):
-#                 x_tmp = X[i]
-#                 X[i] = X[index]
-#                 X[index] = x_tmp
-#                 
-#                 y_tmp = y[i]
-#                 y[i] = y[index]
-#                 y[index] = y_tmp
-#                 
-#             desired_label = 0
-#             for i in xrange(length):
-#                 desired_label = i % 10
-#                 if y[i] != desired_label:
-#                     index = search_right_label(desired_label, i)
-#                     swap_ele(index, i)
-#             
-#             for i in xrange(length-100, length):
-#                 print y[i]
+        if which_set == 'train':
+            length = X.shape[0]
+            def search_right_label(desired_label, i):
+                for idx in xrange(i, length):
+                    if y[idx] == desired_label:
+                        return idx
+             
+            def swap_ele(index, i):
+                x_tmp = X[i]
+                X[i] = X[index]
+                X[index] = x_tmp
+                 
+                y_tmp = y[i]
+                y[i] = y[index]
+                y[index] = y_tmp
+                 
+            desired_label = 0
+            for i in xrange(length):
+                desired_label = i % 10
+                if y[i] != desired_label:
+                    index = search_right_label(desired_label, i)
+                    swap_ele(index, i)
+             
+            for i in xrange(length-100, length):
+                print y[i]
                         
         self.one_hot = one_hot
         if one_hot:
