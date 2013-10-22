@@ -138,8 +138,8 @@ class My_CIFAR10(dense_design_matrix.DenseDesignMatrix):
             y = y[start:stop]
             assert X.shape[0] == y.shape[0]
 
-        if which_set == 'test':
-            assert X.shape[0] == 10000
+#         if which_set == 'test':
+#             assert X.shape[0] == 10000
 
         view_converter = dense_design_matrix.DefaultViewConverter((32,32,3), axes)
         
