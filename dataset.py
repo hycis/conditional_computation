@@ -268,6 +268,8 @@ class My_CIFAR10(dense_design_matrix.DenseDesignMatrix):
         #import pdb
         #pdb.set_trace()
         with open(file) as f:
+            import pdb
+            pdb.set_trace()
             pk = cPickle.load(f)
         _logger.info('loading file.. %s' % file)
         return pk
