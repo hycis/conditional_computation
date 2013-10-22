@@ -143,31 +143,31 @@ class My_CIFAR10(dense_design_matrix.DenseDesignMatrix):
 
         view_converter = dense_design_matrix.DefaultViewConverter((32,32,3), axes)
         
-        if which_set == 'train':
-            length = X.shape[0]
-            def search_right_label(desired_label, i):
-                for idx in xrange(i, length):
-                    if y[idx] == desired_label:
-                        return idx
-            
-            def swap_ele(index, i):
-                x_tmp = X[i]
-                X[i] = X[index]
-                X[index] = x_tmp
-                
-                y_tmp = y[i]
-                y[i] = y[index]
-                y[index] = y_tmp
-                
-            desired_label = 0
-            for i in xrange(length):
-                desired_label = i % 10
-                if y[i] != desired_label:
-                    index = search_right_label(desired_label, i)
-                    swap_ele(index, i)
-            
-            for i in xrange(length-100, length):
-                print y[i]
+#         if which_set == 'train':
+#             length = X.shape[0]
+#             def search_right_label(desired_label, i):
+#                 for idx in xrange(i, length):
+#                     if y[idx] == desired_label:
+#                         return idx
+#             
+#             def swap_ele(index, i):
+#                 x_tmp = X[i]
+#                 X[i] = X[index]
+#                 X[index] = x_tmp
+#                 
+#                 y_tmp = y[i]
+#                 y[i] = y[index]
+#                 y[index] = y_tmp
+#                 
+#             desired_label = 0
+#             for i in xrange(length):
+#                 desired_label = i % 10
+#                 if y[i] != desired_label:
+#                     index = search_right_label(desired_label, i)
+#                     swap_ele(index, i)
+#             
+#             for i in xrange(length-100, length):
+#                 print y[i]
                         
         self.one_hot = one_hot
         if one_hot:
