@@ -78,7 +78,7 @@ class My_CIFAR10(dense_design_matrix.DenseDesignMatrix):
 #             pkl = self._unpickle(os.environ['PYLEARN2_DATA_PATH']+
 #                                  'cifar10/pylearn2_gcn_whitened/train.pkl')
             #pkl = self._unpickle(os.environ['PYLEARN2_DATA_PATH']+
-                                 'cifar10/pylearn2_gcn_whitened/test.pkl')
+                        #         'cifar10/pylearn2_gcn_whitened/test.pkl')
             #X = pkl.X
             #y = pkl.y
             
