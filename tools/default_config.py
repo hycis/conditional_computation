@@ -38,7 +38,9 @@ model_config = DD({
             #'config_id'                     : 'GaussianNoise1000cifar200epoch',
             #'config_id'                     : 'Clean100cifar200epoch',
             #'config_id'                     : 'Clean100cifar200epochPreproc',
-            'config_id'                     : 'GaussianNoise1000cifar200epochPreproc',
+            #'config_id'                     : 'GaussianNoise1000cifar200epochPreproc',
+            'config_id'                     : 'GaussNoise2k-2kCifar200epochPreproc',
+
 
 
             # TODO: cached should always be True!
@@ -105,8 +107,8 @@ model_config = DD({
                     'term_class'            : 'monitorbased',
                     'proportional_decrease' : 1e-4,
                     'max_epochs'            : 20,
-                    'channel_name'          : 'valid_softmax1_misclass',
-                    'save_best_channel'     : 'valid_softmax1_nll',
+                    'channel_name'          : 'valid_softmax2_nll',
+                    'save_best_channel'     : 'valid_softmax2_nll',
                 })
             }),
 
@@ -145,7 +147,21 @@ model_config = DD({
                 'hidden1' : DD({
                     'layer_class'           : 'gaussianRELU',
                     #'dim'                   : ((100, 2000), int),
-                    'dim'                   : 1000,
+                    'dim'                   : 2000,
+                    'max_col_norm'          : ((0.1, 5.), float),
+                    'adjust_threshold_factor'   : ((0.0001, 1), float),
+                    'desired_active_rate'   : 0.1,
+                    'noise_std'             : ((0.1, 10), float),
+                     
+                    #'weight_decay'          : ((1., 9.), float),
+ 
+                    'sparse_init'           : 15
+                }),
+                                                  
+                'hidden2' : DD({
+                    'layer_class'           : 'gaussianRELU',
+                    #'dim'                   : ((100, 2000), int),
+                    'dim'                   : 2000,
                     'max_col_norm'          : ((0.1, 5.), float),
                     'adjust_threshold_factor'   : ((0.0001, 1), float),
                     'desired_active_rate'   : 0.1,
