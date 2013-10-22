@@ -120,9 +120,9 @@ if __name__=='__main__':
     for i in range(args.n_jobs):
         # TODO: do not hardcode the common options!
         #exp_cmd = 'jobman -r cmdline mlp_training_framework.model.experimTHEANO_FLAGS=profile=True,floatX=float32ent '
-        exp_cmd = 'jobman cmdline mlp_model.model.experiment '
+        exp_cmd = 'jobman -r cmdline mlp_model.model.experiment '
 
-        if 'ip05' in host:
+        if 'ip05' in host or 'umontreal' in host:
             exp_cmd = 'THEANO_FLAGS=floatX=float32 ' + exp_cmd
         if args.use_gpu and host == 'local':
             exp_cmd = 'THEANO_FLAGS=device=gpu2,floatX=float32 ' + exp_cmd
