@@ -122,7 +122,7 @@ if __name__=='__main__':
         #exp_cmd = 'jobman -r cmdline mlp_training_framework.model.experimTHEANO_FLAGS=profile=True,floatX=float32ent '
         exp_cmd = 'jobman -r cmdline mlp_model.model.experiment '
 
-        if 'ip05' in host or 'umontreal' in host:
+        if 'ip05' in host:
             exp_cmd = 'THEANO_FLAGS=floatX=float32 ' + exp_cmd
         if args.use_gpu and host == 'local':
             exp_cmd = 'THEANO_FLAGS=device=gpu2,floatX=float32 ' + exp_cmd
