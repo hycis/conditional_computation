@@ -82,16 +82,16 @@ class My_CIFAR10(dense_design_matrix.DenseDesignMatrix):
             #X = pkl.X
             #y = pkl.y
             
-            X = np.zeros((10, 10))
-            y = np.ones((10,))
+            X = np.zeros((20, 20))
+            y = np.ones((20,))
         
         elif which_set == 'test':
 #             pkl = self._unpickle(os.environ['PYLEARN2_DATA_PATH']+
 #                                  'cifar10/pylearn2_gcn_whitened/test.pkl')
 #             X = pkl.X
 #             y = pkl.y
-            X = np.zeros((10, 10))
-            y = np.ones((10,))
+            X = np.zeros((20, 20))
+            y = np.ones((20,))
             
 #         X = np.cast['float32'](Xs[which_set])
 #         y = Ys[which_set]
