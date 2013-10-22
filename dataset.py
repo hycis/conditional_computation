@@ -99,8 +99,8 @@ class My_CIFAR10(dense_design_matrix.DenseDesignMatrix):
         if isinstance(y,list):
             y = np.asarray(y)
 
-        if which_set == 'test':
-            assert y.shape[0] == 10000
+#         if which_set == 'test':
+#             assert y.shape[0] == 10000
 
         if center:
             X -= 127.5
