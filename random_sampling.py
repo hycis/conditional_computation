@@ -96,6 +96,10 @@ if __name__=='__main__':
                                 launched locally and it specifies the
                                 number of concurrent jobs that can
                                 running at the same time at most.''')
+    
+    parse.add_argument('-r', '--record_stdout', dest='record',
+                       help='''If this option is used, then the outputs from
+                               terminal will be saved into file''')
     # TODO: ajouter assert pour s'assurer que lorsqu'on lance des jobs avec gpu, seulement
     # 1 job puisse etre lance localement.
     args = parser.parse_args()
@@ -120,7 +124,8 @@ if __name__=='__main__':
     for i in range(args.n_jobs):
         # TODO: do not hardcode the common options!
         #exp_cmd = 'jobman -r cmdline mlp_training_framework.model.experimTHEANO_FLAGS=profile=True,floatX=float32ent '
-        exp_cmd = 'jobman -r cmdline mlp_model.model.experiment '
+        exp_cmd = 'jobman ' + args.record +' cmdline mlp_model.model.experiment '
+        print exp_cmd
 
         if 'ip05' in host:
             exp_cmd = 'THEANO_FLAGS=floatX=float32 ' + exp_cmd
