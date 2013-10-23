@@ -97,7 +97,7 @@ if __name__=='__main__':
                                 number of concurrent jobs that can
                                 running at the same time at most.''')
     
-    parser.add_argument('-r', '--record', const='-r',
+    parser.add_argument('-r', '--record', action='store_true',
                        help='''If this option is used, then the outputs from
                                terminal will be saved into file''')
     # TODO: ajouter assert pour s'assurer que lorsqu'on lance des jobs avec gpu, seulement
@@ -125,7 +125,11 @@ if __name__=='__main__':
     for i in range(args.n_jobs):
         # TODO: do not hardcode the common options!
         #exp_cmd = 'jobman -r cmdline mlp_training_framework.model.experimTHEANO_FLAGS=profile=True,floatX=float32ent '
-        exp_cmd = 'jobman ' + args.record +' cmdline mlp_model.model.experiment '
+        if args.record:
+            exp_cmd = 'jobman -r cmdline mlp_model.model.experiment '
+        else:
+            exp_cmd = 'jobman cmdline mlp_model.model.experiment '
+        
         print exp_cmd
 
         if 'ip05' in host:
