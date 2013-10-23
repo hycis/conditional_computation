@@ -97,7 +97,7 @@ if __name__=='__main__':
                                 number of concurrent jobs that can
                                 running at the same time at most.''')
     
-    parser.add_argument('-r', default='',
+    parser.add_argument('-r', '--record', default='',
                        help='''If this option is used, then the outputs from
                                terminal will be saved into file''')
     # TODO: ajouter assert pour s'assurer que lorsqu'on lance des jobs avec gpu, seulement
