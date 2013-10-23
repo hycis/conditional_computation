@@ -103,6 +103,7 @@ if __name__=='__main__':
     # TODO: ajouter assert pour s'assurer que lorsqu'on lance des jobs avec gpu, seulement
     # 1 job puisse etre lance localement.
     args = parser.parse_args()
+    print args
     cmds = []
     exps_by_model = {}
 
