@@ -1,4 +1,4 @@
-from pylearn2.models.mlp import Linear, MLP, Softmax
+from pylearn2.models.mlp import Linear, MLP, Softmax, Tanh
 import numpy as np
 import theano.tensor as T
 from theano.compat.python2x import OrderedDict
@@ -327,6 +327,11 @@ class NoisyRELU(Linear):
     
     
 class My_Softmax(Softmax):
+    
+    def test_fprop(self, state_below):
+        self.fprop(state_below)
+
+class My_Tanh(Tanh):
     
     def test_fprop(self, state_below):
         self.fprop(state_below)

@@ -38,7 +38,7 @@ from pylearn2.train_extensions.best_params import MonitorBasedSaveBest
 from pylearn2.datasets.dense_design_matrix import DenseDesignMatrix
 from pylearn2.datasets import preprocessing as pp
 
-from layers import NoisyRELU, GaussianRELU, My_Softmax, My_MLP
+from layers import NoisyRELU, GaussianRELU, My_Softmax, My_MLP, My_Tanh
 
 from dataset import My_CIFAR10
 
@@ -223,7 +223,7 @@ class HPS:
                 max_row_norm=layer.max_row_norm)
 
     def get_layer_tanh(self, layer):
-        return Tanh(layer_name=layer.layer_name,dim=layer.dim,irange=layer.irange,
+        return My_Tanh(layer_name=layer.layer_name,dim=layer.dim,irange=layer.irange,
                 istdev=layer.istdev,sparse_init=layer.sparse_init,
                 sparse_stdev=layer.sparse_stdev, include_prob=layer.include_prob,
                 init_bias=layer.init_bias,W_lr_scale=layer.W_lr_scale,
