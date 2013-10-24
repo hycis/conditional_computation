@@ -14,6 +14,9 @@ from pylearn2.models.mlp import MLP
 
 def My_MLP(MLP):
     
+    def __init__(self, **kwargs):
+        super(My_MLP, self).__init__(**kwargs)
+    
     def test_fprop(self, state_below, return_all = False):
 
         rval = self.layers[0].test_fprop(state_below)
