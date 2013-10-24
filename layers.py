@@ -12,7 +12,7 @@ from theano import config
 
 from pylearn2.models.mlp import MLP
 
-def My_MLP(MLP):
+class My_MLP(MLP):
     
     def test_fprop(self, state_below, return_all = False):
 
