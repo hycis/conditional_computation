@@ -35,6 +35,8 @@ class My_MLP(MLP):
         X, Y = data
         state = X
         rval = OrderedDict()
+        import pdb
+        pdb.set_trace()
     
         for layer in self.layers:
             ch = layer.get_monitoring_channels()
