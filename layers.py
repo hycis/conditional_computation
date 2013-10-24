@@ -329,12 +329,12 @@ class NoisyRELU(Linear):
 class My_Softmax(Softmax):
     
     def test_fprop(self, state_below):
-        self.fprop(state_below)
+        return self.fprop(state_below)
 
 class My_Tanh(Tanh):
     
     def test_fprop(self, state_below):
-        self.fprop(state_below)
+        return self.fprop(state_below)
     
 #     def get_monitoring_channels(self):
 # 
