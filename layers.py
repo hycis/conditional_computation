@@ -188,7 +188,7 @@ class GaussianRELU(Linear):
 
 
 
-        return rval
+#         return rval
     
 
 
