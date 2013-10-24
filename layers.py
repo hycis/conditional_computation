@@ -88,7 +88,7 @@ class GaussianRELU(Linear):
     # fprop used by test set for monitoring data    
     def test_fprop(self, state_below):
         p = self._linear_part(state_below)
-        p = p * (p > 0.) + self.left_slope * p * (p < 0.)
+        p = p * (p > 0.)
         return p
     
     def get_params(self):
@@ -225,7 +225,7 @@ class NoisyRELU(Linear):
     # fprop used by test set for monitoring data    
     def test_fprop(self, state_below):
         p = self._linear_part(state_below)
-        p = p * (p > 0.) + self.left_slope * p * (p < 0.)
+        p = p * (p > 0.)
         return p
 
     def get_params(self):
