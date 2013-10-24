@@ -109,11 +109,11 @@ class GaussianRELU(Linear):
         updates[self.threshold] += renormalize * T.abs_(self.desired_active_rate - 
                     self.active_rate) * self.adjust_threshold_factor
 
-    def get_monitoring_channels_from_state(self, state, target=None):
-        
-        rval = super(GaussianRELU, self).get_monitoring_channels_from_state(state)
-        
-        print "===get_monitor_channels_from_state==="
+#     def get_monitoring_channels_from_state(self, state, target=None):
+#         
+#         rval = super(GaussianRELU, self).get_monitoring_channels_from_state(state)
+#         
+#         print "===get_monitor_channels_from_state==="
         
 #         active_rate = self.active_rate.astype(config.floatX)
 # 
@@ -246,12 +246,12 @@ class NoisyRELU(Linear):
         updates[self.threshold] += renormalize * T.abs_(self.desired_active_rate - 
                     self.active_rate) * self.adjust_threshold_factor
 
-    def get_monitoring_channels(self):
-        X, Y = 
-
-    def get_monitoring_channels_from_state(self, state, target=None):
-        
-        rval = super(NoisyRELU, self).get_monitoring_channels_from_state(state)
+#     def get_monitoring_channels(self):
+#         X, Y = 
+# 
+#     def get_monitoring_channels_from_state(self, state, target=None):
+#         
+#         rval = super(NoisyRELU, self).get_monitoring_channels_from_state(state)
         
 #         print "===get_monitor_channels_from_state==="
 #         
