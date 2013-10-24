@@ -21,14 +21,6 @@ from dataset import My_CIFAR10
 
 from pylearn2_objects import *
 
-from pylearn2.models.mlp import MLP
-
-def My_MLP(MLP):
-    
-    def test_fprop():
-        
-
-
 def update_irange_in_layer(layer, prev_layer_dim):
     if layer.layer_class == 'tanh':
         # Case: tanh layer
