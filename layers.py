@@ -35,8 +35,8 @@ class My_MLP(MLP):
         X, Y = data
         state = X
         rval = OrderedDict()
-        import pdb
-        pdb.set_trace()
+        #import pdb
+        #pdb.set_trace()
     
         for layer in self.layers:
             ch = layer.get_monitoring_channels()
@@ -331,11 +331,15 @@ class NoisyRELU(Linear):
 class My_Softmax(Softmax):
     
     def test_fprop(self, state_below):
+        import pdb
+        pdb.set_trace()
         return self.fprop(state_below)
 
 class My_Tanh(Tanh):
     
     def test_fprop(self, state_below):
+        import pdb
+        pdb.set_trace()
         return self.fprop(state_below)
     
 #     def get_monitoring_channels(self):
