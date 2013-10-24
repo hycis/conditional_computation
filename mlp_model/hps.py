@@ -38,7 +38,7 @@ from pylearn2.train_extensions.best_params import MonitorBasedSaveBest
 from pylearn2.datasets.dense_design_matrix import DenseDesignMatrix
 from pylearn2.datasets import preprocessing as pp
 
-from layers import NoisyRELU, GaussianRELU
+from layers import NoisyRELU, GaussianRELU, My_Softmax, My_MLP
 
 from dataset import My_CIFAR10
 
@@ -182,7 +182,7 @@ class HPS:
             layers.append(layer)
         # create MLP:
         print layers
-        model = MLP(layers=layers,input_space=input_space,nvis=nvis,
+        model = My_MLP(layers=layers,input_space=input_space,nvis=nvis,
                     batch_size=self.batch_size)
         self.mlp = model
         return model
@@ -243,7 +243,7 @@ class HPS:
         
     def get_layer_softmax(self, layer):
         
-        return Softmax(layer_name=layer.layer_name,n_classes=layer.dim,irange=layer.irange,
+        return My_Softmax(layer_name=layer.layer_name,n_classes=layer.dim,irange=layer.irange,
                 istdev=layer.istdev,sparse_init=layer.sparse_init,
                 init_bias_target_marginals=layer.init_bias, W_lr_scale=layer.W_lr_scale,
                 b_lr_scale=layer.b_lr_scale, max_col_norm=layer.max_col_norm,
