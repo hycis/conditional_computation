@@ -182,6 +182,8 @@ class HPS:
             layers.append(layer)
         # create MLP:
         print layers
+        import pdb
+        pdb.set_trace()
         model = My_MLP(layers=layers,input_space=input_space,nvis=nvis,
                     batch_size=self.batch_size)
         self.mlp = model
