@@ -40,7 +40,7 @@ model_config = DD({
             #'config_id'                     : 'Clean100cifar200epochPreproc',
             #'config_id'                     : 'GaussianNoise1000cifar200epochPreproc',
             #'config_id'                     : 'GaussNoise2k-2kCifar200epochPreproc',
-            'config_id'                     : 'Noisy200-2kCifar200epochPreproc',
+            'config_id'                     : 'Noisy200-2kCifar200epochPreproc1',
 
 
 
