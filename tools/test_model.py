@@ -22,7 +22,8 @@ def test_model(dataset, model_path):
         sys.exit()
 
     # Compile theano function for computing the model predictions.
-    X = model.get_input_space().make_batch_theano()
+    #X = model.get_input_space().make_batch_theano()
+    X = T.dmatrix()
     Y = model.fprop(X)
     fprop = function([X], [Y])
     input_ndarray = np.asarray(data_X, dtype='float32')
