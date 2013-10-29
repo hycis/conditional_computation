@@ -11,6 +11,8 @@ def test_model(dataset, model_path):
     
     data_X = dataset.X
     data_y = dataset.y
+    import pdb
+    pdb.set_trace()
     
     try:
         model = serial.load(model_path)
