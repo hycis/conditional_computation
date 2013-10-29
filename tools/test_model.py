@@ -10,6 +10,7 @@ import numpy as np
 def test_model(dataset, model_path):
     
     data_X = dataset.X
+    data_y = dataset.y
     
     try:
         model = serial.load(model_path)
@@ -27,9 +28,11 @@ def test_model(dataset, model_path):
     predictions = np.asarray(fprop(input_ndarray), dtype='float32').T
     predictions = predictions.reshape((len(predictions),))
     
+    
     print predictions
     
 if __name__ == '__main__':
     dataset = My_CIFAR10(which_set='test')
-    model_path = '/data/lisa/exp/wuzhen/test/conditional_computation/mlp/jobman_20131026_182820_36582050'
+    model_path = '/data/lisa/exp/wuzhen/test/conditional_computation \
+    /mlp/jobman_20131026_182820_36582050/model_Noisy200-2kCifar200epochPreproc_optimum.pkl'
     test_model(dataset, model_path)
