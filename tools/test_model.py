@@ -33,6 +33,6 @@ def test_model(dataset, model_path):
     
 if __name__ == '__main__':
     dataset = My_CIFAR10(which_set='test')
-    model_path = '/data/lisa/exp/wuzhen/test/conditional_computation \
+    model_path = '/data/lisa/exp/wuzhen/test/conditional_computation\
     /mlp/jobman_20131026_182820_36582050/model_Noisy200-2kCifar200epochPreproc_optimum.pkl'
     test_model(dataset, model_path)
