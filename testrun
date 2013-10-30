@@ -1,0 +1,5 @@
+#! /bin/bash
+killall -9 python
+killall -9 jobman
+git pull origin master
+python random_sampling.py -c 1
