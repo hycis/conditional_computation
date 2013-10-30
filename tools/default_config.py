@@ -80,14 +80,6 @@ model_config = DD({
             #random_uniform
             #batchwise_shuffled_sequential
 
-
-            # Momentum and exponential decay
-            'ext_array'                     : DD({
-                'exp_decay' : DD({
-                    'ext_class'             : 'exponentialdecayoverepoch',
-                    'decay_factor'          : ((0.85, 0.999), float),
-
-
             # TODO: cached should always be True!
             'cached'                        : True,
             
@@ -258,9 +250,7 @@ model_config = DD({
                     'dim'                   : 10,
                     'irange'                : 0.05
                     #'sparse_init'           : 15
-                }),
+                })
             }),
         }),
-    }),
-}),
 })
