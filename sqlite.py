@@ -40,10 +40,18 @@ def insertDB(dir, specs, model_id):
             valid_error = model.monitor.channels['valid_softmax2_misclass'].val_record
             #best_test_error = np.sort(test_error)[0]
             best_valid_error = np.min(valid_error)
+<<<<<<< HEAD
 
              
 	    #print state.dataset
             print state.dataset, folder, 'best valid error', np.asscalar(best_valid_error)
+=======
+
+
+             
+	    #print state.dataset
+            print state.dataset + ' ' +  folder + 'best valid error', np.asscalar(best_valid_error)
+>>>>>>> ff18aba014fa89fcd7999095f1a11a208cb63321
             #print 'best test error', np.asscalar(best_test_error)
             #print folder
 	    #print state.batch_size.__class__

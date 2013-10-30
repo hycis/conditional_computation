@@ -51,6 +51,8 @@ class My_MLP(MLP):
                 raise TypeError(str((type(ch), layer.layer_name)))
             for key in ch:
                 rval[layer.layer_name+'_'+key]  = ch[key]
+        
+            
 
         return rval
 
