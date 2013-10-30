@@ -259,8 +259,8 @@ model_config = DD({
                     'irange'                : 0.05
                     #'sparse_init'           : 15
                 })
-            }),
-        }),
-    }),
-}),
+            })
+        })
+    })
+})
 })
