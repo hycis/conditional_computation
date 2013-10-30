@@ -263,116 +263,116 @@ model_config = DD({
         }),
 })
 
-'''
-
-model_config = DD({
-        # MLP
-        'mlp' : DD({
-            'model_class'                   : 'mlp',
-            'train_class'                   : 'sgd',
-            'config_id'                     : 12345,
-            # TODO: cached should always be True!
-            'cached'                        : True,
-            # task can be fun or diff.
-            #'task'                          : 'fun',
-            'pack'                          : 'pack15',
-            # Available datasets for fun pack 15:
-            # default
-            # default+ratios
-            # default+cfeatures
-            # default+extra
-            # Available datasets for diff pack 15:
-            # only test.
-            # They will be regenerated since
-            # we found some nan values in the default diff pack 15 datasets.
-            'dataset'                       : 'default+ratios',
-
-            'input_space_id'                : None,
-            'nvis'                          : None,
-
-            # Channel and dataset monitoring
-            'channel_array'                 : ['mca0'],
-            'monitoring_datasets'           : ['valid'],
-
-            'random_seed'                   : 256571,
-            'batch_size'                    : 32,
-            'learning_rate'                 : ((1e-5, 0.99), float),
-            'init_momentum'                 : ((0.5, 0.99), float),
-
-            # Cost
-            'train_iteration_mode'          : 'random_uniform',
-            # fun1 or hint1
-            'cost_array'                    : ['fun1'],
-
-            # Momentum and exponential decay
-            'ext_array'                     : DD({
-                'exp_decay' : DD({
-                    'ext_class'             : 'exponentialdecayoverepoch',
-                    'decay_factor'          : ((0.85, 0.999), float),
-                    'min_lr_scale'          : ((1e-3, 1e-1), float),
-                }),
-                'moment_adj' : DD({
-                    'ext_class'             : 'momentumadjustor',
-                    'final_momentum'        : 0.9,
-                    'start_epoch'           : 1,
-                    'saturate_epoch'        : ((20, 50), int),
-                }),
-            }),
-
-            # Termination criteria
-            'term_array'                    : DD({
-                # Max number of training epochs
-                'epoch_count' : DD({
-                    'term_class'            : 'epochcounter',
-                    'max_epochs'            : 10,
-                }),
-                # Early stopping on validation set
-                # If after max_epochs, we don't see significant improvement
-                # on validation cost, we stop the training.
-                'early_stopping' : DD({
-                    'term_class'            : 'monitorbased',
-                    'proportional_decrease' : ((1e-4, 1e-1), float),
-                    'max_epochs'            : 50,
-                    'channel_name'          : 'valid_hps_cost'
-                })
-            }),
-
-            'layers'                        : DD({
-                # IMPORTANT: For each layer, only add hyperparams that are different than
-                # the default hyperparams from layer_config
-
-                # NOTE: always start the name of your hidden layers with hidden and your
-                # output layers with output in order for the hidden layers
-                # to be found first before the output layers when going
-                # through the layers DD dictionary.
-
-                # NOTE: the supported activation functions are:
-                # tanh, sigmoid and rectifiedlinear
-
-                # First hidden layer
-                'hidden1' : DD({
-                    'layer_class'           : 'tanh',
-                    'dim'                   : ((100, 2000), int),
-                    'max_col_norm'          : 1,
-                }),
-
-                # Second hidden layer
-                'hidden2' : DD({
-                    'layer_class'           : 'tanh',
-                    'dim'                   : ((100, 2000), int),
-                    'max_col_norm'          : 1,
-                }),
-
-                # Last (output) layer
-                # The fun model only takes 1 output.
-                'output1' : DD({
-                    'layer_class'           : 'fun1',
-                    'dim'                   : 1,
-                    'irange'                : 0.05,
-                })
-            }),
-        }),
-})
-'''
+# '''
+# 
+# model_config = DD({
+#         # MLP
+#         'mlp' : DD({
+#             'model_class'                   : 'mlp',
+#             'train_class'                   : 'sgd',
+#             'config_id'                     : 12345,
+#             # TODO: cached should always be True!
+#             'cached'                        : True,
+#             # task can be fun or diff.
+#             #'task'                          : 'fun',
+#             'pack'                          : 'pack15',
+#             # Available datasets for fun pack 15:
+#             # default
+#             # default+ratios
+#             # default+cfeatures
+#             # default+extra
+#             # Available datasets for diff pack 15:
+#             # only test.
+#             # They will be regenerated since
+#             # we found some nan values in the default diff pack 15 datasets.
+#             'dataset'                       : 'default+ratios',
+# 
+#             'input_space_id'                : None,
+#             'nvis'                          : None,
+# 
+#             # Channel and dataset monitoring
+#             'channel_array'                 : ['mca0'],
+#             'monitoring_datasets'           : ['valid'],
+# 
+#             'random_seed'                   : 256571,
+#             'batch_size'                    : 32,
+#             'learning_rate'                 : ((1e-5, 0.99), float),
+#             'init_momentum'                 : ((0.5, 0.99), float),
+# 
+#             # Cost
+#             'train_iteration_mode'          : 'random_uniform',
+#             # fun1 or hint1
+#             'cost_array'                    : ['fun1'],
+# 
+#             # Momentum and exponential decay
+#             'ext_array'                     : DD({
+#                 'exp_decay' : DD({
+#                     'ext_class'             : 'exponentialdecayoverepoch',
+#                     'decay_factor'          : ((0.85, 0.999), float),
+#                     'min_lr_scale'          : ((1e-3, 1e-1), float),
+#                 }),
+#                 'moment_adj' : DD({
+#                     'ext_class'             : 'momentumadjustor',
+#                     'final_momentum'        : 0.9,
+#                     'start_epoch'           : 1,
+#                     'saturate_epoch'        : ((20, 50), int),
+#                 }),
+#             }),
+# 
+#             # Termination criteria
+#             'term_array'                    : DD({
+#                 # Max number of training epochs
+#                 'epoch_count' : DD({
+#                     'term_class'            : 'epochcounter',
+#                     'max_epochs'            : 10,
+#                 }),
+#                 # Early stopping on validation set
+#                 # If after max_epochs, we don't see significant improvement
+#                 # on validation cost, we stop the training.
+#                 'early_stopping' : DD({
+#                     'term_class'            : 'monitorbased',
+#                     'proportional_decrease' : ((1e-4, 1e-1), float),
+#                     'max_epochs'            : 50,
+#                     'channel_name'          : 'valid_hps_cost'
+#                 })
+#             }),
+# 
+#             'layers'                        : DD({
+#                 # IMPORTANT: For each layer, only add hyperparams that are different than
+#                 # the default hyperparams from layer_config
+# 
+#                 # NOTE: always start the name of your hidden layers with hidden and your
+#                 # output layers with output in order for the hidden layers
+#                 # to be found first before the output layers when going
+#                 # through the layers DD dictionary.
+# 
+#                 # NOTE: the supported activation functions are:
+#                 # tanh, sigmoid and rectifiedlinear
+# 
+#                 # First hidden layer
+#                 'hidden1' : DD({
+#                     'layer_class'           : 'tanh',
+#                     'dim'                   : ((100, 2000), int),
+#                     'max_col_norm'          : 1,
+#                 }),
+# 
+#                 # Second hidden layer
+#                 'hidden2' : DD({
+#                     'layer_class'           : 'tanh',
+#                     'dim'                   : ((100, 2000), int),
+#                     'max_col_norm'          : 1,
+#                 }),
+# 
+#                 # Last (output) layer
+#                 # The fun model only takes 1 output.
+#                 'output1' : DD({
+#                     'layer_class'           : 'fun1',
+#                     'dim'                   : 1,
+#                     'irange'                : 0.05,
+#                 })
+#             }),
+#         }),
+# })
+# '''
 
 
