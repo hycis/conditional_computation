@@ -39,13 +39,13 @@ def insertDB(dir, specs, model_id):
             #test_error = model.monitor.channels['test_softmax1_misclass'].val_record
             valid_error = model.monitor.channels['valid_softmax2_misclass'].val_record
             #best_test_error = np.sort(test_error)[0]
-            best_valid_error = np.sort(valid_error)[0]
+            best_valid_error = np.min(valid_error)
 
              
 	    #print state.dataset
-            print 'best valid error', np.asscalar(best_valid_error)
+            print state.dataset, folder, 'best valid error', np.asscalar(best_valid_error)
             #print 'best test error', np.asscalar(best_test_error)
-            print folder
+            #print folder
 	    #print state.batch_size.__class__
             #print 'EXIST', folder
             #import pdb
@@ -208,7 +208,8 @@ if __name__ == '__main__':
 	    "layers.hidden2.dim"]
 
 
-    model_id = 'Clean200-200Cifar200epochPreproc'
+    #model_id = 'Clean200-200Cifar200epochPreproc'
     #model_id = 'Clean100cifar200epochPreproc'
+    model_id = 'Noisy200-2kCifar200epochPreproc'
     insertDB(dir, specs, model_id)
 #     queryDB(specs, model_id)
