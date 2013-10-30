@@ -50,7 +50,7 @@ model_config = DD({
             'cached'                        : True,
             
             # dataset can be mnist or svhn or cifar10
-            'dataset'                       : 'mnist',
+            'dataset'                       : 'svhn',
             
             'input_space_id'                : None,
             'nvis'                          : None,
